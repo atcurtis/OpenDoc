@@ -1,0 +1,196 @@
+/* @(#)Z 1.6 com/src/core/idl/NamSpac.idl, odcore, od96os2, odos29646d 96/11/15 15:24:57 (96/10/29 09:22:13) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		NamSpac.idl
+//#
+//#	Contains:	Interface for ODNameSpace class
+//#
+//#	Owned by:	David McCusker
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <9>	 8/18/95	DM		#1275241: IDL Cleanup
+//#		 <8>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <7>	 5/25/95	jpa		Added SetSynchedToEditors and
+//#									IsSynchedToEditors. [1240150]
+//#		 <6>	 5/17/95	TJ		Backed out changes from previous checkin.
+//#		 <4>	 3/24/95	CG		#1217023 API: Read and Write now use
+//#									ODByteArray instead of Platformfile.
+//#		 <3>	 1/23/95	CG		#1195019: Added getter for
+//#									fNameSpaceManager.
+//#		 <2>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <1>	 7/29/94	CG		first checked in
+//#		 <3>	 6/24/94	CG		Added functionprefix.
+//#		 <2>	 6/14/94	CG		Removed fHeap and GetHeap().
+//#		 <1>	  6/8/94	CG		first checked in
+//#
+//#	To Do:
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _NAMSPAC_
+#define _NAMSPAC_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODNameSpace;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+#ifdef __PRIVATE__
+interface  ODNameSpaceManager;
+#endif
+
+interface  ODStorageUnitView;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken StringHashTable;
+#endif
+
+//==============================================================================
+// ODNameSpace
+//==============================================================================
+
+interface ODNameSpace :  ODObject
+{
+   ODISOStr GetName();
+
+   ODNSTypeSpec GetType();
+   
+   ODNameSpace GetParent();
+   
+   void SetType( in ODNSTypeSpec type );
+
+   void Unregister(in ODISOStr key);
+
+   ODBoolean Exists(in ODISOStr key);
+   
+   void WriteToFile(in ODByteArray file);
+
+   void ReadFromFile(in ODByteArray file);
+
+   void WriteToStorage(in ODStorageUnitView view);
+
+   void ReadFromStorage(in ODStorageUnitView view);
+
+#ifdef __PRIVATE__
+  void InitNameSpace(in ODNameSpaceManager mgr,
+  					 in ODNameSpace parent,
+					 in ODULong numExpectedEntries,
+					 in ODISOStr name);
+  
+  void					SetSynchedToEditors(in ODBoolean synched);
+  ODBoolean				IsSynchedToEditors();
+
+  StringHashTable* 		GetHashTable();
+
+  ODULong				GetNumEntries();
+  void 					NotifyDying(in ODNameSpace space);
+  ODNameSpaceManager	GetNameSpaceManager();
+#endif  //# __PRIVATE__
+   
+#ifdef __SOMIDL__
+	implementation
+  	{
+	majorversion = 1; minorversion = 0;
+
+	functionprefix = ODNameSpace;
+	
+	override:
+    	somUninit,
+        Purge;
+
+    releaseorder:
+        GetName,
+		GetType,
+		GetParent,
+		SetType,
+        Unregister,
+        Exists,
+        WriteToFile,
+        ReadFromFile,
+        WriteToStorage,
+        ReadFromStorage,
+	#ifdef __PRIVATE__
+		InitNameSpace,
+		GetHashTable,
+		GetNumEntries,
+		NotifyDying,
+		GetNameSpaceManager,
+		SetSynchedToEditors,
+		IsSynchedToEditors;
+	#else
+		reserved1,
+		reserved2,
+		reserved3,
+		reserved4,
+		reserved5,
+		reserved6,
+		reserved7;
+	#endif
+	
+    #ifdef __PRIVATE__
+      StringHashTable*   	fStringHashTable;
+      ODNameSpaceManager 	fNameSpaceManager;
+      ODNameSpace       	fParent;
+      ODULong        		fNumInitialEntries;
+      ODISOStr			  	fName;
+      ODNSTypeSpec			fType;
+      ODBoolean				fSynchedToEditors;
+
+	  passthru C_xh = 
+	  	""
+	  	"class StringHashTable;"
+		"";
+
+    #endif //# __PRIVATE__
+  };
+#endif //# __SOMIDL__
+};
+
+#endif //# _NAMSPAC_
+

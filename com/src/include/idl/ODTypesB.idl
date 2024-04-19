@@ -1,0 +1,371 @@
+/* @(#)Z 1.8 com/src/include/idl/ODTypesB.idl, odcore, od96os2, odos29646d 96/11/15 15:25:40 (96/08/26 14:20:09) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#	File:		ODTypesB.idl
+//#
+//#	Contains:	Platform independent types for OpenDoc
+//#
+//#	Owned by:	Richard Rodseth
+//#
+//#	Copyright:	(r) 1994-95 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<38>	 10/9/95	VL		1289928: kODNative is removed.
+//#		<37>	  9/8/95	Te		1281096 FB2:Many constants in ODTypesB
+//#									without kOD prefix!
+//#		<36>	  9/6/95	RR		#1231656 Moved constants to StdDef.idl
+//#		<35>	  9/1/95	CC		1273646, 1279220: Added private clone kind
+//#									kODCloneToFile.
+//#		<34>	 6/13/95	VL		1257404: Added kODNullKey constant to
+//#									ODTypesB.idl. kODClone is made private.
+//#		<33>	 6/10/95	VL		1252836: kODPosMOtherType is removed.
+//#									1252808: ODVersionID is moved to DocPriv.h.
+//#		<32>	  6/7/95	CC		1252870: Removed kODKeyNotGranted from
+//#									public API.
+//#		<31>	 5/18/95	CC		1241288: Removed obsolete type ODLinkID.
+//#		<30>	  3/1/95	RR		# 1220319 XMP to OD. Yikes!
+//#		<29>	 2/15/95	JBS		1198600 added kODPresDefault
+//#		<28>	 2/10/95	CG		#1177475: Changed ODPlatformTypeSpace to a
+//#									typedef from an enum, need types as
+//#									constants in StdDefs.xh.
+//#		<27>	 1/26/95	eeh		1213354: ODActionData now an ODByteArray.
+//#		<26>	 1/26/95	VL		#???: SURef is now a 4-byte array. Also
+//#									added type for non-persistent frame.
+//#		<25>	 1/25/95	jpa		Moved kODExtSemanticInterface to
+//#									StdExts.idl. [1206907]
+//#		<24>	 1/19/95	CC		1196269 Removed kODCloneDuplicate.
+//#									1193567 Added kODKeyNotGranted.
+//#		<23>	 1/18/95	VL		1193559: Added ODObjectType and
+//#									kODPartObject and kODFrameObject. Added
+//#									ODPersistentObjectID.
+//#		<22>	 1/13/95	RR		Moved ODCoordinate to GeoTypes. Added
+//#									module to allow creation of binding file
+//#		<21>	  1/9/95	VL		1196957: Added new constants to Drag
+//#									Attributes.
+//#		<20>	11/30/94	RR		#1188078 Removed unused types
+//#		<19>	11/14/94	VL		1155887: Added new pos code for top draft.
+//#		<18>	 9/23/94	VL		1184272: ContainerID is a sequence of
+//#									octets. 1184166: Moved ContainerName and
+//#									DocumentName to M file.
+//#		<17>	  9/7/94	CC		#1185056 - Define ODLinkStatus to be
+//#									ODULong instead of an enumeration.
+//#		<16>	 8/31/94	Te		#1183129, #1183116, #1183119, #1183111:
+//#									Lots of ErrorCode cleanup.  Moved Exception
+//#									struct definition to here since no
+//#									types/structs should be in Def files.
+//#		<15>	 8/18/94	Te		#1181622 Set Owned By: field to Richard
+//#		<14>	 8/12/94	CC		1160117 -Added kODCloneToLink and
+//#									kODCloneFromLink.
+//#		<13>	  8/3/94	CC		Removed ODClipboardKey type.
+//#		<12>	 7/29/94	CG		Changes to ODNSTypeSpec.
+//#		<11>	  7/7/94	CC		Added kODdrag  constants from DragDrp.idl.
+//#		<10>	 6/29/94	NP		Added semantic interface extension name
+//#									constant and kODNoWait.
+//#		 <9>	 6/28/94	VL		Added new ODDropResult.
+//#		 <8>	 6/22/94	eeh		added kODNullTypeToken, kODViewAs*
+//#		 <7>	 6/15/94	jpa		Added imaging stuff (xform types, etc.)
+//#		 <6>	 6/15/94	CG		Removed duplicate consts found in
+//#									StdDefs.idl.
+//#		 <5>	 6/14/94	CG		Added more NameSpace and Binding constants.
+//#		 <3>	  6/1/94	RR		Redefined IText in ODTypesM.idl
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+//# Primitive and Platform-Independent Types
+
+#ifndef _ODTYPESB_
+#define _ODTYPESB_
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_TYPESB)
+#pragma somemittypes on
+#endif
+
+//==============================================================================
+// Constants
+//==============================================================================
+
+// for Undo protocol
+enum ODDoneState
+{
+  kODDone,
+  kODUndone,
+  kODRedone
+};
+
+//==============================================================================
+// Scalar Types
+//==============================================================================
+
+// Common OD Types
+
+typedef boolean        ODBoolean;    // boolean value. Do not count on its size.
+typedef octet          ODUByte;    // unsigned >= 8-bit value
+typedef char           ODSByte;    // signed >= 8-bit value
+typedef unsigned short ODUShort;    // unsigned >= 16-bit value
+typedef short          ODSShort;    // signed >= 16-bit value
+typedef unsigned long  ODULong;    // unsigned >= 32-bit value
+typedef long           ODSLong;    // signed >= 32-bit value
+typedef float          ODFloat;    // floating-point value
+
+typedef void*          ODPtr;      // OD pointer
+
+typedef string  ODISOStr;      // 7 bit ascii. No embedded NULLs. NULL
+                    //  terminated.
+
+typedef ODISOStr  ODType;      // Used for storage types, focus types,
+                    //  data types, etc.
+
+typedef ODULong   ODTypeToken;    // Tokenized form of ODType
+
+typedef ODULong  ODID;        // Storage Unit IDs
+
+typedef ODULong	ODPersistentObjectID;	// Persistent Object ID used for scripting
+
+typedef ODType    ODValueType;    // Used to identify the type of the value, e.g., TEXT, PICT and so
+                    //  on. Obviously, the type doesn't need to be an OSType.
+
+typedef ODSLong  ODError;      // >= 32-bit exception code
+
+typedef ODULong  ODToken;      // >= 32-bit unsigned value for tokens
+
+typedef ODULong  ODSize;      // >= 32-bit unsigned value for size
+
+typedef ODULong   ODInfoType;    // The type for the part info stored in a frame
+
+typedef ODULong  ODFlags;      // >= 32-bit unsigned value for flags
+
+typedef sequence<octet> ODByteArray;	// ODByteArray should be used for foreign types larger than 4 bytes
+										// and for variable length data in general
+
+
+typedef ODByteArray ODContainerID;
+typedef ODISOStr ODContainerType;
+
+typedef ODType   ODObjectType;
+
+typedef ODType   ODFocusType;      // This is a string, which can be tokenized
+
+typedef ODByteArray    ODActionData;      // Action data for undo/redo
+
+
+enum ODFramePosition
+{
+  kODFrameBehind,
+  kODFrameInFront
+};
+
+enum ODTraversalType
+{
+  kODTopDown,
+  kODBottomUp,
+  kODChildrenOnly
+};
+
+enum ODSiblingOrder
+{
+  kODFrontToBack,
+  kODBackToFront
+};
+
+enum ODNSTypeSpec
+{
+  kODNSDataTypeODObject,
+  kODNSDataTypeODValue
+};
+
+enum ODRespectMarksChoices
+{ 
+  kODDontRespectMarks,
+  kODRespectMarks 
+};
+
+enum ODActionType
+{
+  kODSingleAction,
+  kODBeginAction,
+  kODEndAction
+};
+
+
+
+//==============================================================================
+// Imaging Types
+//==============================================================================
+
+typedef ODSLong     ODFixed;		// 16.16 fixed-point value
+typedef ODSLong		ODFract;		//  2.30 fixed-point value
+
+struct ODMatrix       // Transform matrix for translation, scaling,
+{ 						// skewing, rotation or any combination.
+  ODFixed m[3][3];    // Same as "mapping" in QuickDraw GX.
+};
+
+typedef ODSShort     ODGraphicsSystem;    // Type of graphics system
+	   
+typedef ODSShort ODTransformType;
+
+enum ODPlatformCanvasType
+{
+  kODNoPlatformCanvas,
+  kODPlatformStandardCanvas,
+  kODPlatformWindowCanvas
+};
+
+
+enum ODGeometryMode {
+	kODLoseGeometry,			// Toss out geometric info to save time or space.
+	kODPreserveGeometry,		// Preserve geometric info as long as possible
+	kODNeedsGeometry			// Must keep geometric info.
+};
+
+enum ODLinkStatus
+{
+  kODInLinkDestination,
+  kODInLinkSource,
+  kODNotInLink
+};
+
+enum ODHighlight{
+	kODNoHighlight,
+	kODFullHighlight,
+	kODDimHighlight
+};
+
+//# For ODDragAndDrop
+enum  ODDropResult
+{
+	kODDropFail,
+	kODDropCopy,
+	kODDropMove,
+#ifdef _PLATFORM_OS2_
+	kODDropUnfinished,
+	kODDropLink
+#else  // _PLATFORM_OS2_
+	kODDropUnfinished
+#endif // not _PLATFORM_OS2_
+};
+
+
+//# For ODLink
+
+typedef ODULong	ODLinkKey;
+
+
+//# For ODTranslation
+
+enum ODTranslateResult {
+	kODCannotTranslate,
+	kODCanTranslate
+};
+
+typedef ODULong ODPlatformTypeSpace;
+
+//# For ODStorageUnit
+
+
+
+typedef void*	ODValue;
+typedef ODID	ODValueIndex;
+typedef ODID	ODStorageUnitID;
+
+const	ODULong kODStorageUnitRefSize = 4;
+typedef ODUByte ODStorageUnitRef[kODStorageUnitRefSize];
+
+typedef ODULong ODStorageUnitKey;
+
+typedef ODISOStr  ODPropertyName;
+typedef ODISOStr  ODStorageUnitName;
+typedef ODULong ODPositionCode;
+
+//# For ODDocument
+
+typedef  ODID		ODDocumentID;
+
+//# For ODDraft
+
+enum ODPurgePriority {
+	kODInvisibleBlocks,
+	kODAllBlocks,
+	kODVisibleBlocks
+}; 
+
+enum ODCloneKind {
+	kODCloneCopy,
+	kODCloneCut,
+	kODClonePaste,
+	kODCloneDropCopy,
+	kODCloneDropMove,
+	kODCloneToLink,
+#ifdef __PRIVATE__
+	kODCloneFromLink,
+	kODCloneAll,
+	kODCloneToFile
+#else
+	kODCloneFromLink
+#endif
+};
+
+enum ODDraftPermissions {
+	kODDPNone,
+	kODDPTransient,
+	kODDPReadOnly,
+	kODDPSharedWrite,
+	kODDPExclusiveWrite
+};
+
+typedef	ODID	ODDraftID;
+#ifdef _PLATFORM_OS2_
+typedef ODID	ODLinkID;
+#endif // _PLATFORM_OS2_
+typedef	ODISOStr	ODDraftName;
+
+
+//# moved from ErrorDef.idl (NO TYPES/STRUCTS/CLASSES SHOULD BE IN .DEF FILES)
+
+exception ODException {
+	ODError	error;
+	char	message[256];		// $$$$$ Do we really need this field???
+};
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_TYPES)
+#pragma somemittypes off
+#endif
+
+module OpenDoc_Global_TypesB 
+{
+	const string OpenDoc_Types_Version = "1.0.";
+};
+
+#endif //# _ODTYPESB_
+

@@ -1,0 +1,147 @@
+/* @(#)Z 1.7 com/src/binding/idl/ODBindng.idl, odconfig, od96os2, odos29646d 96/11/15 15:24:44 (96/10/29 09:15:27) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odconfig
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//# <OS2>  04/28/95 JSO  Port B1C16 - Apple change <5>              */
+//# <OS2>  12/14/94 JSO  Port B1C7                                  */
+//# <OS2>   8/27/94 MAP  Port A8C3                                  */
+//#******************************************************************/
+//#
+//#  File:    ODBndngB.idl
+//#
+//#  Contains:  Interface file for ODBinding class
+//#
+//#  Owned by:  Caia Grisar
+//#
+//#  Copyright:  1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#  Change History (most recent first):
+//#
+//#     <6>   5/17/95  VL    1170098: Added private-by-convention
+//#                  ConstructNoPart.
+//#     <5>   3/24/95  CG    #1225900: InitBinding is private now.
+//#     <4>  12/13/94  CG    #1206024: Added function prefix.
+//#     <3>   8/24/94  CG    #1181622: Updated file ownership.
+//#     <2>   6/20/94  CG    Added fBinding, removed fHeap.
+//#     <1>   6/10/94  CG    first checked in
+//#  To Do:
+//#
+#else
+//#  Copyright:  1993-1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODBINDNG_
+#define _ODBINDNG_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface ODBinding;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+interface ODSession;
+interface ODStorageUnit;
+interface ODPart;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken Binding;
+#endif
+
+//=====================================================================================
+// ODBinding
+//=====================================================================================
+
+interface ODBinding : ODObject
+{
+#ifdef __PRIVATE__
+  void InitBinding(in ODSession session);
+  ODPart  ConstructNoPart();
+#endif
+  ODEditor ChooseEditorForPart(in ODStorageUnit thePartSU, in ODType newKind );
+  ODContainerSuite GetContainerSuite(in ODContainerType containerType);
+
+#ifdef __SOMIDL__
+  implementation
+  {
+    functionprefix = ODBinding;
+
+  override:
+      somInit,
+    somUninit,
+    Purge;
+
+    releaseorder:
+#ifdef __PRIVATE__
+    InitBinding,
+    ConstructNoPart,
+#else
+    reserved1,
+    reserved2,
+#endif
+    ChooseEditorForPart,
+    GetContainerSuite;
+
+  majorversion = 1; minorversion = 0;
+
+    #ifdef __PRIVATE__
+     passthru C_xih =
+      ""
+    "class Binding;"
+    "";
+    ODSession       fSession;
+    Binding*      fBinding;
+    #endif
+  };
+#endif
+};
+
+#endif // _ODBINDNG_

@@ -1,0 +1,365 @@
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27,94
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+// @(#) 1.16 com/src/storage/idl/LinkSpec.idl, oddataxfer, od96os2, odos29646d 8/2/96 09:04:49 [ 11/15/96 15:27:53 ]
+#ifdef __PRIVATE__
+//#
+//#     File:           LinkSpec.idl
+//#
+//#     Contains:       Class definition for ODLinkSpec
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <11>     8/15/95        CC              1275241: IDL review.
+//#             <10>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#              <9>     7/14/95        TJ              Made Some TypeDefs into Structs so SOM Slim
+//#                                                                     can get there correct Sizes.
+//#              <8>      4/5/95        CSL             #1221461: Fix number of reserved methods
+//#              <7>     3/10/95        CC              1225926: Override FromThisDraft().
+//#              <6>     1/27/95        TJ              Removed interface ODAppleEvent. Changed
+//#                                                                     ODAppleEvent to AppleEvent in WriteTo and
+//#                                                                     changed ODAppleEvent to AppleEvent* in
+//#                                                                     ReadFrom.
+//#              <5>     1/27/95        VL              Added interface ODAppleEvent.
+//#              <4>    12/15/94        CC              1205709 LinkSpec.idl - Removed GetPart(), ,
+//#                                                                     GetData(), and GetDataSize() methods.
+//#              <3>     7/27/94        CC              Removed GetProcessLaunchDate, added
+//#                                                                     FromThisDraft, changed GetProcessID to
+//#                                                                     GetOriginatingProcessID.
+//#              <2>     6/21/94        CC              Added functionprefix.
+//#              <1>      6/8/94        CG              first checked in
+//#              <6>      6/8/94        CC              Change AppleEvent to ODAppleEvent.
+//#              <5>      6/7/94        RR              Privatise change log
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINKSPEC_
+#define _LINKSPEC_
+
+#ifndef _LINKSPCB_
+#include "LinkSpcB.idl"
+#endif
+
+#ifdef _PLATFORM_OS2_
+#ifndef _IODDEFS_
+#include <IODDefs.idl>
+#endif
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+#ifdef _PLATFORM_OS2_
+#ifdef __PRIVATE__
+interface IODLinkRegistry;
+interface IODLinkService;
+interface IODLinkTargetToLinkSource;
+interface IODLinkTarget;
+#endif
+#endif // _PLATFORM_OS2_
+
+interface  ODLinkSpec;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface  ODStorageUnit;
+interface  ODDraft;
+interface  ODPart;
+
+#ifdef __PRIVATE__
+
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+struct ProcessSerialNumber {
+        ODULong hi;
+        ODULong lo;
+};
+typedef somToken AppleEvent;
+
+#ifdef _PLATFORM_WIN32_
+typedef somToken LPVOID;
+typedef somToken FILETIME;
+#endif //# _PLATFORM_WIN32_
+
+#endif //# __PRIVATE__
+
+//==============================================================================
+// ODLinkSpec
+//==============================================================================
+
+interface ODLinkSpec :  ODBaseLinkSpec
+{
+#ifdef __PRIVATE__
+#ifndef _PLATFORM_OS2_
+        void InitLinkSpec(in ODPart part, in ODByteArray partData);
+#endif // _PLATFORM_OS2_
+        void GetOriginatingProcessID(out ProcessSerialNumber psn);
+
+#ifdef _PLATFORM_MACINTOSH_
+
+        void WriteToAppleEvent(in AppleEvent* theAppleEvent);
+
+        void ReadFromAppleEvent(in AppleEvent* theAppleEvent);
+
+#endif //# _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_OS2_
+
+    enum Value {PERSISTENT_LINKSPEC_VALUE,
+                TRANSIENT_LINKSPEC_VALUE};
+  // State machine for use by ODL:
+  // A transient Linkspec (ODLinkSpec) will use states {U, TI, P, T}
+  // A persistent Linkspec (IODPersistentLinkSpec) will use states {U, PI, P}
+    enum State {UNINIT,         // U state -- just after new or
+                                //         ReleaseAll
+                TRANSIENT_INIT, // TI state -- just after CreateLinkSpec
+                                //         A part SUID exists.
+                                //         Can either Write, in which case
+                                //         part SUID is assumed to be a source;
+                                //         or Read, in which case the data
+                                //         read defines source part, and
+                                //         part SUID is assumed to be target
+                                //         Not used by PersistentLinkSpec
+                PERSISTENT_INIT,// PI state -- just after CreatePersistentLinkSpec(null, ...)
+                                //         PI state is just like TI state except
+                                //         that if a source Part does a Write,
+                                //         the PersistentLinkSpec is first converted
+                                //         into a PERSISTENTLINKABLE spec by
+                                //         calling Draft::GetRegistryAndLinkIDFromTSpec
+                                //         Not used by Transient LinkSpec
+                TRANSIENTLINKABLE, // T state-- just after reading transient
+                                   //          value from a SU (not used
+                                   //          by PersistentLinkSpec; these
+                                   //          LinkSpecs always convert
+                                   //          transient values to persistent
+                                   //          when reading them in)
+                PERSISTENTLINKABLE // P state-- just after reading persistent
+                                   //          value from a SU
+                                   //          (or, for persistent LSpec,
+                                   //          after creation by draft when
+                                   //          a LinkSource was provided)
+               };
+      // Can issue Write from states PI, TI, T, P
+      // Can issue Draft::GetLink from states T, P
+      // Can issue Read from any state except U
+      //     Transient Linkspecs will read transient value and go to T
+      //                                or persistent value and go to P
+      //     If state is T or P, old value will be thrown away first
+      //     Persistent Linkspecs will read transient value and convert, go to P
+      //                                or persistent value and go to P
+      //     If already was in P, first throw away old value, go back to PI
+
+    void EstablishLink (in IODLinkTarget linkTrgt,
+                        in  ODULong pid,
+                        in  ODLinkConnectionData trgtPartDesc,
+                        in  IODLinkService trgtLinkService,
+                        out ODStorageUnitID trgtPartSUID,
+                        out ODLinkID linkID,
+                        out IODLinkTargetToLinkSource linkSrc,  /* should be IODVirtualLinkSource */
+                        out ODLinkConnectionID trgtID,
+                        out ODBoolean isLocal,
+                        out ODBoolean trackTrgt,
+                        out ODISOStr asName);
+      // Called in LinkTarget::EstablishLink to establish a new link with the
+      //   source part.
+      // If aState is TRANSIENTLINKABLE, it internalizes fSourceLinkService and
+      //   invokes its EstablishLinkFromTSpec method.
+      // If aState is PERSISTENTLINKABLE, it internalizes aLinkRegistry and
+      //   queries the LinkRegistry for the reference of the LinkSource to
+      //   invokes its AddTarget method.
+
+
+    void InitLinkSpec (in IODDSOMExternalizedID linkService,
+                       in ODPart part,
+                       in ODByteArray data);
+      // Called in Draft::CreateLinkSpec to initialize the LinkSpec after it
+      //   is created.
+      // If caller is the draft of a source part, it must provide the
+      //   linkService and source partSUID for call back to establish a link.
+      // If caller is the draft of a target part, it only needs to provide
+      //   the target partSUID for the LinkSpec to query the part attributes.
+     // In either case the TI state will be entered.
+     //
+    void VoidLinkSpec ();
+      // Called to void this LinkSpec.
+
+    void ConvertToPersistent();
+      // Called to convert a Transient Linkspec to a Persistent one
+
+    void GetLinkSourceConnectionData (out ODLinkConnectionData* srcConnData);
+      // Called by the draft to retrieve the description of the source content
+
+#endif
+
+#ifdef _PLATFORM_WIN32_
+
+        void UseItemName( in char *pszItemName );
+
+        char *WriteLinkSpecString();
+
+        void ReadLinkSpecString( in char *pHexDigit );
+
+        void *GetMoniker();
+
+        void VoidLinkSpec();
+
+#endif //# _PLATFORM_WIN32_
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+implementation
+{
+        majorversion = 1; minorversion = 0;
+
+        functionprefix = ODLinkSpec;
+
+        override:
+                somUninit,
+        #ifdef _PLATFORM_WIN32_
+                somInit,
+        #endif
+        #ifdef _PLATFORM_OS2_
+                somInit,
+        #endif
+        #ifdef __PRIVATE__
+           #ifdef _PLATFORM_WIN32_
+                GetPart,
+                GetPartData,
+           #endif
+                FromThisDraft,
+        #endif
+                ReadLinkSpec,
+                WriteLinkSpec;
+
+        releaseorder:
+                #ifdef __PRIVATE__
+                        InitLinkSpec,
+                        GetOriginatingProcessID,
+                  #ifdef _PLATFORM_MACINTOSH_
+                        WriteToAppleEvent,
+                        ReadFromAppleEvent,
+                        reservedA,
+                        reservedB,
+                        reservedC;
+                  #endif //# _PLATFORM_MACINTOSH_
+                  #ifdef _PLATFORM_OS2_
+                        EstablishLink,
+                        VoidLinkSpec,
+                        ConvertToPersistent,
+                        GetLinkSourceConnectionData,
+                        ReservedA;
+                  #endif //# _PLATFORM_OS2_
+                  #ifdef _PLATFORM_WIN32_
+                        UseItemName,
+                        WriteLinkSpecString,
+                        ReadLinkSpecString,
+                        GetMoniker,
+                        VoidLinkSpec;
+                  #endif //# _PLATFORM_WIN32_
+                  #ifdef _PLATFORM_AIX_
+                        reservedA,
+                        reservedB,
+                        reservedC,
+                        reservedD,
+                        reservedE;
+                  #endif //# _PLATFORM_AIX_
+                #else
+                        reserved1,
+                        reserved2,
+                        reserved3,
+                        reserved4,
+                        reserved5,
+                        reserved6,
+                        reserved7;
+                #endif
+
+        #ifdef __PRIVATE__
+                passthru C_xh =
+                        ""
+                        "#ifdef _PLATFORM_MACINTOSH_"
+                        "#ifndef __PROCESSES__"
+                        "#include <Processes.h>"
+                        "#endif"
+                        ""
+                        "#ifndef __APPLEEVENTS__"
+                        "#include <AppleEvents.h>"
+                        "#endif"
+                        "#endif"
+                        "";
+                passthru C_xh_after =
+                        ""
+                        "#ifdef _PLATFORM_OS2_"
+                        "#include <ioddefs.xh>"
+                        "#endif"
+                        "";
+                ProcessSerialNumber fProcessID;
+          #ifdef _PLATFORM_WIN32_
+                FILETIME                                fProcessLaunchDate;
+          #else
+                ODULong                         fProcessLaunchDate;
+          #endif // _PLATFORM_WIN32_
+          #ifdef _PLATFORM_WIN32_
+                ODPart                          fPart;
+                ODByteArray                     fPartData;
+                LPVOID                          fpmkFull;
+          #endif //# _PLATFORM_WIN32_
+          #ifdef _PLATFORM_OS2_
+                ODByteArray           fData;              // Set at TI/PI/T states
+                IODDSOMExternalizedID fSourceLinkService; // Set at TI/PI/T states
+                ODStorageUnitID       fTargetPartSUID;    // Set at T,P states
+                ODStorageUnitID       fSourcePartSUID;    // Set at TI/PI/T states
+                ODLinkID              fLinkID;            // Set at P state
+                ODISOStr              fASName;            // Set at P state
+                ODULong               fVersion;           // Value is kODOS2
+                State                 fState;             // Current state
+
+          #endif //# _PLATFORM_OS2_
+        #endif //# __PRIVATE__
+
+};
+#endif //# _PLATFORM_MACINTOSH_
+#endif //# __SOMIDL__
+};
+
+#endif //# _LINKSPEC_
+

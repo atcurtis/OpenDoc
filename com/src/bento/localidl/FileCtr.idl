@@ -1,0 +1,134 @@
+/* @(#)Z 1.6 com/src/bento/localidl/FileCtr.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:47 (96/10/29 09:14:45) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		FileCtr.idl
+//#
+//#	Contains:	class definition for Bento File Container
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <6>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		 <5>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <4>	 9/23/94	VL		1184272: ContainerID is now a sequence of
+//#									octets.
+//#		 <3>	 6/30/94	CC		Added private methods GetCMContainer() &
+//#									GetHandlers() and private fields
+//#									fCMContainer & fHandlers.
+//#		 <2>	 6/15/94	CC		Added functionprefix to eliminate Undefined
+//#									entry, name: "_%CREATE".
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _FILECTR_
+#define _FILECTR_
+
+#ifndef _CMCTR_
+#include "CMCtr.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface   ODFileContainer;
+
+#ifdef __PRIVATE__
+//==============================================================================
+// Implementation Types
+//==============================================================================
+typedef somToken AliasHandle;
+typedef somToken PlatformFile;
+#endif
+
+//==============================================================================
+// ODContainer
+//==============================================================================
+
+interface ODFileContainer  :  ODBentoContainer 
+{
+#ifdef __SOMIDL__
+	implementation
+	{
+	majorversion = 1; minorversion = 0;
+	functionprefix = ODFileContainer;
+	override:
+		somUninit,
+		Purge,
+		GetID,
+		GetName,
+		SetName,
+		#ifdef __PRIVATE__
+			InitContainer,
+			GetCMContainer,
+			GetHandlers,
+			Create,
+			Open,
+			Close;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6;
+		#endif
+
+	#ifdef __PRIVATE__
+		passthru C_xih = 
+				"class ODBentoHandlers;"
+				"#include <CMAPI.h>"
+				"#ifdef _PLATFORM_MACINTOSH_"
+				"#include <Aliases.h>"
+				"#endif"
+				"class PlatformFile;"
+				"";
+		CMContainer			fCMContainer;
+		ODBentoHandlers*	fHandlers;
+#ifdef _PLATFORM_MACINTOSH_
+		AliasHandle			fAlias;
+#endif
+		PlatformFile*		fPlatformFile;
+	#endif
+	};
+#endif
+};
+
+
+#endif  // _FILECTR_

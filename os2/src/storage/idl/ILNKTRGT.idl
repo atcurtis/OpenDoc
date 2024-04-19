@@ -1,0 +1,126 @@
+/* @(#)Z 1.5 os2/src/storage/idl/ILNKTRGT.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:29:38 (96/08/26 13:42:17) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*                                                                  */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/********************************************************************/
+
+
+#ifndef _ILNKTRGT_
+#define _ILNKTRGT_
+
+#include <Link.idl>
+#include <IODDefs.idl>
+
+interface IODLinkService;
+interface IODLinkTargetToLinkSource;
+interface ODLinkSpec;
+
+interface IODLinkTarget : ODLink
+{
+
+  #ifdef __PRIVATE__
+
+    void EstablishLink (in ODLinkSpec linkSpec,
+                        in  IODLinkService trgtLinkService);
+      // Called in Draft::GetLink to establish a link from the given LinkSpec.
+
+    void InitLinkTarget (in ODStorageUnit su,
+                         in IODFileName pathName); /* name from which doc was read */
+      // Called in Draft::GetLink to initialize the LinkTarget after it is
+      //   created.
+
+    void InitLinkTargetFromStorage (in ODStorageUnit su,
+                                    in IODFileName pathName); /* name from which doc was read */
+      // Called in Draft::GetLink to initialize the LinkTarget from a
+      //   pre-existing storage unit.
+
+    oneway void RemoveLink ();
+      // Called by LinkSource to inform that source Part has broken the link.
+
+  #endif //__PRIVATE__
+
+  #ifdef __SOMIDL__
+    implementation {
+      override:
+        #ifdef __PRIVATE__
+        GetLinkSourceConnectionData,
+        GetConnectionData,
+        #endif //__PRIVATE__
+        somInit,
+        somUninit,
+        Externalize,
+        CloneInto,
+        GetUpdateID,
+        GetChangeTime,
+        GetContentStorageUnit,
+        GetLinkSource,
+        Lock,
+        RegisterDependent,
+        Release,
+        ReleaseAll,
+        ShowSourceContent,
+        Unlock,
+        UnregisterDependent,
+        SetDescription,
+        GetDescription,
+        IsRegistered;
+
+      releaseorder:
+        #ifdef __PRIVATE__
+          EstablishLink,
+          InitLinkTarget,
+          InitLinkTargetFromStorage,
+          RemoveLink;
+        #else
+          reserved1,
+          reserved2,
+          reserved3,
+          reserved4;
+        #endif //__PRIVATE__
+
+      #ifdef __PRIVATE__
+        ODLinkConnectionID        fConnID;
+        ODBoolean                 fIsLocal;
+        ODLinkID                  fLinkID;
+        IODLinkTargetToLinkSource fLinkSrc;
+        ODULong                   fNumOfRegParts;
+        ODLinkConnectionData       fTrgtConnData;
+        ODStorageUnitID           fTrgtPartSUID;
+        ODBoolean                 fTracked;
+        ODULong                   fPID;
+        ODISOStr                  fASName;
+        ODBoolean                 fIsRegistered;
+      #endif //__PRIVATE__
+    };
+  #endif //__SOMIDL__
+};
+
+#endif //_ILNKTRGT_

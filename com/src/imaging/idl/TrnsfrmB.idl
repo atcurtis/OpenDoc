@@ -1,0 +1,233 @@
+/* @(#)Z 1.6 com/src/imaging/idl/TrnsfrmB.idl, odimaging, od96os2, odos29646d 96/11/15 15:25:07 (96/10/29 09:26:11) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//#          3/15/96 jab  Removed double underscores from function  */
+//#                       prefix.                                   */
+//#          2/22/96 jab  Merge DR4 with OS/2 Feb.13 drop.          */
+//#  146581 12/10/95 map  IDL validation                            */
+//#  137664  9/21/95 aml  API changes for TransformPoint and        */
+//#                       InvertPoint                               */
+//#  133968  8/23/95 jso  Port dr3                                  */
+//#  120349  5/15/95 map  Fix problem with //# comment on #endifs   */
+//#  120349  5/15/95 map  Fix up IDL copyright                      */
+//#******************************************************************/
+//#
+//#	File:		TrnsfrmB.idl
+//#
+//#	Contains:	ODBaseTransform, a coordinate transformation.
+//#
+//#	Owned by:	Jens Alfke
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<11>	 9/13/95	DM		1277216 GM:API return no ODPoints nor
+//#									ODPolygons
+//#		<10>	  9/8/95	jpa		IDL cleanup [1281687]
+//#		 <9>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <8>	12/20/94	jpa		Add composite xform support [1205794]
+//#		 <7>	 12/5/94	jpa		Added __ to fn prefix for legibility.
+//#		 <6>	  9/9/94	jpa		Descend from ODRefCntObject. [1185660]
+//#		 <5>	 8/17/94	jpa		Added "functionprefix" directive. [1181512]
+//#		 <4>	  8/8/94	jpa		Added NewTransform [1179574]
+//#		 <3>	 6/30/94	jpa		Added BuildInverse method.
+//#		 <2>	  6/8/94	jpa		Privatized change history.
+//#		 <1>	  6/8/94	jpa		first checked in
+//#		 <2>	 5/26/94	jpa		Tweaked IDL.
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _TRNSFRMB_
+#define _TRNSFRMB_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"  
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODBaseTransform;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODTransform;
+interface ODShape;
+interface ODStorageUnit;
+
+//==============================================================================
+// ODTransform
+//==============================================================================
+
+interface ODBaseTransform :  ODRefCntObject
+{
+  //#---------------------------------
+  //# factories:
+
+	ODTransform		NewTransform();
+    ODTransform		Copy();
+
+  //#---------------------------------
+  //# getters:
+
+    ODTransformType	GetType();
+    void			GetOffset(out ODPoint offset);
+    void			GetPreScaleOffset(out ODPoint offset);
+    void			GetScale(out ODPoint scale);
+    void			GetMatrix(out ODMatrix matrix);
+    ODBoolean		HasMatrix();
+
+    ODBoolean		IsSameAs(in ODTransform compareTransform);
+
+  //#---------------------------------
+  //# setters:
+
+    ODTransform		Reset();
+    ODTransform		SetMatrix(in ODMatrix matrix);
+    ODTransform		CopyFrom(in ODTransform sourceTransform);
+  
+  //#---------------------------------
+  //# geometric operations:
+  
+    ODTransform		SetOffset(in ODPoint point);
+    ODTransform		MoveBy(in ODPoint point);
+    ODTransform		ScaleBy( in ODPoint scale);
+    ODTransform		ScaleDownBy( in ODPoint scale);
+
+    ODTransform		Invert( );
+    ODTransform		PreCompose(in ODTransform transform);
+    ODTransform		PostCompose(in ODTransform transform);
+
+  //#---------------------------------
+  //# geometry operations with points & shapes:
+
+    void			TransformPoint(inout ODPoint point);
+    void			InvertPoint(inout ODPoint point);
+  
+    void			TransformShape(in ODShape shape);
+    void			InvertShape(in ODShape shape);
+  
+  //#---------------------------------
+  //# input / output:
+  
+    void			WriteTo(in ODStorageUnit storageUnit);
+    void			ReadFrom(in ODStorageUnit storageUnit);
+
+#ifdef __PRIVATE__
+
+	//# Private to implementation
+	void			InitBaseTransform( );
+	void			BuildInverse( );
+	
+#endif
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		override:
+			somUninit,
+			Purge,
+			Release;
+			
+		releaseorder:
+			GetType,
+			GetOffset,
+			GetPreScaleOffset,
+			GetScale,
+			GetMatrix,
+			HasMatrix,
+			IsSameAs,
+			Reset,
+			SetMatrix,
+			Copy,
+			CopyFrom,
+			SetOffset,
+			MoveBy,
+			ScaleBy,
+			ScaleDownBy,
+			Invert,
+			PreCompose,
+			PostCompose,
+			TransformPoint,
+			InvertPoint,
+			TransformShape,
+			InvertShape,
+			WriteTo,
+			ReadFrom,
+			NewTransform,
+		#ifdef __PRIVATE__
+			InitBaseTransform,
+			BuildInverse;
+		#else
+			reserved1,
+			reserved2;
+		#endif
+
+		majorversion = 1; minorversion = 0;
+				
+		functionprefix = ODBaseTransform;
+		
+    #ifdef __PRIVATE__
+		ODTransformType	fType;
+      	ODMatrix		fMatrix;
+      	ODMatrix*		fInverseMatrix;
+		ODBaseTransform	fPreTransform;
+		ODBaseTransform	fPostTransform;
+    #endif
+  };
+#endif
+};
+
+#endif //# _TRNSFRMB_
+
+

@@ -1,0 +1,750 @@
+/* @(#) 1.24 com/src/include/idl/ErrorDef.idl, odcore, od96os2, odos29646d 10/30/96 18:06:13 [11/15/96 15:25:33] */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+
+#ifdef __PRIVATE__
+//#
+//#     File:           ErrorDef.idl
+//#
+//#     Contains:       Error constants
+//#
+//#     Owned by:       Nick Pilch
+//#
+//#     Copyright:      (r) 1994-95 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <65>    04/23/96        brr               21467: Added kODErrUnknownID
+//#             <64>    04/22/96        brr               21316: Added kODErrDuplicateID and kODErrNotEnoughSubmenuIDs
+//#             <63>    10/24/95        jpa             1293441: VL: Added kODErrFatalContainerErr.
+//#             <62>     10/9/95        VL              1288571: Moved
+//#                                                                     kODErrNoSysTranslationFacility from
+//#                                                                     Translt.cpp.
+//#             <61>     4/10/95        NP              1287830:Remove kODErrStorageUnitLocked.
+//#             <60>     9/18/95        CG              1285279 GM: kODPartNotWrapper should be
+//#                                                                     kODErrPartNotWrapper.
+//#             <59>     9/12/95        DM              1278291: remove kODErrInvalidName
+//#             <58>     9/12/95        JBS             1282719 added kODErrInvalidIterator
+//#             <57>      9/8/95        Te              Bumped RlShlDef end of range in use to
+//#                                                                     -29815
+//#             <56>      9/8/95        VL              1282012: Removed kODErrDraftNotExists and
+//#                                                                     kODErrContainerNotExists.
+//#             <55>      9/8/95        JBS             1281770 added kODErrInvalidLinkStatus
+//#             <54>      9/8/95        jpa             Use officially assigned Mac OSErr codes
+//#                                                                     [1281354]. Added kODErrAlreadyNotified
+//#                                                                     [1282486]
+//#             <53>      9/1/95        CC              1278590: Added kODErrCannotEstablishLink.
+//#             <52>     8/31/95        JBS             1278337 added kODErrCanvasHasNoOwner
+//#             <51>     8/30/95        CG              #1278294 FB2:Moved
+//#                                                                     kODErrCannotFindSystemEditorsFolder and
+//#                                                                     kODErrCannotFindOpenDocLibrariesFolder from
+//#                                                                     here to RlShlDef.h
+//#             <50>     8/25/95        CC              1264154: Added
+//#                                                                     kODErrIllegalClipboardCloneKind.
+//#             <49>     8/25/95        NP              1263127: Remove kODErrCannotUndo.
+//#             <48>     8/24/95        EL              1278212: move private error code to
+//#                                                                     BentoDef.h.
+//#             <47>     8/22/95        eeh             1278280: error codes moved to RlShlDef.h
+//#             <46>     8/21/95        VL              1278330, 1278315: Added
+//#                                                                     kODErrIllegalNullContainerInput,kODErrIlleg
+//#                                                                     alNullDocumentInput,kODErrIllegalNullDraftI
+//#                                                                     nput,kODErrIllegalNullValueTypeInput,kODErr
+//#                                                                     IllegalNullIDInput,kODErrSUValueDoesNotExis
+//#                                                                     t,kODErrIllegalNonTopmostDraft.
+//#             <45>     8/21/95        RR              #1271358 Added kODErrInvalidCommandID
+//#             <44>     8/21/95        NP              1274946: Final obsoleted/renamed error code
+//#                                                                     changes
+//#             <43>     8/18/95        NP              1274946: Much change. Moved obsolete and
+//#                                                                     private codes to a __PRIVATE__ section.
+//#             <42>     8/16/95        NP              1274946: ErrorDef.idl problems. (partial).
+//#                                                                     1274949: ErrorDef.idl additions. (partial)
+//#             <41>     7/24/95        CC              1154714: Added
+//#                                                                     kODErrCannotRegisterDependent.
+//#             <40>     7/20/95        CC              1260342: Added
+//#                                                                     kODErrBackgroundClipboardClear.
+//#             <39>     6/23/95        JBS             1238245 add kODErrIllegalRecursiveEmbedding
+//#             <38>     6/23/95        JBS             1243657 added kODErrNotRootFrame
+//#             <37>     6/17/95        CC              1259902: Added kODErrUnknownUpdateID.
+//#                                                                     1259139: Added kODErrNoLinkContent.
+//#             <36>      6/1/95        jpa             Added kODErrCantLoadSOMClass [1242839]
+//#             <35>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <34>     5/18/95        CC              1238898: Added kODErrNullDestinationFrame.
+//#                                                                     1250280: Added  kODErrNullLinkInfoInput,
+//#                                                                     kODErrNullLinkInfoResultInput, and
+//#                                                                     kODErrNullPasteAsResultInput. Renamed
+//#                                                                     kODErrNullFacetInput.
+//#             <33>      5/2/95        CC              1207493: Added kODErrMoveIntoSelf.
+//#             <32>      5/2/95        VL              1243122: Define kODErrValueIndexOutOfRange.
+//#             <31>      5/2/95        JBS             1243361 kODErrIteratorNotInitialized;
+//#                                                                     1243371 kODErrIllegalNullFacetInput,
+//#                                                                     kODErrIllegalNullFrameInput
+//#             <30>     4/28/95        eeh             1244410: define kODErrInvalidExtension and
+//#                                                                     kODErrUnknownExtension
+//#             <29>     4/27/95        eeh             1237283: added kODErrCannotUndo
+//#             <28>     4/26/95        CG              1240687 OpenDoc gives a cryptic error when
+//#                                                                     there is no Editors folder.
+//#             <27>     4/13/95        CG              #1221869: Added
+//#                                                                     kODErrCannotFindShellPlugInsFolder.
+//#             <26>      4/5/95        CG              #1216169 BB, #1221135: When Editors folder
+//#                                                                     or OpenDoc Libraries folder is missing,
+//#                                                                     OpenDoc quits and displays error.
+//#             <25>      4/3/95        JBS             1209506 added kODErrDoesNotUndo,
+//#                                                                     kODErrNoPromises, kODErrDoesNotDrop,
+//#                                                                     kODErrDoesNotLink, kODPartNotWrapper,
+//#                                                                     kODErrIllegalNullTokenInput,
+//#                                                                     kODErrIllegalNullShapeInput,
+//#                                                                     kODErrIllegalNullStorageUnitInput
+//#             <24>      3/9/95        VL              1220320: Moved public error codes from
+//#                                                                     Bento to here.
+//#             <23>     2/16/95        CG              #1210975 BB: $$$$$ Make that
+//#                                                                     kODErrPartInUse.
+//#             <22>     2/16/95        CG              #1210975 BB: $$$$$ Added kODPartInUse.
+//#             <21>     2/16/95        Te              #1210979 5-$ Bugs need to be evaluated in
+//#                                                                     Shell.
+//#                                                                     Added kODErrCouldNotBindForeignDocument,
+//#                                                                     kODErrSystemVolumeIsFull,
+//#                                                                     kODErrRefCountNotEqualOne
+//#                                                                     Renamed kODErrAllVolumesAreFull to
+//#                                                                     kODErrAllWritableVolumesAreFull
+//#             <20>      2/7/95        CC              1216124: Added kODErrNullFacet.
+//#             <19>     1/27/95        Te              1209735 Resolve $$$$$ comments in
+//#                                                                     PlfmFile.cpp
+//#                                                                     Added kODErrAllVolumesAreFull,
+//#                                                                     kODErrVolumesIsFull,
+//#                                                                     kODErrDirectoryNotHaveWriteAccess,
+//#                                                                     kODErrCannotSaveACopyOntoCurrentDoc,
+//#                                                                     kODErrCannotSaveACopyOntoBusyDoc
+//#                                                                     kODErrFileClosed, kODErrFileOpened
+//#             <18>     1/25/95        jpa             Added kODErrSOMException for use in
+//#                                                                     Except.cpp [1211083]
+//#             <17>     1/19/95        CC              1210964 Added kODErrNoEditionManager,
+//#                                                                     kODErrCorruptLinkSource, kODErrCorruptLink,
+//#                                                                     kODErrCannotRevealLink,
+//#                                                                     kODErrCannotFindLinkSourceEdition,
+//#                                                                     kODErrCannotFindLinkSource,
+//#                                                                     kODErrAlreadyImportedLink, and
+//#                                                                     kODErrLinkAlreadyExported.
+//#             <16>     1/18/95        VL              Added kODErrInvalidObjectType,
+//#                                                                     kODErrInvalidPersistentObjectID,
+//#                                                                     kODErrIllegalNullStorageSystemInput.
+//#             <15>    12/25/94        Te              1191189 Eliminate duplicate Def.h, Def.xh
+//#                                                                     files.  Need to check this in to force the
+//#                                                                     reemission of the .xh file.
+//#             <14>    11/14/94        VL              1188257: Moved Bento errors to BenotDef.h.
+//#             <13>     11/1/94        CC              1190911 - Added kODErrInvalidCloneKind.
+//#             <12>     10/4/94        CC              1190307 - Added kODErrBrokenLink and
+//#                                                                     kODErrBrokenLinkSource.
+//#             <11>      9/1/94        Te              #1183054 Removed kODErrNameNotExists.
+//#                                                                     Documented Error Code usage & creation
+//#                                                                     policy.
+//#             <10>     8/31/94        Te              #1183129, #1183116, #1183119, #1183111:
+//#                                                                     Lots of ErrorCode cleanup.
+//#              <9>     8/30/94        CG              #1152929: Removed
+//#                                                                     kODErrInvalidFileContents.
+//#              <8>     8/18/94        Te              #1181622 Set Owned By: field to myself
+//#              <7>      8/3/94        CC              Removed clipboard not locked error.
+//#              <6>     7/21/94        VL              Added kODErrSubClassResponsibility.
+//#              <5>     6/15/94        jpa             Added ODError exception defn.
+//#              <4>      6/7/94        RR              Privatise change log
+//#
+//#     To Do:
+//# In Progress:
+//#
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+
+#ifndef _ERRORDEF_
+#define _ERRORDEF_
+
+#ifndef _ODTYPESB_
+#include "ODTypesB.idl"
+#endif
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes on
+#endif
+
+//#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//# BEGIN-UNDER CONSTRUCTION
+//#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+//              Reserved for linking    -29860 to -29910
+
+#ifdef __PRIVATE__
+
+/*      Private error codes are found in the following files:
+                UtilErrs.h              -29849 .. -29830
+                Window.cpp              -29828 .. -29827
+                RlShlDef.h              -29826 .. -29815        [gap for future expansion]
+                BentoDef.h              -29809 .. -29789
+
+                AEHshTbl.h               -1724 ..  -1722        [part of AE err range]
+*/
+
+#endif //# __PRIVATE__
+
+
+
+//#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//# END-UNDER CONSTRUCTION
+//#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+//#=============================================================================
+//# General Errors including ODObject
+//#=============================================================================
+
+const ODError kODMinError                                               =       -29893; // Range of OD err codes
+#ifdef _PLATFORM_MACINTOSH_
+const ODError kODMinUsedError                                           =       -29756; //MAC only
+#endif //_PLATFORM_MACINTOSH_
+
+#if (defined _PLATFORM_WIN32_ || defined _PLATFORM_OS2_ || defined _PLATFORM_AIX_)
+//********************************************************************************
+const ODError kODMinUsedError                                           =       -29775;  // for WIN32, OS2, and AIX
+//
+// Attention IBM Developers!
+//
+// Lets keep assigned error code values semantically the same for each platform.
+// In other words, if WIN32 defines an error code that doesn't apply to OS/2, then
+// OS/2 should skip that error code number.  Therefore, kODMinUsedError is the same
+// for WIN32, OS2, and AIX.
+//
+
+#ifdef _PLATFORM_OS2_
+const ODError kODErrFacetPSnotAssocWithDC              = -29757; // OS/2 only
+#endif
+
+#if (defined _PLATFORM_WIN32_ || defined _PLATFORM_OS2_ || defined _PLATFORM_AIX_)
+const ODError kODErrFacetChangeToOrFromOnscreenDynamic = -29758;
+const ODError kODErrInvalidParameter                   = -29759;
+const ODError kODErrOnlyOwnerCanChangeCanvas           = -29760;
+#endif //_PLATFORM_WIN32_ || _PLATFORM_OS2_ || _PLATFORM_AIX_
+
+#ifdef _PLATFORM_WIN32_
+const ODError kODErrCannotExportToIDataObject           = -29761; // WIN32 only
+#endif
+
+//********************************************************************************
+#endif //_PLATFORM_WIN32_ || _PLATFORM_OS2_ || _PLATFORM_AIX_
+
+const ODError kODMaxError                                                       =       -29600;
+
+//# Currently unused slots: None
+
+const ODError kODNoError                                                        =       0;
+
+
+const ODError kODErrUndefined                                   =       -29600;
+
+//# NEW
+const ODError kODErrAlreadyNotified                                     =       -29601;
+
+const ODError kODErrIllegalNullInput                            =       -29602;
+
+const ODError kODErrIllegalNullDispatchModuleInput      =       -29603;
+const ODError kODErrIllegalNullFacetInput                       =       -29604;
+const ODError kODErrIllegalNullFrameInput                       =       -29605;
+const ODError kODErrIllegalNullPartInput                =       -29606;
+const ODError kODErrIllegalNullTransformInput           =       -29607;
+const ODError kODErrIllegalNullStorageSystemInput       =       -29608;
+const ODError kODErrIllegalNullTokenInput                       =       -29609;
+const ODError kODErrIllegalNullShapeInput                       =       -29610;
+const ODError kODErrIllegalNullStorageUnitInput         =       -29611;
+const ODError kODErrIllegalNullPropertyInput            =       -29612;
+const ODError kODErrIllegalNullSUCursorInput            =       -29613;
+const ODError kODErrIllegalNullContainerInput       =   -29614;
+const ODError kODErrIllegalNullDocumentInput            =       -29615;
+const ODError kODErrIllegalNullDraftInput                       =       -29616;
+const ODError kODErrIllegalNullValueTypeInput       =   -29617;
+const ODError kODErrIllegalNullIDInput                          =       -29618;
+
+//# NEW
+const ODError kODErrValueOutOfRange                                     =       -29619;
+
+//# NEW
+const ODError kODErrInsufficientInfoInParams            =       -29620;
+
+const ODError kODErrObjectNotInitialized                        =   -29621;
+
+const ODError kODErrOutOfMemory                                 =       -29622;
+
+const ODError kODErrNotImplemented                              =       -29623;
+
+//# NEW
+const ODError kODErrInvalidPersistentFormat                     =       -29624;
+
+const ODError kODErrSubClassResponsibility                      =       -29625;
+
+//#------------------------------------------------------------------------------
+//# ODObject (& subclasses)
+//#------------------------------------------------------------------------------
+
+const ODError kODErrUnsupportedExtension                =       -29626;
+const ODError kODErrInvalidExtension                    =       -29627;
+const ODError kODErrUnknownExtension                    =       -29628;
+const ODError kODErrInvalidObjectType                           =       -29629;
+const ODError kODErrInvalidPersistentObjectID           =       -29630;
+const ODError kODErrInvalidPersistentObject                     =       -29631;
+
+//#------------------------------------------------------------------------------
+//# RefCountObject (& subclasses)
+//#------------------------------------------------------------------------------
+
+const ODError kODErrZeroRefCount                                =       -29632;
+
+//# NEW
+const ODError kODErrRefCountGreaterThanZero             =       -29633;
+
+const ODError kODErrRefCountNotEqualOne                 =       -29634;
+
+//#------------------------------------------------------------------------------
+//# Iterators
+//#------------------------------------------------------------------------------
+
+const ODError kODErrIteratorOutOfSync                   =       -29635;
+const ODError kODErrIteratorNotInitialized              =       -29636;
+const ODError kODErrInvalidIterator                             =       -29755;
+
+//#==============================================================================
+//# Parts Return These Errors
+//#==============================================================================
+
+const ODError kODErrCannotEmbed                                 =       -29637;
+const ODError kODErrDoesNotUndo                                 =       -29638;
+const ODError kODErrNoPromises                                  =       -29639;
+const ODError kODErrDoesNotDrop                                 =       -29640;
+const ODError kODErrDoesNotLink                                 =       -29641;
+const ODError kODErrPartNotWrapper                      =       -29642;
+
+//#==============================================================================
+//# Core
+//#==============================================================================
+
+//#------------------------------------------------------------------------------
+//# ODNameSpaceManager, ODNameSpace
+//#------------------------------------------------------------------------------
+
+const ODError kODErrKeyAlreadyExists                    =       -29643;
+
+//# NEW
+const ODError kODErrInvalidNSName                                       =       -29644;
+
+//# NEW
+const ODError kODErrInvalidNSType                                       =       -29645;
+
+//#------------------------------------------------------------------------------
+//# PartWrapper
+//#------------------------------------------------------------------------------
+
+const ODError kODErrPartInUse                                           =       -29646;
+
+//#------------------------------------------------------------------------------
+//# PartWrapper
+//#------------------------------------------------------------------------------
+
+//# NEW
+const ODError kODErrInvalidITextFormat                          =       -29647;
+
+//#==============================================================================
+//# Imaging
+//#==============================================================================
+
+const ODError kODErrInvalidGraphicsSystem               =       -29648;
+
+//#------------------------------------------------------------------------------
+//# Shape
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNoShapeGeometry                             =       -29649; //# Shape has no polygon representation
+
+//#------------------------------------------------------------------------------
+//# Transform
+//#------------------------------------------------------------------------------
+
+const ODError kODErrTransformErr                                =       -29650; //# Illegal op on xform
+
+//# NEW
+const ODError kODErrInvalidPlatformShape                        =       -29651;
+
+//#==============================================================================
+//# Layout
+//#==============================================================================
+
+//#------------------------------------------------------------------------------
+//# Facet
+//#------------------------------------------------------------------------------
+
+const ODError kODErrCanvasNotFound                              =       -29652;
+
+const ODError kODErrUnsupportedFramePositionCode        =       -29653;
+
+const ODError kODErrInvalidFacet                                =       -29654;
+
+const ODError kODErrFacetNotFound                               =       -29655;
+const ODError kODErrCanvasHasNoOwner                    =       -29656;
+
+//#------------------------------------------------------------------------------
+//# Frame
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNotRootFrame                                        =       -29657;
+const ODError kODErrIllegalRecursiveEmbedding           =       -29658;
+
+const ODError kODErrInvalidFrame                                =       -29659;
+
+const ODError kODErrFrameHasFacets                      =       -29660;
+
+const ODError kODErrInvalidLinkStatus                   =       -29754;
+
+//#==============================================================================
+//# Memory
+//#==============================================================================
+
+const ODError kODErrInvalidBlock                                =       -29661;    //# bad heap or damaged object
+
+//#==============================================================================
+//# Messaging
+//#==============================================================================
+
+//#------------------------------------------------------------------------------
+//# Semantic Interface
+//#------------------------------------------------------------------------------
+
+//# NEW
+const ODError kODErrNotAnODToken                                =       -29662;
+
+//# NEW
+const ODError kODErrCantCountFromLists                          =       -29663;
+
+//#==============================================================================
+//# Storage
+//#==============================================================================
+
+const ODError kODErrUnsupportedPosCode                  =       -29664;
+const ODError kODErrInvalidPermissions                  =       -29665;
+
+const ODError kODErrCannotCreateContainer                       =       -29666;
+const ODError kODErrCannotOpenContainer                         =       -29667;
+
+//# NEW
+const ODError kODErrFatalContainerError                         =       -29756;
+
+//# NEW
+const ODError kODErrContainerDoesNotExist                       =       -29668;
+
+//# NEW
+const ODError kODErrDocumentDoesNotExist                        =       -29669;
+
+//# NEW
+const ODError kODErrDraftDoesNotExist                           =       -29670;
+const ODError kODErrDraftHasBeenDeleted                         =       -29671;
+
+const ODError kODErrInvalidStorageUnit                          =       -29672;
+
+//# NEW
+const ODError kODErrIllegalOperationOnSU                        =       -29673;
+
+//# NEW
+const ODError kODErrSUValueDoesNotExist                         =       -29674;
+
+//# NEW
+const ODError kODErrIllegalNonTopmostDraft                      =       -29675;
+
+//# NEW
+const ODError kODErrNoSysTranslationFacility            =       -29680;
+
+//#------------------------------------------------------------------------------
+//# Storage Unit
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNoValueAtThatIndex                  =       -29676;
+const ODError kODErrCannotAddProperty                           =       -29677;
+
+const ODError kODErrUnfocusedStorageUnit                =       -29678;
+const ODError kODErrInvalidStorageUnitRef               =       -29679;
+//#const ODError kODErrStorageUnitLocked                        =       -29680;
+const ODError kODErrInvalidStorageUnitKey               =       -29681;
+const ODError kODErrStorageUnitNotLocked                =       -29682;
+const ODError kODErrInvalidDraftKey                                     =       -29683;
+const ODError kODErrCloningInProgress                           =   -29684;
+const ODError kODErrValueIndexOutOfRange                        =   -29685;
+
+//# NEW
+const ODError kODErrInvalidValueType                            =       -29686;
+
+//# NEW
+const ODError kODErrIllegalPropertyName                         =       -29687;
+const ODError kODErrPropertyDoesNotExist                        =       -29688;
+
+//#------------------------------------------------------------------------------
+//# Draft
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNoDraftProperties                           =       -29689;
+const ODError kODErrCannotCreateFrame                           =       -29690;
+const ODError kODErrCannotAcquireFrame                  =       -29691;
+const ODError kODErrCannotCreatePart                    =       -29692; //# I hate this error.
+const ODError kODErrCannotAcquirePart                   =       -29693;
+const ODError kODErrCannotCreateLink                    =       -29694;
+const ODError kODErrCannotAcquireLink                   =       -29695;
+
+const ODError kODErrInvalidID                                   =       -29696;
+
+const ODError kODErrInconsistentCloneKind               =       -29697;
+const ODError kODErrInvalidCloneKind                    =       -29698;
+const ODError kODErrInvalidDestinationDraft                     =       -29699;
+const ODError kODErrMoveIntoSelf                                        =       -29700;
+const ODError kODErrNullDestinationFrame                        =       -29701;
+
+//#------------------------------------------------------------------------------
+//# Document
+//#------------------------------------------------------------------------------
+
+const ODError kODErrInvalidBelowDraft                           =       -29702;
+const ODError kODErrCannotCollapseDrafts                =       -29704;
+const ODError kODErrNonEmptyDraft                               =       -29705;
+const ODError kODErrNoPreviousDraft                             =       -29706;
+const ODError kODErrOutstandingDraft                    =       -29707;
+const ODError kODErrInvalidDraftID                              =       -29708;
+const ODError kODErrCannotChangePermissions             =       -29709;
+
+//#------------------------------------------------------------------------------
+//# Storage System
+//#------------------------------------------------------------------------------
+
+const ODError kODErrContainerExists                             =       -29710;
+
+//#------------------------------------------------------------------------------
+//# LinkSpec
+//#------------------------------------------------------------------------------
+
+const ODError kODErrCannotGetExternalLink               =       -29712;
+const ODError kODErrNoLinkSpecValue                             =       -29713;
+const ODError kODErrUnknownLinkSpecVersion              =       -29714;
+const ODError kODErrCorruptLinkSpecValue                =       -29715;
+
+//#------------------------------------------------------------------------------
+//# Link
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNotExportedLink                             =       -29716;
+const ODError kODErrBrokenLink                                  =       -29717;
+const ODError kODErrCannotRevealLink                            =       -29718;
+const ODError kODErrCorruptLink                                         =       -29719;
+const ODError kODErrLinkAlreadyExported                         =       -29720;
+const ODError kODErrNoLinkContent                                       =       -29721;
+const ODError kODErrCannotRegisterDependent                     =       -29722;
+
+//#------------------------------------------------------------------------------
+//# LinkSource
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNotImportedLink                             =       -29723;
+const ODError kODErrInvalidLinkKey                              =       -29724;
+const ODError kODErrBrokenLinkSource                    =       -29725;
+const ODError kODErrCorruptLinkSource                           =       -29726;
+const ODError kODErrCannotFindLinkSourceEdition         =       -29727; // Cannot locate source of cross document link because edition file does not exist
+const ODError kODErrCannotFindLinkSource                        =       -29728; // Cannot locate source of cross document link
+const ODError kODErrAlreadyImportedLink                         =       -29729; // Cannot create link due to Internal error
+const ODError kODErrUnknownUpdateID                                     =       -29730;
+const ODError kODErrCannotEstablishLink                         =       -29731;
+
+//#------------------------------------------------------------------------------
+//# LinkManager
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNoEditionManager                            =       -29732;
+const ODError kODErrDocNotSaved                                         =       -29733;
+
+//#------------------------------------------------------------------------------
+//# Data Interchange Dialogs
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNullFacetInput                                      =       -29734;
+const ODError kODErrNullLinkInfoInput                           =       -29735;
+const ODError kODErrNullLinkInfoResultInput                     =       -29736;
+const ODError kODErrNullPasteAsResultInput                      =       -29737;
+
+//#------------------------------------------------------------------------------
+//# DragAndDrop
+//#------------------------------------------------------------------------------
+
+const ODError kODErrNoDragManager                       =       -29738;
+const ODError kODErrNoDragSystemStorage                 =       -29739;
+const ODError kODErrDragItemNotFound                    =       -29740;
+const ODError kODErrCannotAllocateDragItem              =       -29741;
+const ODError kODErrUnknownDragImageType                =       -29742;
+const ODError kODErrDragTrackingException               =       -29743;
+const ODError kODErrDropFacetNotKnown                   =       -29775;
+
+//#------------------------------------------------------------------------------
+//# Clipboard
+//#------------------------------------------------------------------------------
+
+const ODError kODErrBackgroundClipboardClear            =       -29744;
+const ODError kODErrIllegalClipboardCloneKind           =       -29745;
+
+//#==============================================================================
+//# UI
+//#==============================================================================
+
+//#------------------------------------------------------------------------------
+//# Arbitrator
+//#------------------------------------------------------------------------------
+
+const ODError kODErrFocusAlreadyRegistered              =       -29746;
+const ODError kODErrFocusNotRegistered                  =       -29747;
+
+//#------------------------------------------------------------------------------
+//# Dispatcher
+//#------------------------------------------------------------------------------
+
+const ODError kODErrDispatcherNotInitialized = -29771;
+
+const ODError kODErrExistingDispatchModule   = -29772;
+const ODError kODErrInvalidDispatchModule    = -29773;
+
+//#------------------------------------------------------------------------------
+//# MenuBar
+//#------------------------------------------------------------------------------
+
+#ifdef _PLATFORM_MACINTOSH_
+const ODError kODErrInvalidCommandID                            =       -29748;
+#endif
+const ODError kODErrNotEnoughSubmenuIDs                         =       -29763;
+const ODError kODErrDuplicateID                                 =       -29764;
+const ODError kODErrUnknownID                                   =       -29765;
+
+//#------------------------------------------------------------------------------
+//# Undo
+//#------------------------------------------------------------------------------
+
+const ODError kODErrCannotMarkAction                    =       -29749;
+const ODError kODErrEmptyStack                                  =       -29750;
+const ODError kODErrNoBeginAction                               =       -29751;
+const ODError kODErrCannotAddAction                             =       -29752;
+
+//#------------------------------------------------------------------------------
+//# WindowState
+//#------------------------------------------------------------------------------
+
+const ODError kODErrCannotCreateWindow                  =       -29753;
+
+//------------------------------------------------------------------------------
+// DocumentManager
+//------------------------------------------------------------------------------
+
+const ODError kODErrOpeningMemContainer                 =       -29762;
+const ODError kODErrClosingNonODWindow                  =       -29766;
+const ODError kODErrNoDraftInWindow                     =       -29767;
+
+//RobCox
+//#------------------------------------------------------------------------------
+//# Registration
+//#------------------------------------------------------------------------------
+const ODError kODErrRegistrationError                   =       -29768;
+const ODError kODErrRegStartProcessFail                 =       -29769;
+const ODError kODErrEnvVariableNotSet                   =       -29770;
+const ODError kODErrWrongPlatformForODZ                 =       -29774;
+
+
+//#-----------------------------------------------------------------------------
+//# Platform-specific errors
+//#-----------------------------------------------------------------------------
+
+#ifdef _PLATFORM_MACINTOSH_
+
+#endif //# _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_OS2_
+
+//#------------------------------------------------------------------------------
+//# Linking 
+//#------------------------------------------------------------------------------
+
+
+//#============================================================================
+//# Error codes from -29860 to -29910 (KODError + 50) are reserved for linking
+//#============================================================================
+
+const ODError kODError                          = -29860;
+const ODError kODErrorMaxLinkError              = kODError-50; //[up to -29910]
+const ODError kODErrLinkSourceIsEmpty           = kODError-1;  //-29861
+const ODError kODErrLinkSourceAlreadyInited     = kODError-2;  //-29862
+const ODError kODErrLinkSourceConnected         = kODError-3;  //-29863
+const ODError kODErrInvalidTargetID             = kODError-4;  //-29864
+const ODError kODErrRequestMutexTimeOut         = kODError-5;  //-29865
+const ODError kODErrRequestMutexInterrupt       = kODError-6;  //-29866
+const ODError kODErrRequestMutexInvalidHandle   = kODError-7;  //-29867
+const ODError kODErrRequestMutexTooManyRequests = kODError-8;  //-29868
+const ODError kODErrRequestMutexOwnerDied       = kODError-9;  //-29869
+const ODError kODErrReleaseMutexInvalidHandle   = kODError-10; //-29870
+const ODError kODErrReleaseMutexNotOwner        = kODError-11; //-29871
+const ODError kODErrDocNotRegistered            = kODError-12; //-29872
+const ODError kODErrDocNotOpened                = kODError-13; //-29873
+const ODError kODErrLinkNotRegistered           = kODError-14; //-29874
+const ODError kODErrLinkNotOpened               = kODError-15; //-29875
+const ODError kODErrInvalidDocPathName          = kODError-16; //-29876
+const ODError kODErrDocAlreadyOpened            = kODError-17; //-29877
+const ODError kODErrInvalidDocID                = kODError-18; //-29878
+const ODError kODErrInvalidLinkID               = kODError-19; //-29879
+const ODError kODErrInvalidAvlSvr               = kODError-20; //-29880
+const ODError kODErrInvalidLinkSource           = kODError-21; //-29881
+const ODError kODErrInvalidAuxState             = kODError-22; //-29882
+const ODError kODErrLinkIDNotInDoc              = kODError-23; //-29883
+const ODError kODErrInvalidShell                = kODError-24; //-29884
+const ODError kODErrLinkAlreadyOpened           = kODError-25; //-29885
+const ODError kODErrWaitingUnlock               = kODError-26; //-29886
+const ODError kODErrDocOpenedFailed             = kODError-27; //-29887
+const ODError kODErrLinkOpenedFailed            = kODError-28; //-29888
+const ODError kODErrInvalidLink                 = kODError-29; //-29889
+const ODError kODErrNoLinkSource                = kODError-30; //-29890
+const ODError kODErrSourceDocRemote             = kODError-31; //-29891
+const ODError kODErrSourceDocNotOpen            = kODError-32; //-29892
+const ODError kODErrInvalidDraft                = kODError-33; //-29893
+                                                                     
+
+
+#endif // _PLATFORM_OS2_
+
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes off
+#endif
+
+
+module OpenDoc_Errors
+{
+        const string OpenDoc_Errors_Version = "1.0.";
+};
+
+#endif //# _ERRORDEF_
+

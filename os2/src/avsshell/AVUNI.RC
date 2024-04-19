@@ -1,0 +1,73 @@
+// @(#)Z 1.2 os2/src/avsshell/avuni.rc, oddataxfer, od96os2, odos29646d 96/11/15 15:50:56 (96/08/23 01:40:42)
+//====START_GENERATED_PROLOG======================================
+//
+//
+//   COMPONENT_NAME: oddataxfer
+//
+//   CLASSES: none
+//
+//   ORIGINS: 82,27
+//
+//
+//   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//   All Rights Reserved
+//   Licensed Materials - Property of IBM
+//   US Government Users Restricted Rights - Use, duplication or
+//   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//   	
+//   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//   OR PERFORMANCE OF THIS SOFTWARE.
+//
+//====END_GENERATED_PROLOG========================================
+//
+/*
+  File:    avuni.rc
+
+  Contains:  This file will contain all the hard-coded or string
+             information that is present in many of the source
+             modules.  This will allow for the contents of this
+             file to be translated to any language.
+
+  Owned by:  OpenDoc
+
+  Copyright:  © 1994 by Apple Computer, Inc., all rights reserved.
+
+  Change History (most recent first):
+
+     <1>   07/31/95  mjk    First Creation.
+
+  To Do:
+*/
+
+/*
+ *  The following are all string values that will have be to translated
+ *  to other languages when move to a new language platform.
+ *
+ */
+
+#include "avuni.h"
+
+STRINGTABLE
+  BEGIN
+    AV_OPENDOCSHELL                   "OpenDocShell"
+    AV_UNTITLEDDOC                    "Untitled Document"
+    AV_ERRORTITLE                     "Error!"
+    AV_PARTREGERROR                   "Part Registration Information Not Found!"
+    AV_CANTRESTOREBTO                 "Cannot restore avlsrvr.bto!"
+    AV_BTOBAKCORRUPT                  "Avlsrvr.bto and Avlsrvr.bak are both corrupted!\nDelete them and restart AVSSHELL.EXE"
+    AV_MENUABOUT                      "About OpenDocªÉ"
+    AV_UNTITLED                       "Untitled."
+    AV_SEMUNTITLED                    "\\SEM32\\UNTITLED"
+    AV_CANNOTOPENSEM                  "Can't open 'Untitled' semaphore"
+    AV_CANNOTGETSEM                   "Can't get 'Untitled' semaphore"
+    AV_COPY                           " copy"
+    AV_SAVECOPY                       "\pSave a copy as:"
+    AV_EXCEPTION                      "\pException: "
+    AV_OPENDOCDOCUMENT                "OpenDoc Document"
+  END
+

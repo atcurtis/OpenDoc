@@ -1,0 +1,150 @@
+/* @(#)Z 1.6 com/src/storage/idl/LinkSpcB.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:53 (96/10/29 09:32:33) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		LinkSpcB.idl
+//#
+//#	Contains:	Class definition for ODBaseLinkSpec
+//#
+//#	Owned by:	Craig Carper
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <7>	 8/15/95	CC		1275241: IDL review.
+//#		 <6>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <5>	 7/27/95	CC		1264705: Made GetPart, GetPartData, and
+//#									FromThisDraft methods private (releaseorder
+//#									not changed).
+//#		 <4>	 3/10/95	CC		1225926:  FromThisDraft() method must be
+//#									public for use by container suites.
+//#		 <3>	12/15/94	CC		1205709 LinkSpcB.idl - Added GetPart() and
+//#									GetPartData() methods, and fPart and fData
+//#									fields.
+//#		 <2>	 6/24/94	CC		Added functionprefix.
+//#		 <1>	  6/8/94	CG		first checked in
+//#		 <2>	  6/7/94	RR		Privatise change log
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINKSPCB_
+#define _LINKSPCB_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODBaseLinkSpec;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface  ODStorageUnit;
+
+#ifdef __PRIVATE__
+interface  ODPart;
+#endif
+
+//==============================================================================
+// ODBaseLinkSpec
+//==============================================================================
+
+interface ODBaseLinkSpec :  ODObject
+{
+	void WriteLinkSpec(in ODStorageUnit su);
+
+	void ReadLinkSpec(in ODStorageUnit su);
+
+#ifdef __PRIVATE__
+
+	void InitBaseLinkSpec(in ODPart part, in ODByteArray partData);
+ 
+	ODPart GetPart();
+	
+	ODByteArray GetPartData();
+	
+	ODBoolean FromThisDraft();
+	
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODBaseLinkSpec;
+
+		override:
+			somInit,
+			somUninit;
+
+		releaseorder:
+			WriteLinkSpec,
+			ReadLinkSpec,
+		#ifdef __PRIVATE__
+			InitBaseLinkSpec,
+			GetPart,
+			GetPartData,
+			FromThisDraft;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4;
+		#endif
+
+		#ifdef __PRIVATE__
+		    #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_) || defined(_PLATFORM_MACINTOSH_)
+			ODPart		fPart;
+			ODByteArray	fPartData;
+		    #endif
+		#endif  //# __PRIVATE__
+	};
+
+#endif //# __SOMIDL__
+
+
+};
+
+
+#endif //# _LINKSPCB_
+
+

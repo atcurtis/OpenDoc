@@ -1,0 +1,199 @@
+/* @(#)Z 1.5 com/src/bento/localidl/CMCtr.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:43 (96/10/29 09:14:12) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		CMCtr.idl
+//#
+//#	Contains:	Class definition for Bento Container
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994-1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<14>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		<13>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<12>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<11>	  4/7/95	EL		1225905: Add GetModDate and SetModDate.
+//#		<10>	  3/9/95	VL		1225504: Introduced TargetDocument to avoid
+//#									Target Document ref-counting problem.
+//#		 <9>	 2/10/95	VL		1205627: Added GetTargetContainer.
+//#		 <8>	 1/31/95	EL		1195846: allow setDirtyFlag to clear flag.
+//#									Note this is a private interface change
+//#		<7+>	 1/31/95	EL		1195846: allow setDirtyFlag to clear flag.
+//#									Note this is a private interface change.
+//#		 <7>	 9/23/94	VL		1184166: Added GetName and SetName to
+//#									override.
+//#		 <6>	  8/5/94	VL		1171603: Added GetCMSession.
+//#		 <5>	 6/30/94	CC		GetCMContainer() is a subclass
+//#									responsibility; added GetHandlers, also a
+//#									subclass responsibility.
+//#		 <4>	 6/29/94	CC		Added private methods to access
+//#									fCMContainer and fHandlers.
+//#		 <3>	 6/15/94	CC		Added functionprefix to eliminate Undefined
+//#									entry, name: "_%CREATE".
+//#		 <2>	 6/15/94	RR		ODHeap -> ODMemoryHeap
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CMCTR_
+#define _CMCTR_
+
+#ifndef _ODCTR_
+#include "ODCtr.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface ODBentoContainer;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+#ifdef __PRIVATE__
+typedef somToken CMContainer;
+typedef somToken ODBentoHandlers;
+typedef somToken ODMemoryHeapID;
+typedef somToken CMSession;
+interface CMDocument;
+interface ODStorageSystem; 
+interface ODDocument;
+interface ODFileContainer;
+#endif
+
+//==============================================================================
+// ODContainer
+//==============================================================================
+
+interface ODBentoContainer : ODContainer 
+{
+#ifdef __PRIVATE__
+
+	// private within Bento Container Suite
+
+	CMContainer			GetCMContainer();
+	ODBentoHandlers*	GetHandlers();
+	ODBoolean			GetDirtyFlag();
+	void				SetDirtyFlag(in ODBoolean flag);
+	ODMemoryHeapID		GetHeap();
+	CMSession			GetCMSession();
+	ODBentoContainer	GetTargetContainer();
+	CMDocument			GetTargetDocument();
+	ODTime				GetModDate();
+	void				SetModDate(in ODTime timer);
+	
+#endif
+  
+#ifdef __SOMIDL__
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+  	functionprefix = ODBentoContainer;
+    override:
+		somUninit,
+		Acquire,
+        Release,
+        Purge,
+        GetStorageSystem,
+        GetID,
+        GetName,
+        SetName,
+        AcquireDocument,
+		#ifdef __PRIVATE__
+			InitContainer,
+			Create,
+			Open,
+			Close,
+			ReleaseDocument;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5;
+		#endif
+    releaseorder:
+		#ifdef __PRIVATE__
+			GetCMContainer,
+			GetHandlers,
+			GetDirtyFlag,
+			SetDirtyFlag,
+			GetHeap,
+			GetCMSession,
+			GetTargetContainer,
+			GetTargetDocument,
+			GetModDate,
+			SetModDate;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6,
+			reserved7,
+			reserved8,
+			reserved9,
+			reserved10;
+		#endif
+
+	#ifdef __PRIVATE__
+		passthru C_xih = 
+				"#include <BentoHdr.h>"
+				"";
+		passthru C_xh = ""
+				"class ODBentoHandlers;"
+				"#include <CMAPI.h>"
+				"#include <ODMemory.h>"
+				"";
+		
+		ODStorageSystem		fStorageSystem;
+		ODContainerID*		fID;		
+		ODDocument			fDocument;		
+		ODBoolean			fDirty;		
+		ODMemoryHeapID 		fHeap;
+		CMSession			fCMSession;
+		ODTime				fModDate;
+	#endif
+  };
+#endif
+};
+
+
+#endif  // _CMCTR_
+

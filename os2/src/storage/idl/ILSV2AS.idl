@@ -1,0 +1,122 @@
+/* @(#)Z 1.3 os2/src/storage/idl/ILSV2AS.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:29:38 (96/08/23 01:43:34) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*                                                                  */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/********************************************************************/
+
+#ifndef _ILSVTOAS_
+#define _ILSVTOAS_
+
+#include <somobj.idl>
+#include <odtypesb.idl>
+#include <IODDefs.idl>
+
+interface IODAvailServerToLinkService;
+interface IODLinkTargetToLinkSource;
+
+/*
+ * The LinkServiceToAvailServer interface describes calls from an open
+ * document's LinkService object to the Availability Server (AS).
+ */
+
+interface IODLinkServiceToAvailServer : SOMObject
+{
+   IODDocumentID RegisterDoc(in IODFileName docPathName,
+                             in IODAvailServerToLinkService linkService);
+     // RegisterDoc is called when a new document is opened.
+
+
+   void UnregisterDoc(in IODDocumentID docID);
+     // UnregisterDoc is called when a document is destroyed.
+
+   ODBoolean DocOpened(in  IODDocumentID docID,
+                       in  IODFileName docPathName,
+                       in  IODAvailServerToLinkService linkService,
+                       out IODFileName oldPathName);
+     // DocOpened is called when a document already registered with the AS
+     // is opened.  If the path name does not match the path name registered
+     // with that document id, then an exception is returned and the document
+     // is not opened.
+
+   void DocClosed(in IODDocumentID docID);
+     // DocClosed is called when an opened document is closed.
+
+   void DocMoved(in IODDocumentID docID,
+                 in IODFileName oldPathName,
+                 in IODFileName newPathName);
+     // DocMoved is called when a registered document's persistent storage
+     // changes from oldPathName to newPathName.
+
+   ODLinkID RegisterLink(in IODDocumentID docID,
+                         in IODLinkTargetToLinkSource linkSrc);
+    // RegisterLink is called when a new LinkSource has been
+    // created in the document.  It provides a pointer to the LinkSource so
+    // the AS may forward calls to it.  The AS returns a unique (within the
+    // AS) ID for this LinkSource.  (LinkOpened need not be called).
+
+   void LinkOpened(in ODLinkID linkID,
+                   in IODLinkTargetToLinkSource linkSrc,
+                   out IODAuxiliaryState* auxState,
+                   out ODBoolean isLocked);
+     // LinkOpened is called when an existing LinkSource is internalized in
+     // a document.  It provides a pointer to the LinkSource so
+     // the AS may forward calls to it.  The AS returns the current
+     // AuxiliaryState associated with this LinkSource, and whether some
+     // target currently holds a lock on this LinkSource ContentSU.
+
+   void LinkClosed(in ODLinkID linkID,
+                   in IODAuxiliaryState* auxState);
+     // LinkClosed is called when a LinkSource is released in a document.
+     // It provides the current AuxiliaryState for this LinkSource.
+     // The AS will now process calls for this LinkSource.
+     // (Note that local LinkTargets will not have a reference any longer to
+     // the LinkSource object in the document.)
+
+   void RemoveLink(in ODLinkID linkID);
+     // RemoveLink is called when a LinkSource is removed from a document.
+
+  #ifdef __SOMIDL__
+    implementation {
+      releaseorder:
+        RegisterDoc,
+        UnregisterDoc,
+        DocOpened,
+        DocClosed,
+        DocMoved,
+        RegisterLink,
+        LinkOpened,
+        LinkClosed,
+        RemoveLink;
+    };
+  #endif //__SOMIDL__
+};
+
+#endif //_ILSVTOAS_

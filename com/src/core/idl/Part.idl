@@ -1,0 +1,495 @@
+/* @(#)Z 1.7 com/src/core/idl/Part.idl, odcore, od96os2, odos29646d 96/11/15 15:25:00 (96/10/29 09:22:43) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		Part.idl
+//#
+//#	Contains:	SOM class definition for ODPart class
+//#
+//#	Owned by:	Joshua Susser
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<27>	  9/1/95	CC		1273646: Override Externalize.
+//#		<26>	 8/18/95	JBS		1275241 IDL Review
+//#		<25>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<24>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<23>	 4/16/95	VL		1230084: Added CloneInto.
+//#		<22>	  4/3/95	JBS		1234218 cleanup obsolete defs and
+//#									consolidate protocols - mostly formatting
+//#		<21>	 3/28/95	JBS		1229656 add EditInLinkAttempted; 1226398
+//#									add ClonePartInfo
+//#		<20>	  3/7/95	CC		1224121: CreateLink() returns an
+//#									ODLinkSource object.
+//#		<19>	 1/27/95	VL		Added interface ODObjectSpec.
+//#		<18>	 1/27/95	NP		1213354: Touch this file to make rebuilds
+//#									go smoother.
+//#		<17>	 1/22/95	NP		Force rebuilding of h files because of
+//#									change to ODObjectSpec.
+//#		<16>	 1/20/95	JBS		1195017, 1205669: part API changes
+//#		<15>	 1/13/95	RR		1192147, 1201708 Removed overrides of
+//#									HandleEventInEmbedded, MouseEnter,
+//#									MouseWithin and MouseLeave. Moved
+//#									functionality to HandleEvent
+//#		<14>	12/23/94	JBS		1186869 - hide ODPartWrapper from public
+//#									API; 1192557 - ODPartWrapper realPart
+//#									access
+//#		<13>	12/15/94	CC		1197221 CreateLink() takes ODByteArray
+//#									parameter.
+//#									1205684 LinkUdated parameter renamed to
+//#									"change" from "id".
+//#		<12>	 9/23/94	RR		#1183564 made EventData inout
+//#		<11>	  9/1/94	CC		RADAR #1183005 - change AdjustBorderShape
+//#									param from Frame to Facet (for JBS)
+//#		<10>	 8/28/94	VL		#1182975: DragEnter & DragWithin should
+//#									return ODDragResult (instead of ODBoolean).
+//#		 <9>	 8/26/94	VL		1183174: Removed CloneInto as it does not
+//#									really override the superclass method.
+//#		 <8>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <7>	 8/16/94	VL		1143605: Added override CloneInto.
+//#		 <6>	 8/13/94	Te		#1180814 Added support for ODPartWrapper
+//#									API
+//#		 <5>	  8/9/94	VL		1179857: DragEnter and DragWithin return
+//#									ODBoolean.
+//#		 <4>	  8/5/94	JBS		#1179151 Part API cleanup
+//#		 <3>	 6/28/94	CG		Synched API with a7.
+//#		 <2>	 6/24/94	CG		Added functionprefix.
+//#		 <1>	  6/8/94	CG		first checked in
+//#		 <1>	  6/8/94	CG		first checked in
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _PART_
+#define _PART_
+
+#ifndef _PSTOBJ_
+#include "PstObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface ODPart;
+interface M_ODPart;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODCanvas;
+interface ODDragItemIterator;
+interface ODEmbeddedFramesIterator;
+interface ODFacet;
+interface ODFrame;
+interface ODLink;
+interface ODLinkSource;
+interface ODObjectSpec;
+interface ODShape;
+interface ODStorageUnit;
+interface ODStorageUnitView;
+interface ODTypeList;
+
+//==============================================================================
+// ODPart
+//==============================================================================
+
+interface ODPart : ODPersistentObject
+{
+
+	//==========================================================================
+	// Required Protocols
+	//==========================================================================
+
+	//--------------------------------------------------------------------------
+	// Initialization
+	//--------------------------------------------------------------------------
+
+	void InitPart(in ODStorageUnit storageUnit,
+				  in ODPart partWrapper);
+
+	void InitPartFromStorage(in ODStorageUnit storageUnit,
+							 in ODPart partWrapper);
+
+	//--------------------------------------------------------------------------
+	// From Layout protocol
+	//--------------------------------------------------------------------------
+
+	void DisplayFrameAdded(in ODFrame frame);
+
+	void DisplayFrameRemoved(in ODFrame frame);
+
+	void DisplayFrameConnected(in ODFrame frame);
+
+	void DisplayFrameClosed(in ODFrame frame);
+
+	void AttachSourceFrame(in ODFrame frame,
+						   in ODFrame sourceFrame);
+
+	void FrameShapeChanged(in ODFrame frame);
+
+	void ViewTypeChanged(in ODFrame frame);
+
+	void PresentationChanged(in ODFrame frame);
+
+	void SequenceChanged(in ODFrame frame);
+
+	void LinkStatusChanged(in ODFrame frame);
+
+	void ContainingPartPropertiesUpdated(in ODFrame frame,
+										 in ODStorageUnit propertyUnit);
+
+	ODInfoType ReadPartInfo(in ODFrame frame,
+							in ODStorageUnitView storageUnitView);
+
+	void WritePartInfo(in ODInfoType partInfo,
+					   in ODStorageUnitView storageUnitView);
+
+	void ClonePartInfo(in ODDraftKey key,
+					   in ODInfoType partInfo,
+					   in ODStorageUnitView storageUnitView,
+					   in ODFrame scope);
+
+	ODID Open(in ODFrame frame);
+
+	//--------------------------------------------------------------------------
+	// From Imaging protocol
+	//--------------------------------------------------------------------------
+
+	void Draw(in ODFacet facet,
+			  in ODShape invalidShape);
+
+	void FacetAdded(in ODFacet facet);
+
+	void FacetRemoved(in ODFacet facet);
+
+	void GeometryChanged(in ODFacet facet,
+						 in ODBoolean clipShapeChanged,
+						 in ODBoolean externalTransformChanged);
+
+	void HighlightChanged(in ODFacet facet);
+
+	void CanvasChanged(in ODFacet facet);
+
+	void CanvasUpdated(in ODCanvas canvas);
+
+	ODULong GetPrintResolution(in ODFrame frame);
+
+	//--------------------------------------------------------------------------
+	// From Part Activation protocol
+	//--------------------------------------------------------------------------
+
+	ODBoolean BeginRelinquishFocus(in ODTypeToken focus,
+								   in ODFrame ownerFrame,
+								   in ODFrame proposedFrame);
+
+	void CommitRelinquishFocus(in ODTypeToken focus,
+							   in ODFrame ownerFrame,
+							   in ODFrame proposedFrame);
+              
+	void AbortRelinquishFocus(in ODTypeToken focus,
+							  in ODFrame ownerFrame,
+							  in ODFrame proposedFrame);
+                  
+	void FocusAcquired(in ODTypeToken focus,
+					   in ODFrame ownerFrame);
+  
+	void FocusLost(in ODTypeToken focus,
+				   in ODFrame ownerFrame);
+                  
+
+	//--------------------------------------------------------------------------
+	// From Part Persistance protocol
+	//--------------------------------------------------------------------------
+
+	void ExternalizeKinds(in ODTypeList kindset);
+
+	void ChangeKind(in ODType kind);
+
+	//--------------------------------------------------------------------------
+	// From UI Events protocol
+	//--------------------------------------------------------------------------
+
+	ODBoolean HandleEvent(inout ODEventData event,
+						  in ODFrame frame,
+						  in ODFacet facet,
+						  inout ODEventInfo eventInfo);
+  
+	void AdjustMenus(in ODFrame frame);
+    
+	//==========================================================================
+	// Optional Protocols
+	//==========================================================================
+
+	//--------------------------------------------------------------------------
+	// From Undo protocol
+	//--------------------------------------------------------------------------
+
+	void UndoAction(in ODActionData actionState);
+
+	void RedoAction(in ODActionData actionState);
+
+	void DisposeActionState(in ODActionData actionState,
+							in ODDoneState doneState);
+
+	void WriteActionState(in ODActionData actionState,
+						  in ODStorageUnitView storageUnitView);
+
+	ODActionData ReadActionState(in ODStorageUnitView storageUnitView);
+
+	//--------------------------------------------------------------------------
+	// From DragAndDrop protocol
+	//--------------------------------------------------------------------------
+
+	void FulfillPromise(in ODStorageUnitView promiseSUView);
+
+	void DropCompleted(in ODPart destPart,
+					   in ODDropResult dropResult);
+
+	ODDragResult DragEnter(in ODDragItemIterator dragInfo,
+						   in ODFacet facet,
+						   in ODPoint where);
+
+	ODDragResult DragWithin(in ODDragItemIterator dragInfo,
+							in ODFacet facet,
+							in ODPoint where);
+
+	void DragLeave(in ODFacet facet,
+				   in ODPoint where);
+
+	ODDropResult Drop(in ODDragItemIterator dropInfo,
+					  in ODFacet facet,
+					  in ODPoint where);
+
+	//--------------------------------------------------------------------------
+	// From Linking protocol
+	//--------------------------------------------------------------------------
+
+	ODLinkSource CreateLink(in ODByteArray data);
+
+	void RevealLink(in ODLinkSource linkSource);
+
+	void LinkUpdated(in ODLink updatedLink,
+					 in ODUpdateID change);
+
+	// --- for containing parts ---
+
+	void EmbeddedFrameUpdated(in ODFrame frame,
+							  in ODUpdateID change);
+
+	ODBoolean EditInLinkAttempted(in ODFrame frame);
+
+	//--------------------------------------------------------------------------
+	// From Embedding protocol
+	//--------------------------------------------------------------------------
+
+	ODFrame RequestEmbeddedFrame(in ODFrame containingFrame,
+								 in ODFrame baseFrame,
+								 in ODShape frameShape,
+								 in ODPart embedPart,
+								 in ODTypeToken viewType,
+								 in ODTypeToken presentation,
+								 in ODBoolean isOverlaid);
+
+	void RemoveEmbeddedFrame(in ODFrame embeddedFrame);
+
+	ODShape RequestFrameShape(in ODFrame embeddedFrame,
+							  in ODShape frameShape);
+
+	void UsedShapeChanged(in ODFrame embeddedFrame);
+
+	ODShape AdjustBorderShape(in ODFacet embeddedFacet,
+							  in ODShape shape);
+
+	ODStorageUnit AcquireContainingPartProperties(in ODFrame frame);
+
+	ODBoolean RevealFrame(in ODFrame embeddedFrame,
+						  in ODShape revealShape);
+    
+	void EmbeddedFrameSpec(in ODFrame embeddedFrame,
+						   in ODObjectSpec spec);
+    
+	ODEmbeddedFramesIterator CreateEmbeddedFramesIterator(in ODFrame frame);
+
+	//==========================================================================
+	// DO NOT OVERRIDE
+	//==========================================================================
+
+	//--------------------------------------------------------------------------
+	// From Part Wrapping protocol
+	//--------------------------------------------------------------------------
+
+	ODBoolean IsRealPart();
+   
+	ODPart GetRealPart();
+   
+	void ReleaseRealPart();
+
+	//==========================================================================
+
+	#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+		
+		functionprefix = ODPart;
+		
+		override:
+			somUninit,
+			CloneInto,
+			Externalize;
+
+		releaseorder:
+	        InitPart,
+	        InitPartFromStorage,
+	        DisplayFrameAdded,
+	        DisplayFrameRemoved,
+	        DisplayFrameConnected,
+	        DisplayFrameClosed,
+	        AttachSourceFrame,
+	        FrameShapeChanged,
+	        ViewTypeChanged,
+	        PresentationChanged,
+			SequenceChanged,
+	        LinkStatusChanged,
+	        ContainingPartPropertiesUpdated,
+	        ReadPartInfo,
+	        WritePartInfo,
+			ClonePartInfo,
+	        Open,
+	        Draw,
+	        FacetAdded,
+	        FacetRemoved,
+	        GeometryChanged,
+	        HighlightChanged,
+	        CanvasChanged,
+	        CanvasUpdated,
+	        GetPrintResolution,
+	        BeginRelinquishFocus,
+	        CommitRelinquishFocus,
+	        AbortRelinquishFocus,
+	        FocusAcquired,
+	        FocusLost,
+	        ExternalizeKinds,
+	        ChangeKind,
+	        HandleEvent,
+	        AdjustMenus,
+
+	        UndoAction,
+	        RedoAction,
+	        DisposeActionState,
+	        WriteActionState,
+	        ReadActionState,
+	        FulfillPromise,
+	        DropCompleted,
+	        DragEnter,
+	        DragWithin,
+	        DragLeave,
+	        Drop,
+	        CreateLink,
+	        RevealLink,
+	        LinkUpdated,
+	        EmbeddedFrameUpdated,
+			EditInLinkAttempted,
+	        RequestEmbeddedFrame,
+	        RemoveEmbeddedFrame,
+	        RequestFrameShape,
+	        UsedShapeChanged,
+	        AdjustBorderShape,
+	        AcquireContainingPartProperties,
+	        RevealFrame,
+	        EmbeddedFrameSpec,
+	        CreateEmbeddedFramesIterator,
+
+			IsRealPart,
+			GetRealPart,
+			ReleaseRealPart;
+		#ifdef __PRIVATE__
+		#endif
+	};
+	#endif
+};
+
+interface M_ODPart : SOMClass
+{
+        ISOString              clsGetODPartHandlerName();
+        string                 clsGetODPartHandlerDisplayName();
+        sequence<PartKindInfo> clsGetODPartKinds();
+        string                 clsGetOLE2ClassId();
+        string                 clsGetWindowsIconFileName();
+
+#ifdef __PRIVATE__
+/*  I am unsure as to whether these are being used, but don't want
+    to lose their references, in case they are.   
+  ODULong  clsGetRefCount();
+  void  clsRelease();
+  void  clsSetUpdateFlag(in ODULong flag);
+  ODULong  clsGetUpdateFlag();
+*/
+#endif
+
+        #ifdef __SOMIDL__
+        implementation
+        {
+                functionprefix = M_ODPart;
+
+                override:
+                  somNew;
+                releaseorder:
+                  clsGetODPartHandlerName,
+                  clsGetODPartHandlerDisplayName,
+                  clsGetODPartKinds,
+                  clsGetOLE2ClassId,
+                  clsGetWindowsIconFileName;
+
+        #ifdef __PRIVATE__
+/*  I am unsure as to whether these are being used, but don't want
+    to lose their references, in case they are.   
+                  clsGetRefCount,
+                  clsRelease,
+                  clsSetUpdateFlag,
+                  clsGetUpdateFlag;
+        else *** defect 22546 - pdl will catch the pound sign before the else
+                  reservered1,
+                  reservered2,
+                  reservered3,
+                  reservered4;
+*/
+        #endif   // PRIVATE
+        };
+     #endif   // SOMIDL
+};
+
+#endif // _PART_

@@ -1,0 +1,183 @@
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/* @(#) 1.4 com/src/ui/idl/ODViewEx.idl, odui, od96os2, odos29646d 10/31/96 12:46:05 [11/15/96 15:29:40] */
+#ifdef __PRIVATE__
+//#
+//#     File:           ODViewEx.idl
+//#
+//#     Contains:       IDL description of ODViewExtension Extension
+//#
+//#     Change History (most recent first):
+//#
+//#              <3>     11/08/95   BLG  143201  Make RetrievePartAttributes() and RetrieveColumnAttributes() methods private
+//#              <2>     06/03/95    st  124328  header/class fixes
+//#              <1>      2/10/95        cmb     first checked in
+//#
+//#     To Do:
+//#
+#else
+#endif
+
+
+#ifndef _ODVIEWEXT_
+#define _ODVIEWEXT_
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+#ifndef _EXTENSN_
+#include "Extensn.idl"
+#endif
+
+#ifndef _PART_
+#include "part.idl"
+#endif
+
+
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+   ODViewExtension is implemented as a subclass of ODExtension. The default
+   implementation of ODViewExtension provides for a container control that
+   will display a tree, details and icon views of the parts hierarchy, similar
+   to the way workplace shell displays directories/files in thier
+   implementation of views.
+*/
+
+//=====================================================================================
+// Constants
+//==================================================================================
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODViewExtension;
+
+//=====================================================================================
+// Implementation Types
+//==================================================================================
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+   typedef somToken ODFIELDINFO;
+   #ifdef __PRIVATE__
+      typedef somToken ODCnrViewList;
+   #endif
+#endif
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+interface ODCnrView;
+
+//==============================================================================
+// ODViewExtension
+//==============================================================================
+
+interface ODViewExtension : ODExtension
+{
+
+   void      InitViewExtension(           in    ODPart      part              );
+
+   ODBoolean DisplayView(                 in    ODPart      rootpart,
+                                          in    ODULong     ulViewType        );
+
+   ODBoolean AddDetailsColumns(           in    ODFIELDINFO *pPartODFieldInfo,
+                                          in    char        **sColDataType,
+                                          in    char        **sPartSUPropName,
+                                          in    char        **sPartSUValName,
+                                          in    ODULong     ulNumberofColumns );
+
+#ifdef __PRIVATE__
+   ODBoolean   RetrievePartAttributes(    inout char        *sColumnDataType,
+                                          inout char        *sPartSUPropName,
+                                          inout char        *sPartSUValName,
+                                          inout ODULong     ulColumn          );
+
+   ODBoolean   RetrieveColumnAttributes ( out ODFIELDINFO odInfo,
+                                          in    ODULong     ulColumn          );
+   void        TerminateView(             in    ODCnrView   Container         );
+#endif
+
+
+#ifdef __SOMIDL__
+  implementation
+  {
+      functionprefix = ODViewExtension;
+
+      override:
+         somInit,
+         somUninit,
+         GetBase;
+      releaseorder:
+         InitViewExtension,
+         DisplayView,
+         AddDetailsColumns,
+#ifdef __PRIVATE__
+         RetrievePartAttributes,
+         RetrieveColumnAttributes,
+         TerminateView;
+#else
+         reserved1,
+         reserved2,
+         reserved3;
+#endif
+
+        passthru C_xh =
+		"// Tree/Icon/Details Views"
+		""
+		"#define OD_TREEVIEW     1"
+		"#define OD_ICONVIEW     2"
+		"#define OD_DETAILSVIEW  3"
+		""
+		"typedef struct _ODFIELDINFO {"
+		" ULONG        cb;              // Strcuture size"
+		" ULONG        flDataAttrs;     // attrs of disp data"
+		" ULONG        flTitleAttrs;    // attrs of col title"
+		" char  *        sTitleText;    // column title text"
+		"} ODFIELDINFO;";
+
+
+      #ifdef __PRIVATE__
+         ODCnrViewList *CnrViewListHead;
+         ODFIELDINFO *pPartODFieldInfo;
+         char          **sColDataType;
+         char          **sPartSUPropName;
+         char          **sPartSUValName;
+         ODULong     ulNumberofColumns;
+         ODPart  fBase;
+      #endif
+
+   };
+   #endif
+}; // End ODViewExtension Class
+
+#endif

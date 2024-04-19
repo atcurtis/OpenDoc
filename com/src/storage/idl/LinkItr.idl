@@ -1,0 +1,111 @@
+/* @(#)Z 1.4 com/src/storage/idl/LinkItr.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:52 (96/10/29 09:32:24) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		LinkItr.idl
+//#
+//#	Contains:	Definition of ODLinkIterator class.
+//#
+//#	Owned by:	Craig Carper
+//#
+//#	Copyright:	(r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <4>	 8/15/95	CC		1275241: IDL review.
+//#		 <3>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <2>	 5/18/95	CC		1249197: Renamed InitODLinkIterator to
+//#									InitLinkIterator and made private.
+//#		 <1>	 8/11/94	CC		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINKITR_
+#define _LINKITR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  ODLinkIterator;
+
+//=====================================================================================
+// Classes used in this interface
+//=====================================================================================
+interface  ODLink;
+
+//=====================================================================================
+// Class ODLinkIterator
+//=====================================================================================
+
+interface ODLinkIterator : ODObject
+{
+	ODBoolean IsNotComplete();
+	ODLink First();
+	ODLink Next();
+
+#ifdef __PRIVATE__
+
+	void InitLinkIterator();    
+	
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODLinkIterator;
+
+		override:
+			somUninit;
+
+		releaseorder:
+			IsNotComplete,
+			First,
+			Next,
+		#ifdef __PRIVATE__
+			InitLinkIterator;
+		#else
+			reserved1;
+		#endif
+	};
+#endif //# __SOMIDL__
+};
+
+#endif  // _LINKITR_

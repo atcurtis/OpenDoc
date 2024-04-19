@@ -1,0 +1,134 @@
+/* @(#)Z 1.6 com/src/imaging/idl/PlatCanv.idl, odimaging, od96os2, odos29646d 96/11/15 15:29:37 (96/10/29 09:25:53) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__                                                  
+//# IBM Change History (most recent first):                         */
+//#          2/28/96 jab  Incorporate changes for cross-platform    */
+//#                       implementation.  ODPlatformCanvas becomes */
+//#                       an abstract base class.                   */
+//#  130552  7/22/95 ced  Move ODPlatformWindowCanvas introduced    */
+//#                       methods into this class. Add HasWindow.   */
+//#  120349  5/15/95 map  Fix problem with //# comment on #endifs   */
+//#  120349  5/15/95 map  Fix up IDL copyright                      */
+//#******************************************************************/
+//#
+//#  File:    PlatCanv.idl
+//#
+//#  Contains:  ODPlatformCanvas
+//#
+//#  Written by:  Chuck Dumont
+//#
+//#  Copyright: (r) 1994 by IBM, all rights reserved.
+//#
+//#  Change History (most recent first):
+//#
+//#           02/27/94  CED   Created
+//#
+//#  To Do:
+//#
+#else
+//#  Copyright:  (r) 1994-1995 by IBM, all rights reserved.
+#endif
+
+#ifndef _PLATCANV_
+#define _PLATCANV_
+
+//==============================================================================
+// Mac OS types used in this interface
+//==============================================================================
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif // _ODTYPESM_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif // _ODOBJECT_
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface ODPlatformCanvas;
+
+//==============================================================================
+// Classes used in this interface
+//==============================================================================
+
+//==============================================================================
+// ODPlatformCanvas
+//==============================================================================
+
+interface ODPlatformCanvas :  ODObject
+{
+   ODPlatformCanvas	CreateConcreteCanvas(in ODGraphicsSystem aSystemType,
+                                                     in ODBoolean isDynamic,
+                                                     in ODBoolean isOffscreen);
+
+   ODGraphicsSystem GetSystemType( );
+
+   ODBoolean HasWindow( );
+
+   ODBoolean IsInitialized( );
+
+   ODPlatformCanvasType GetPlatformCanvasType();
+
+
+#ifdef __SOMIDL__
+  implementation
+  {
+  majorversion = 1; minorversion = 0;
+
+  releaseorder:
+    CreateConcreteCanvas,
+    GetSystemType,
+    HasWindow,
+    IsInitialized,
+    GetPlatformCanvasType;
+
+  functionprefix = ODPlatformCanvas;
+
+  };
+#endif
+};
+
+#endif // _PLATCANV_
+
+

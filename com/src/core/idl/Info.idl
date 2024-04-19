@@ -1,0 +1,125 @@
+/* @(#)Z 1.3 com/src/core/idl/Info.idl, odcore, od96os2, odos29646d 96/11/15 15:24:57 (96/07/15 18:13:30) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#     File:           Info.idl
+//#
+//#     Contains:       Class definition for ODInfo
+//#
+//#     Owned by:       Tantek eelik
+//#
+//#     Copyright:      (r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#              <3>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#              <2>     3/24/95        CG              #1225899: ODInfo::InitInfo made private.
+//#              <1>     7/11/94        Te              first checked in
+//#              <1>      7/11/94       Te              first checked in
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _INFO_
+#define _INFO_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+*/
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODInfo;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODFacet;
+interface ODSession;
+
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+#ifdef __PRIVATE__
+#endif
+
+//==============================================================================
+// ODInfo
+//==============================================================================
+
+interface ODInfo :  ODObject
+{
+#ifdef __PRIVATE__
+   void InitInfo(in ODSession session);
+#endif
+
+   ODBoolean  ShowPartFrameInfo(in ODFacet facet, in ODBoolean allowEditing);
+
+
+#ifdef __SOMIDL__
+  implementation
+  {
+        functionprefix = ODInfo;
+        override:
+            somInit,
+            somUninit;
+
+    releaseorder:
+        #ifdef __PRIVATE__
+                InitInfo,
+        #else
+                reserved1,
+        #endif
+        ShowPartFrameInfo;
+
+    #ifdef __PRIVATE__
+        ODSession  fSession;
+    #endif
+
+  };
+#endif
+};
+
+#endif
+

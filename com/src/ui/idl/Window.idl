@@ -1,0 +1,511 @@
+/* @(#) 1.11 com/src/ui/idl/Window.idl, odui, od96os2, odos29646d 10/30/96 18:06:29 [11/15/96 15:28:39] */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/********************************************************************/
+#ifdef __PRIVATE__
+
+//# IBM Change History (most recent first):                         */
+//#         2/20/96 jrb  Complete Apple DR4 Integration             */
+//# 146581 12/10/95 map  IDL validation                             */
+//# 143654 11/13/95 ced  Apple DR4 IDL changes; ShouldDispose       */
+//#                      method removed, shouldDispose param added  */
+//#                      to InitWindow & InitWindowForFrame.        */
+//# 122394  8/22/95 jso  Merge with Apple dr2 code                  */
+//# 133596  8/18/95 SS   Comment ifdef MULTITHREADING to enable docshell multithreading
+//# 122394  6/01/95 map  Fix again problem with //# comments        */
+//# 122943  5/21/95 map  Method name changes for multi-threading    */
+//# 120349  5/15/95 map  Fix problem with //# comment on #endifs    */
+//# 121968  5/15/95 ced  Added GetCreateFlags.                      */
+//# 120604  4/28/95 ced  Merge with B1C16 Apple code.               */
+//#******************************************************************/
+//#
+//#     File:           Window.idl
+//#
+//#     Contains:       Class definition for ODWindow
+//#
+//#     Owned by:       Richard Rodseth
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <23>    10/16/95        RR              #1293067 Pass shouldDispose to
+//#                                                                     RegisterWindow
+//#             <22>    10/10/95        DM              1277216: GM:API: Dont return ODPoint from
+//#                                                                     GetWindowPoint()
+//#             <21>      9/1/95        RR              # 1279100/1280338 Added fIsActive
+//#             <20>     8/15/95        RR              #1275241 IDL Review
+//#             <19>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <18>      6/8/95        RR              #1257260 Collapse base classes. #1214898
+//#                                                                     StdTypes.r -> ODTypes.r
+//#             <17>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <16>     5/19/95        RR              #1249981 Added SetShouldDispose and
+//#                                                                     ShouldDispose
+//#             <15>      4/5/95        CSL             #1221461: Fix number of reserved methods
+//#             <14>     3/22/95        RR              #1225420, 1227993 Added InitWindowForFrame,
+//#                                                                     Remove InitWindowFromStorage,
+//#                                                                     SetSourceFrame
+//#             <13>      3/7/95        RR              # 1220929 Added fSelectionFocus and
+//#                                                                     #1212490  added fInBackground
+//#             <12>     2/20/95        Te              #1221861 BB: Incomplete AOCE support needs
+//#                                                                     to be removed from OpenDoc
+//#             <11>     2/15/95        JBS             1198600 don't release rootFrame after
+//#                                                                     close, added private field
+//#                                                                     fShouldAdjustOnOpen
+//#             <10>     2/10/95        RR              # 1218467 Remove root part field, and add
+//#                                                                     root part parameter to private
+//#                                                                     CreateRootFrame
+//#              <9>     9/30/94        RR              #1183610 Added fIsDirty
+//#              <8>     8/15/94        JBS             1181138: add frameType to CreateFrame();
+//#                                                                     1181156: UI API Cleanup
+//#              <7>     7/26/94        eeh             ODQDPoint->Point; no lying to SOM
+//#              <6>     6/28/94        RR              Added override of Release
+//#              <5>     9/26/94        RR              Added Externalize. Changed SetWindowTitle
+//#              <4>     6/20/94        jpa             Fixed syntax err in passthru.
+//#              <3>     6/16/94        RR              Remove function prefix for now
+//#              <2>     6/16/94        RR              Added function prefix
+//#              <1>      6/8/94        RR              first checked in
+//#              <1>      6/8/94        RR              first checked in
+//#              <5>      6/7/94        RR              Privatise change log
+//#              <1>      5/9/94        VL              first checked in
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _WINDOW_
+#define _WINDOW_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODWindow;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODFacet;
+interface  ODFrame;
+
+#ifdef __PRIVATE__
+interface  ODPart;
+interface  ODStorageUnit;
+interface  ODSession;
+interface  ODArbitrator;
+interface  ODDraft;
+
+#ifdef _PLATFORM_UNIX_
+typedef somToken Widget;
+#endif
+#endif
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+#ifdef _PLATFORM_MACINTOSH_
+#endif //# _PLATFORM_MACINTOSH_
+
+#endif
+
+//=====================================================================================
+// ODWindow
+//=====================================================================================
+
+
+interface ODWindow :  ODRefCntObject
+{
+
+        ODPlatformWindow GetPlatformWindow();
+
+        ODFrame AcquireSourceFrame();
+
+        void   SetSourceFrame(in ODFrame frame);
+
+        ODFrame   GetRootFrame();
+
+        ODFacet  GetFacetUnderPoint(in ODPoint aPoint);
+
+        ODBoolean IsActive();
+
+        void Open();
+
+        void Close();
+
+        void CloseAndRemove();
+
+        void Show();
+
+        void Hide();
+
+        ODBoolean IsShown();
+
+        ODBoolean IsResizable();
+
+        ODBoolean IsRootWindow();
+
+        ODBoolean ShouldSave();
+
+        void SetShouldSave(in ODBoolean shouldSave);
+
+        ODBoolean ShouldShowLinks();
+
+        void SetShouldShowLinks(in ODBoolean shouldShowLinks);
+
+        void AdjustWindowShape();
+
+        ODID  GetID();
+
+        ODBoolean  IsFloating();
+
+        ODFacet  GetRootFacet();
+
+//#ifdef _PLATFORM_MACINTOSH_
+
+        void Select();
+
+#ifdef _PLATFORM_MACINTOSH_
+        void Update();
+#endif
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+    void Update(inout ODEventData theEvent);
+#endif
+
+        ODBoolean ShouldDispose();
+
+//#endif //# _PLATFORM_MACINTOSH_
+
+#ifdef __PRIVATE__
+
+//#ifdef _PLATFORM_MACINTOSH_
+
+        void InitWindow(in ODPlatformWindow platformWindow,
+                                        in ODType               frameType,
+                                        in ODBoolean    isRootWindow,
+                                        in ODBoolean    isResizable,
+                                        in ODBoolean    isFloating,
+                                        in ODBoolean    shouldSave,
+                                        in ODBoolean    shouldDispose,
+                                        in ODPart               rootPart,
+                                        in ODTypeToken  viewType,
+                                        in ODTypeToken  presentation,
+                                        in ODFrame              sourceFrame);
+
+        void InitWindowForFrame(in ODPlatformWindow platformWindow,
+                                        in ODFrame              frame,
+                                        in ODBoolean    isRootWindow,
+                                        in ODBoolean    isResizable,
+                                        in ODBoolean    isFloating,
+                                        in ODBoolean    shouldSave,
+                                        in ODBoolean    shouldDispose,
+                                        in ODFrame              sourceFrame);
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+   void HandleActivateEvent(inout ODEventData theEvent, in ODEventInfo eventInfo);
+#else
+   void HandleActivateEvent(inout ODEventData theEvent);
+#endif
+
+   void HandleUpdateEvent(inout ODEventData theEvent);
+
+   void  Activate();
+
+   void  Deactivate();
+
+#ifdef _PLATFORM_MACINTOSH_
+   void  Drag(in Point startPoint, in Rect draggingBounds);
+
+   void SuspendResume(in ODEventData event);
+#endif
+
+   void SetWindowTitle(in char* title);
+
+#ifdef _PLATFORM_MACINTOSH_
+   void GetWindowPoint(in Point globalPoint, out ODPoint windowPoint);
+#endif
+
+   void SetWasVisible(in ODBoolean wasVisible);
+
+   ODBoolean GetWasVisible();
+
+   void Externalize();
+
+   void SetID(in ODID windowID);
+
+   ODStorageUnit  GetStorageUnit();
+
+   void SetStorageUnit(in ODStorageUnit su);
+
+   ODDraft  GetDraft();
+
+   void CommonInitWindow();
+   void CreateRootFrame(in ODType frameType,
+                                                in ODTypeToken viewType,
+                                                in ODTypeToken presentation,
+                                                in ODPart rootPart);
+   void CreateRootFacet();
+#ifdef _PLATFORM_MACINTOSH_
+   void PrepareCanvas();
+#endif
+   void DrawActiveBorder(in ODFrame frame);
+#ifdef _PLATFORM_MACINTOSH_
+   ODBoolean HasCloseBox();
+   ODBoolean HasZoomBox();
+   ODBoolean HasGrowBox();
+   ODSShort GetProcID();
+   void GetWindowBounds(out Rect bounds);
+   ODSLong GetRefCon();
+#endif
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+   void GetWindowBounds(out ODRect bounds);
+   ODULong GetCreateFlags();
+   void InitWindowTitle();
+#endif // _PLATFORM_OS2_ || _PLATFORM_WIN32_ || _PLATFORM_UNIX_
+
+#ifdef _PLATFORM_UNIX_
+   Widget GetTopLevelShellWidget(); // This will be the mainwindow widget's parent.
+                                    // It can also be used as the parent widget
+                                    // of any dialogs.  This will be equivalent to
+                                    //   ODWindow window;
+                                    //   Display *display;
+                                    //   XtWindowToWidget(display,
+                                    //                    window->GetPlatformWindow);
+   Widget GetMainWindowWidget();    // This will be the menu and drawingarea widgets' parent
+   Widget GetDrawingAreaWidget();   // This will be the facet widgets' parent.
+
+   // The following two methods are used by WindowState to store and
+   // retrieve the ancestor of the TopLevelShellWidget window
+   // which is an immediate child of the root window.
+   // This window is used for comparisons when walking the desktop's
+   // stacking order.
+   void SetRootChildWindow(in ODPlatformWindow rootchild);
+   ODPlatformWindow GetRootChildWindow();
+#endif
+
+// #endif //# _PLATFORM_MACINTOSH_
+
+#endif //# _PRIVATE_
+
+#ifdef __SOMIDL__
+//#ifdef _PLATFORM_MACINTOSH_
+
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODWindow;
+
+                override:
+                        somUninit,
+                        Release,
+                        Purge;
+
+                releaseorder:
+                        GetPlatformWindow,
+                        AcquireSourceFrame,
+                        SetSourceFrame,
+                        GetRootFrame,
+                        GetFacetUnderPoint,
+                        IsActive,
+                        Open,
+                        Close,
+                        CloseAndRemove,
+                        Show,
+                        Hide,
+                        IsShown,
+                        IsResizable,
+                        IsRootWindow,
+                        ShouldSave,
+                        SetShouldSave,
+                        ShouldShowLinks,
+                        SetShouldShowLinks,
+                        AdjustWindowShape,
+                        GetID,
+                        IsFloating,
+                        GetRootFacet,
+
+                        Select,
+                Update,
+                        ShouldDispose,
+                        SetShouldDispose,
+
+                #ifdef __PRIVATE__
+                        InitWindow,
+                        InitWindowForFrame,
+                        HandleActivateEvent,
+                        HandleUpdateEvent,
+                        Activate,
+                        Deactivate,
+      #ifdef _PLATFORM_MACINTOSH_
+                        Drag,
+                        SuspendResume,
+      #endif
+                        SetWindowTitle,
+      #ifdef _PLATFORM_MACINTOSH_
+                        GetWindowPoint,
+      #endif
+                        SetWasVisible,
+                        GetWasVisible,
+                        Externalize,
+                        SetID,
+                        GetStorageUnit,
+                        SetStorageUnit,
+                        GetDraft,
+                        CommonInitWindow,
+                        CreateRootFrame,
+                        CreateRootFacet,
+      #ifdef _PLATFORM_MACINTOSH_
+                        PrepareCanvas,
+      #endif
+                        DrawActiveBorder,
+      #ifdef _PLATFORM_MACINTOSH_
+                        HasCloseBox,
+                        HasZoomBox,
+                        HasGrowBox,
+                        GetProcID,
+      #endif
+                        GetWindowBounds
+      #ifdef _PLATFORM_MACINTOSH_
+                        ,GetRefCon
+      #endif
+      #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+            ,GetCreateFlags,
+            InitWindowTitle
+      #endif
+      #ifdef _PLATFORM_UNIX_
+           ,GetTopLevelShellWidget,
+            GetMainWindowWidget,
+            GetDrawingAreaWidget,
+            SetRootChildWindow,
+            GetRootChildWindow
+      #endif
+         ;
+                #else
+      #ifdef _PLATFORM_MACINTOSH_
+                        reserved1, reserved2, reserved3, reserved4, reserved5, reserved6,reserved7,
+                        reserved8, reserved9, reserved10, reserved11, reserved12,reserved13, reserved14,
+                        reserved15, reserved16, reserved17, reserved18,reserved19, reserved20, reserved21,
+                        reserved22, reserved23, reserved24, reserved25, reserved26, reserved27, reserved28;
+      #endif
+      #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+            reserved1, reserved2, reserved3, reserved4, reserved5, reserved6,
+            reserved7, reserved8, reserved9, reserved10, reserved11, reserved12,
+            reserved13, reserved14, reserved15, reserved16, reserved17, reserved18,
+            reserved19, reserved20, reserved21;
+      #endif
+      #ifdef _PLATFORM_UNIX_
+            reserved1, reserved2, reserved3, reserved4, reserved5, reserved6,
+            reserved7, reserved8, reserved9, reserved10, reserved11, reserved12,
+            reserved13, reserved14, reserved15, reserved16, reserved17, reserved18,
+            reserved19, reserved20, reserved21, reserved22, reserved23,  reserved24,
+            reserved25,  reserved26;
+      #endif
+                #endif
+
+    #ifdef __PRIVATE__
+
+    #ifdef _PLATFORM_MACINTOSH_
+        passthru C_xh =
+                ""
+                "#ifndef __WINDOWS__"
+                "#include <Windows.h>"
+                "#endif"
+                "";
+    #endif
+
+      ODSession         fSession;
+      ODFrame           fSourceFrame;
+      ODPlatformWindow  fPlatformWindow;
+      ODFrame           fRootFrame;
+      ODFacet           fRootFacet;
+      ODBoolean         fIsRootWindow;
+      ODBoolean         fShouldSave;
+      ODBoolean         fShouldShowLinks;
+      ODBoolean         fIsResizable;
+      ODBoolean         fIsFloating;
+      ODBoolean         fWasVisible;
+      ODArbitrator      fArbitrator;
+      ODStorageUnit     fStorageUnit;
+          ODBoolean                     fIsDirty;
+      ODDraft           fDraft;
+      ODID                      fID;
+          ODBoolean                     fShouldAdjustOnOpen;
+          ODTypeToken           fSelectionFocus;
+          ODBoolean                     fInBackground;
+          ODBoolean                     fIsActive;
+          ODBoolean                     fShouldDispose;
+
+#ifdef _PLATFORM_UNIX_
+      // This value will hold the immediate child of the root window.  It will
+      // be used when iterating over the desktop's Z-order.  Currently, the
+      // Motif window manager adds a couple of windows between the
+      // TopLevelShell widget which we will create and the RootWindow.
+      // Note that this value is only valid after running
+      // WindowState::ResetRootChildWindows within a particular request.
+      // This isn't designed to be used outside of Window and WinStat.
+      ODPlatformWindow  fRootChild;
+
+      Widget fTopLevelShellWidget;
+      Widget fMainWindowWidget;
+      Widget fDrawingAreaWidget;
+      ODBoolean fFocusInReceived;
+#endif
+
+#ifdef _PLATFORM_OS2_
+      // Since windows can't share menus in OS/2, we have to create a dummy
+      // menu when a window is deactivated.
+      ODPlatformWindow fDummyMenu;
+#endif
+    #endif //# __PRIVATE__
+
+  };
+// #endif //# _PLATFORM_MACINTOSH_
+#endif //# __SOMIDL__
+};
+
+#endif // _WINDOW_

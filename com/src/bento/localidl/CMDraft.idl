@@ -1,0 +1,500 @@
+/* @(#)Z 1.6 com/src/bento/localidl/CMDraft.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:45 (96/10/28 13:37:25) */
+
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		CMDraft.idl
+//#
+//#	Contains:	Definition of CMDraft
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<30>	 10/5/95	CC		1286180: Added private CloneCompanionObject
+//#									method.
+//#		<29>	 8/25/95	JBS		1263078 FB: fix part editor swapping
+//#		<28>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		<27>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<26>	 6/19/95	VL		1170098: Added DeleteRealPart,
+//#									PartInstantiated, PartDeleted and
+//#									fPartClasses.
+//#		<25>	 6/12/95	CC		1252059: Added fSavedWeakClonedSUIDs.
+//#		<24>	 6/10/95	VL		1252808: Pass-thru needs to include
+//#									DocPriv.h for ODVersionID.
+//#		<23>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<22>	 5/22/95	CC		1242879: Added IsValidID.
+//#		<21>	 5/18/95	CC		1238898: Added fDestFrame field.
+//#		<20>	 5/17/95	VL		1170098: Added ConstructRealPart and
+//#									ReleaseRealPart.
+//#		<19>	  5/2/95	CC		1207493: Added ContainingPartInClone(),
+//#									CheckClonedObject(), fAnyFrameCloned and
+//#									fRootPartCloned (all private).
+//#		<18>	 4/25/95	DM		1172791: Replace AEHashTable with
+//#									OpenHashTable
+//#		<17>	 3/24/95	EL		1209355: add private field
+//#									fRemoveChangeOnAbort
+//#	   	<16>	 2/15/95	EL		1182275: Add private field
+//#									fOrigTopVersionDraftID so we can know on
+//#									closing that a new user draft has been
+//#									created.
+//#		<15>	 1/18/95	VL		1193559: Added new overrides for 2
+//#									methods(GetPersistentObject and
+//#									GetPersistentObjectID). Renamed
+//#									GetPersistentObject to
+//#									RetrievePersistentObject. Removed
+//#									GetPersistentLinkID and GetLinkID.
+//#		<14>	12/16/94	CC		1203516 Removed ODLinkSource parameter from
+//#									CreateLink().
+//#		<13>	 11/1/94	CC		1190911, 1192030, 1196908 - Removed
+//#									GetWeakReferenceProp(),
+//#									GetLinkSourceFromLink(),
+//#									GetLinkFromLinkSource(),
+//#									ConnectLinkSourceToNewPart(), fClonedLinks.
+//#										Added SetOriginalID(), GetOriginalID(),
+//#									ValidWeakReferenceProperty(),
+//#									CompanionWasCloned(), GetCloneKind(),
+//#									CopiedLinkSubstitution().
+//#		<12>	 10/4/94	CC		1190858 - Added ReleaseLinkSource().
+//#		<11>	 9/16/94	CC		1186957 - Added private methods
+//#									GetLinkSourceFromLink() and
+//#									GetLinkFromLinkSource().
+//#		<10>	 9/15/94	CC		1186776 - Added fClonedLinks,
+//#									StrongClone(), GetWeakReferenceProp(), and
+//#									ConnectLinkSourceToNewProp(), and deleted
+//#									obsoleted methods.
+//#		 <9>	  9/6/94	VL		1184177: Removed GetName and SetName.
+//#		 <8>	 8/26/94	VL		1183174: Added WeakClone and private field
+//#									fWeakClonedSUIDs.
+//#		 <7>	 8/16/94	VL		1143605: Added Clone.
+//#		 <6>	 8/11/94	CC		Add override of CreateLinkIterator() and
+//#									CreateLinkSourceIterator().
+//#		 <5>	 7/26/94	VL		Got rid of MacStorageUnit and
+//#									MacDragAndDropStorageUnit.
+//#		 <4>	  7/5/94	VL		Fixed in/out.
+//#		 <3>	 6/22/94	VL		Added functionprefix.
+//#		 <2>	 6/14/94	CC		Changed ODHeap to ODMemoryHeap.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CMDRAFT_
+#define _CMDRAFT_
+
+#ifndef _DRAFT_
+#include "Draft.idl"
+#endif
+
+#ifdef _PLATFORM_OS2_
+#include "IODDefs.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface  CMDraft;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+interface ODPersistentObject;
+interface ODLink;
+interface ODLinkSource;
+interface CMDocument;
+interface ODEmbeddedContainer;
+interface CMLinkIterator;
+interface CMLinkSourceIterator;
+interface ODStorageUnit;
+
+#ifdef _PLATFORM_OS2_
+interface IODLinkService;
+#endif
+
+#ifdef __PRIVATE__
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken OpenHashTable;
+typedef somToken IDList;
+typedef somToken CMContainer;
+typedef somToken VersionList;
+typedef somToken ODMemoryHeapID;
+typedef somToken ODVersionID;
+#endif
+
+//==============================================================================
+// ODDraft
+//==============================================================================
+
+interface CMDraft :  ODDraft
+{
+
+#ifdef __PRIVATE__
+
+	ODStorageUnit CreateSU(in ODStorageUnitID id, 
+							in ODType suType);
+
+	void	CreateVersion();
+	void	OpenVersion();
+	void	CloseVersion();
+	void	DestroyVersion();
+	void	FlushVersion();
+
+	ODPersistentObject RetrievePersistentObject(in ODStorageUnitID id);
+	void	ReleasePersistentObject(in ODPersistentObject object);
+	void	RemovePersistentObject(in ODPersistentObject object);
+	
+	void	CreateCollections();
+	void	DeleteCollections();
+	void	ExternalizeCollections();
+	void	CloseCollections();
+	void	OpenCollections();
+	ODBoolean	AreEmptyCollections();
+	
+	void	FailIfNotExclusiveWrite();
+	
+	ODLink	CreateLink();
+
+	ODID	StrongClone(in ODDraftKey key, in ODID fromObjectID, in ODID toObjectID, in ODID scope);
+
+	ODBoolean		ValidWeakReferenceProperty(in ODID objectID, in ODPropertyName propertyName);
+	void			SetOriginalID(in ODStorageUnitID destID, in ODStorageUnitID originalID);
+	ODStorageUnitID GetOriginalID(in ODStorageUnitID fromID);
+	ODID			CloneCompanionObject(in ODDraftKey key, in ODID fromID);
+	ODBoolean		CompanionWasCloned(in ODStorageUnitID fromID, in ODPropertyName prop);
+	ODCloneKind		GetCloneKind();
+	ODBoolean		CopiedLinkSubstitution(in ODDraftKey key, in ODID fromObjectID, in ODID toObjectID, out ODID toID);
+	ODBoolean		ContainingPartInClone(in ODFrame targetFrame);
+	void			CheckClonedObject(in ODID fromID, in ODID toID, in ODID originalID);
+
+	void			PartInstantiated(in ODPart part);
+	void			PartDeleted(in ODPart part);
+	
+	void 	SetChangedFromPrevFlag(in ODBoolean changed);
+
+	IDList*	GetIDList();
+
+	void Reinitialize(in ODDraftPermissions perms);
+	void Open();
+	void Close();
+	void Abort();
+	void Flush();
+	
+	ODBoolean	IsNewDraft();
+	ODEmbeddedContainer	GetEmbeddedContainer();
+	CMContainer	GetCMContainer();
+	ODBoolean	NeedExternalizing();
+	ODBoolean	IsChangedFromPrev(in VersionList* versionList);
+	OpenHashTable* GetClonedSUIDs(in ODDraft destDraft);
+
+	ODBoolean		IsValidDraftKey(in ODDraftKey key);
+	ODMemoryHeapID	GetHeap();
+	
+
+#ifdef _PLATFORM_OS2_
+        ODLinkSource GetLinkSrcForAvlSvr(in ODStorageUnitID id,
+                                         in IODAuxiliaryState auxState);
+        // This method is called to obtain and internalize a linksource object
+        //   without calling back to the linkservice to get the auxstate,
+        //   since the auxstate is supplied already on the call.
+        // This method is used in two cases:
+        //   1. the linkservice of a document is responding to a
+        //      InternalizeLinkSource call from the availability server.
+        //   2. the surrogate draft in the link service is being
+        //      called to internalize a newly cloned surrogate.
+                                   /******** strom@watson ********/
+#endif
+
+
+
+#endif	// __PRIVATE__
+
+#ifdef __SOMIDL__
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+  	functionprefix = CMDraft;
+
+    override:
+		somUninit,
+        Acquire,
+        Release,
+		Purge,
+        GetDocument,
+        GetID,
+        AcquireDraftProperties,
+        GetPermissions,
+        CreateStorageUnit,
+        AcquireStorageUnit,
+        RemoveStorageUnit,
+        BeginClone,
+        EndClone,
+        AbortClone,
+        Clone,
+        WeakClone,
+        ChangedFromPrev,
+        SetChangedFromPrev,
+        RemoveFromDocument,
+        RemoveChanges,
+        Externalize,
+        SaveToAPrevious,
+        CreateFrame,
+        AcquireFrame,
+        RemoveFrame,
+        CreatePart,
+        AcquirePart,
+        RemovePart,
+        CreateLinkSpec,
+        CreateLinkSource,
+        AcquireLinkSource,
+        AcquireLink,
+        RemoveLink,
+        RemoveLinkSource,
+        GetPersistentObjectID,
+		AcquirePersistentObject,
+        ReleasePart,
+#ifdef _PLATFORM_OS2_
+        IsValidID,
+        CreatePartLinkSourceIterator,
+        CreatePartLinkIterator,
+#else
+        IsValidID,
+#endif
+
+#ifdef __PRIVATE__
+		InitDraft,
+		ReleaseFrame,
+		ReleaseLink,
+		ReleaseLinkSource,
+		ReleaseStorageUnit,
+		CreateLinkIterator,
+		CreateLinkSourceIterator,
+		ConstructRealPart,
+		ReleaseRealPart,
+		DeleteRealPart,
+		SwapPart;
+#else
+		reserved1,
+		reserved2,
+		reserved3,
+		reserved4,
+		reserved5,
+		reserved6,
+		reserved7,
+		reserved8,
+		reserved9,
+		reserved10,
+		reserved11;
+#endif
+		
+	releaseorder:
+		#ifdef __PRIVATE__
+			CreateSU,
+			CreateVersion,
+			OpenVersion,
+			CloseVersion,
+			DestroyVersion,
+			FlushVersion,
+			RetrievePersistentObject,
+			ReleasePersistentObject,
+			RemovePersistentObject,
+			CreateCollections,
+			DeleteCollections,
+			ExternalizeCollections,
+			CloseCollections,
+			OpenCollections,
+			AreEmptyCollections,
+			FailIfNotExclusiveWrite,
+			CreateLink,
+			SetChangedFromPrevFlag,
+			GetIDList,
+			Reinitialize,
+			Open,
+			Close,
+			Abort,
+			Flush,
+			IsNewDraft,
+			GetEmbeddedContainer,
+			GetCMContainer,
+			NeedExternalizing,
+			IsChangedFromPrev,
+			GetClonedSUIDs,
+			IsValidDraftKey,
+			GetHeap,
+			StrongClone,
+			ValidWeakReferenceProperty,
+			SetOriginalID,
+			GetOriginalID,
+			CloneCompanionObject,
+			CompanionWasCloned,
+			GetCloneKind,
+			CopiedLinkSubstitution,
+			ContainingPartInClone,
+			CheckClonedObject,
+			PartInstantiated,
+
+#ifdef _PLATFORM_OS2_
+
+                PartDeleted,
+                GetLinkSrcForAvlSvr;
+#else
+                PartDeleted;
+#endif
+		#else
+			reserved12,
+			reserved13,
+			reserved14,
+			reserved15,
+			reserved16,
+			reserved17,
+			reserved18,
+			reserved19,
+			reserved20,
+			reserved21,
+			reserved22,
+			reserved23,
+			reserved24,
+			reserved25,
+			reserved26,
+			reserved27,
+			reserved28,
+			reserved29,
+			reserved30,
+			reserved31,
+			reserved32,
+			reserved33,
+			reserved34,
+			reserved35,
+			reserved36,
+			reserved37,
+			reserved38,
+			reserved39,
+			reserved40,
+			reserved41,
+			reserved42,
+			reserved43,
+			reserved44,
+			reserved45,
+			reserved46,
+			reserved47,
+			reserved48,
+			reserved49,
+			reserved50,
+			reserved51,
+			reserved52,
+			reserved53,
+			reserved54,
+
+#ifdef _PLATFORM_OS2_
+                        reserved55,
+                        reserved56;
+#else
+                        reserved55;
+#endif
+
+		#endif	// __PRIVATE__
+
+	#ifdef __PRIVATE__
+
+		passthru C_xh =
+			""
+			"#include <CMAPI.h>"
+			"class OpenHashTable;"
+			"class IDList;"
+			"class VersionList;"
+			"#include <ODMemory.h>"
+
+#ifdef _PLATFORM_OS2_
+                        "#include <IODDefs.xh>"
+#endif
+			"";
+
+		passthru C_xih =
+			""
+			"#include <DocPriv.h>"
+			"";
+			
+		CMDocument				fDocument;
+		ODDraftID				fID;
+		ODVersionID				fVersionID;
+		ODVersionID				fPrevVersionID;
+			
+		ODDraftPermissions		fPermissions;
+		ODEmbeddedContainer		fEmbeddedContainer;
+		ODBoolean				fChangedFromPrev;
+		ODBoolean				fIsNewDraft;
+		ODBoolean				fExternalized;
+		ODBoolean				fRemoveChangeOnAbort;
+	
+		OpenHashTable*			fPersistentObjects;
+		OpenHashTable*			fReleasedPersistentObjects;
+		OpenHashTable*			fStorageUnits;
+		OpenHashTable*			fReleasedStorageUnits;
+		
+		IDList*					fIDList;
+		ODStorageUnit			fDraftProperties;
+		
+		OpenHashTable*			fClonedSUIDs;
+		OpenHashTable*			fWeakClonedSUIDs;
+		OpenHashTable*			fSavedWeakClonedSUIDs;
+		ODDraft					fDestDraft;
+		ODFrame					fDestFrame;
+		ODDraftKey				fCurrentKey;
+		ODULong					fLockCount;
+		ODCloneKind				fCloneKind;
+		ODBoolean				fAnyFrameCloned;
+		ODBoolean				fRootPartReused;
+	
+		ODDraftID				fOrigTopVersionDraftID;
+	
+		ODMemoryHeapID			fHeap;
+		
+		OpenHashTable*			fPartClasses;
+
+#ifdef _PLATFORM_OS2_
+                IODLinkService                        fLinkService;
+                string                                fLinkServiceXID;
+#endif
+
+
+	#endif	// __PRIVATE__
+  };
+#endif   //__SOMIDL__
+};
+
+#endif  // _CMDRAFT_

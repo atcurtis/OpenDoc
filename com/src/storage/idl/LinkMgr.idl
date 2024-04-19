@@ -1,0 +1,277 @@
+/* @(#)Z 1.12 com/src/storage/idl/LinkMgr.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:53 (96/10/29 09:32:28) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27,94
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           LinkMgr.idl
+//#
+//#     Contains:       Link Manager Interface
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <19>      9/1/95        CC              1280818: CreateLink method made private.
+//#             <18>     8/29/95        DM              1221778, 1276165: add ShowLinkUpdate-
+//#                                                                     Alert(), SuspendResume(), and _fSuspended-
+//#                                                                     UpdateLinks to let LinkMgr show update
+//#                                                                     alerts. 1274606: private DeleteDraftInfos()
+//#                                                                     no longer needed after inlined in Uninit().
+//#             <17>     8/15/95        CC              1275241: IDL review.
+//#             <16>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <15>     7/25/95        CC              1212338: Declare private class
+//#                                                                     ODObjectCollection.
+//#             <14>     5/18/95        CC              1249197: Made InitLinkManager private.
+//#             <13>      3/7/95        CC              1224121: CreateLink() returns an
+//#                                                                     ODLinkSource object.
+//#             <12>      3/3/95        CC              1223667 ExportOnSave() returns previous
+//#                                                                     status as boolean result.
+//#                                                                     1224402 ExportOnSave() and DeleteOnSave()
+//#                                                                     made private to implementation.
+//#             <11>      2/1/95        CC              1153347: Added fNMResponseUPP and fNMRecPtr
+//#                                                                     fields.
+//#             <10>     1/19/95        CC              1210935, 1207937 Added DeleteOnSave()
+//#                                                                     method.
+//#              <9>    12/22/94        CC              1153780 Removed private method
+//#                                                                     NextGlobalID() (made static).
+//#              <8>    11/30/94        RR              #1188078 Use FSSpec, not ODFileSpec in
+//#                                                                     private methods
+//#              <7>     7/31/94        CC              Changed ODDocument parameters to ODDraft
+//#                                                                     since document properties have been
+//#                                                                     eliminated.
+//#              <6>     7/27/94        CC              Removed unused typedef somToken AppleEvent.
+//#              <5>     6/21/94        CC              Added functionprefix.
+//#              <4>     6/17/94        Te              Added C_xh passthru to #include
+//#                                                                     <Editions.h> for EditionContainerSpec.
+//#              <3>     6/10/94        CC              Eliminated heap parameter to
+//#                                                                     InitLinkManager().
+//#              <2>      6/9/94        CC              Added C_xh passthru to define class
+//#                                                                     OrderedCollection.
+//#              <1>      6/8/94        CG              first checked in
+//#              <7>      6/8/94        CC              Removed some private methods.
+//#              <6>      6/7/94        RR              Privatise change log
+//#              <5>      5/4/94        CC              Adjusted in/out/inout.
+//#
+//#     To Do:
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINKMGR_
+#define _LINKMGR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+#ifndef _STORAGEU_
+#include "StorageU.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODLinkManager;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODSession;
+interface  ODDocument;
+interface  ODDraft;
+interface  ODLink;
+interface  ODLinkSource;
+interface  ODBaseLinkSource;
+interface  ODLinkSpec;
+
+#ifdef __PRIVATE__
+
+interface  ODBaseLinkSource;
+
+//==============================================================================
+// Implementation types
+//==============================================================================
+
+typedef somToken DraftInfo;
+typedef somToken ODRefCntCollection;
+typedef somToken OrderedCollection;
+typedef somToken ODObjectCollection;
+#ifdef _PLATFORM_MACINTOSH_
+typedef somToken NMUPP;
+typedef ODPtr NMRecPtr;
+#endif  //# _PLATFORM_MACINTOSH_
+
+#endif //# __PRIVATE__
+
+//=====================================================================================
+// ODLinkManager
+//=====================================================================================
+
+interface ODLinkManager : ODObject
+{
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+
+        ODULong NewSectionID(in ODDraft draft);
+
+        ODBoolean ReserveSectionID(in ODULong sectionID,
+                                                                in ODDraft draft);
+
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_OS2_
+
+        ODBoolean UnsavedExportedLinks(in ODDraft draft);
+
+        ODBoolean AnyLinkImported(in ODDraft draft);
+
+        void DraftOpened(in ODDraft draft);
+
+        void DraftSaved(in ODDraft draft);
+
+        void DraftClosing(in ODDraft draft);
+
+#ifdef __PRIVATE__
+
+        void InitLinkManager(in ODSession session);
+
+        ODLinkSource CreateLink(in ODDraft draft,
+                                                        in ODLinkSpec linkSpec);
+
+        ODBoolean ExportOnSave(in ODLink link, in ODBoolean doExport);
+
+        ODBoolean DeleteOnSave(in ODLink link, in ODBoolean doDelete);
+
+        //# Private to implementation
+
+        void NewDraftInfo(in ODDraft draft);
+
+        DraftInfo* GetDraftInfo(in ODDraft draft);
+
+    ODLinkUpdateResult ShowLinkUpdateAlert(in ODBaseLinkSource link);
+
+#ifdef _PLATFORM_MACINTOSH_
+    void SuspendResume(in ODEventData event);
+#endif // _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_WIN32_
+
+        ODLink FetchLink( in ODDraft draft, in char *pszItemName );
+
+#endif //# _PLATFORM_WIN32_
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+implementation
+{
+        majorversion = 1; minorversion = 0;
+
+        functionprefix = ODLinkManager;
+
+        override:
+                somUninit;
+
+        releaseorder:
+        #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+                NewSectionID,
+                ReserveSectionID,
+        #else
+                ReservedA,
+                ReservedB,
+        #endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_OS2_
+                UnsavedExportedLinks,
+                AnyLinkImported,
+                DraftOpened,
+                DraftSaved,
+                DraftClosing,
+        #ifdef __PRIVATE__
+        #ifdef _PLATFORM_WIN32_
+                FetchLink,
+        #else
+                ReservedC,
+        #endif //# _PLATFORM_WIN32_
+                InitLinkManager,
+                CreateLink,
+                ExportOnSave,
+                DeleteOnSave,
+                NewDraftInfo,
+                GetDraftInfo,
+#ifdef _PLATFORM_MACINTOSH_
+                ShowLinkUpdateAlert,
+                SuspendResume;
+#else
+                ShowLinkUpdateAlert,
+                ReservedD;
+#endif // _PLATFORM_MACINTOSH_
+        #else
+                reserved1,
+                reserved2,
+                reserved3,
+                reserved4,
+                reserved5,
+                reserved6,
+                reserved7,
+                reserved8;
+        #endif
+
+        #ifdef __PRIVATE__
+                passthru C_xih = ""
+                                                "#ifdef _PLATFORM_MACINTOSH_"
+                                                "#ifndef __NOTIFICATION__"
+                                                "#include <Notification.h>"
+                                                "#endif"
+                                                "#endif"
+                                                "";
+                passthru C_xh = ""
+                                                "class OrderedCollection;"
+                                                "class ODRefCntCollection;"
+                                                "class ODObjectCollection;"
+                                                "class DraftInfo;"
+                                                "";
+                ODRefCntCollection*     fSuspendedUpdateLinks;
+                OrderedCollection*      fDraftInfos;
+        #ifdef _PLATFORM_MACINTOSH_
+                NMUPP                           fNMResponseUPP;
+                NMRecPtr                        fNMRecPtr;
+        #endif //# _PLATFORM_MACINTOSH_
+        #ifdef _PLATFORM_WIN32_
+                ODSession                       fSession;
+        #endif //# _PLATFORM_WIN32_
+                ODBoolean                       fInBackground;
+    #endif //# __PRIVATE__
+};
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_ or _PLATFORM_OS2_
+#endif //# __SOMIDL__
+};
+
+#endif  // _LINKMGR_
+

@@ -1,0 +1,230 @@
+/* @(#)Z 1.7 com/src/registry/localidl/ODPrtRei.idl, odconfig, od96os2, odos29646d 96/11/15 15:49:07 (96/10/29 09:29:47) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odconfig
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//#
+//#     File:           ODPrtReg.idl
+//#     
+//#     Contains:       Interface for ODPartHandlerInfo class
+//#     
+//#     Written by:     Kirk Searls           
+//#     
+//#     Copyright:      @1994 by International Business Machines, Inc., 
+//#                              all rights reserved.
+//#     
+//#     IBM Change History (most recent first):
+//#     
+//#     <4>   10/04/95  jso  124840 - added HTMX variable
+//#     <3>    6/23/95  jso  123479  Added UpdateODPartHandlerInfo
+//#     <2>    8/27/94  MAP          Port A8C3
+//#     <1>    6/8/94   KLS          first checked in
+//#     
+//#     To Do:
+//#
+#else
+//#  Copyright:  1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODPRTREI_
+#define _ODPRTREI_
+
+#ifndef _ODPRTREG_
+#include <ODPrtReg.idl>
+#endif
+
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+  This file defines class ODPartHandlerInfo.  This class contains information 
+  about a part handler class.  This information is kept by the OpenDoc part 
+  registry and is used by the OpenDoc shell and some OpenDoc utilities.
+*/
+
+//==============================================================================
+// Implemenation types
+//==============================================================================
+
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODPartHandlerRegistryInt;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODPartHandlerInfoInt;
+interface PartSet;
+interface KindSet;
+interface FileTypeSet;
+interface FileExtensionSet;
+interface ODFSBentoHandlers;
+interface PlatformFile;
+interface WindowsRegistry;
+
+//==============================================================================
+// Types used by this interface that aren't defined in IDL
+//==============================================================================
+
+typedef long CMContainer;
+typedef long CMSession;
+
+#ifdef _PLATFORM_OS2_
+typedef somToken HMTX;
+#endif
+
+
+//==============================================================================
+// ODPartHandlerRegistryInt
+//==============================================================================
+
+interface ODPartHandlerRegistryInt  : ODPartHandlerRegistry
+{
+    void InitODPartHandlerRegistryIntWithStorage();
+    void RemoveODPartHandlerInfoFromStorage( in ODPartHandlerInfoInt partInfo, 
+                                             in CMContainer container);
+    CMContainer OpenContainer( in long flags);
+    void        CloseContainer();
+    void        ReadPreferences();
+    void        WritePreferences();
+    long        SetPreferredPartHandlerInList( in ISOString partKindName, in ISOString partHandlerName);
+    long        SetPreferredPartHandlerInTypeList( in ISOString partFileTypeName, in ISOString partHandlerName);
+    long        SetPreferredPartHandlerInExtList( in ISOString partFileExtName, in ISOString partHandlerName);
+    long        SetPreferredPartHandlerInCategoryList( in ISOString category, in ISOString partHandlerName);
+    ISOString   GetKindDisplayNameFromKind( in ISOString partKindName);
+    ISOString   GetHandlerDisplayNameFromHandler( in ISOString HandlerName);
+    void        CheckAndRefresh();
+
+
+    attribute ODFSBentoHandlers	fHandlers;
+    attribute PlatformFile	fPlatformFile;
+
+    attribute CMSession session;
+    attribute CMContainer container;
+    attribute long flastRegUpdate;
+      
+#ifdef __SOMIDL__
+
+  implementation
+  {
+
+    passthru C_xh =
+    ""
+    "#include <CMAPI.h>"
+    "#include <ODTypes.h>"
+    "";
+
+    functionprefix = ODPartHandlerRegistryInt;
+
+    somInit : override;
+    somUninit : override;
+  
+    override: RegisterPartHandlerClass
+      , DeregisterPartHandler
+      , DeregisterPartHandlerClass
+      , GetPartHandlerList
+      , GetPartKindList
+      , GetPartHandlerInfo
+      , GetPreferredPartHandler
+      , SetPreferredPartHandler
+      , somDumpSelfInt
+      , UpdateODPartHandlerInfo
+      , GetPreferredPartHandlerForFileType
+      , SetPreferredPartHandlerForFileType
+      , GetPreferredPartHandlerForFileExt
+      , SetPreferredPartHandlerForFileExt
+      , GetFileTypeList
+      , GetFileExtensionList
+      , GetPartHandlerListForFileTypes
+      , GetPartHandlerListForFileExt
+      , GetPreferredPartHandlerForCategory
+      , SetPreferredPartHandlerForCategory
+      , GetCategoryList
+      ;
+
+    releaseorder: InitODPartHandlerRegistryIntWithStorage
+      , RemoveODPartHandlerInfoFromStorage
+      , OpenContainer
+      , CloseContainer
+      , ReadPreferences
+      , WritePreferences
+      , SetPreferredPartHandlerInList
+      , _set_session
+      , _get_session
+      , _set_container
+      , _get_container
+      , SetPreferredPartHandlerInTypeList 
+      , SetPreferredPartHandlerInExtList 
+      , SetPreferredPartHandlerInCategoryList 
+      , _set_fHandlers
+      , _get_fHandlers
+      , _set_fPlatformFile
+      , _get_fPlatformFile
+      , GetKindDisplayNameFromKind
+      , GetHandlerDisplayNameFromHandler
+      , CheckAndRefresh
+      , _set_flastRegUpdate
+      , _get_flastRegUpdate
+      ;
+
+      PartSet parts;
+      KindSet kinds;
+      FileTypeSet types;
+      FileExtensionSet extensions;
+      KindSet categories;
+#ifdef _PLATFORM_OS2
+      HMTX fHMTXBentoAccess;
+#endif
+      char*   completeFileName;
+
+  };
+  
+#endif
+
+};
+
+#endif 
+

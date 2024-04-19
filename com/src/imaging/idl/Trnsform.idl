@@ -1,0 +1,232 @@
+/* @(#)Z 1.9 com/src/imaging/idl/Trnsform.idl, odimaging, od96os2, odos29646d 96/11/15 15:25:06 (96/10/29 09:26:06) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//#         3/15/96 jab  Removed double underscores from function   */
+//#                       prefix.                                   */
+//#         2/29/96 jab  Added Windows only methods.                */
+//#         2/22/96 jab  Merge DR4 with OS2 Feb. 13 drop.           */
+//#                      Note: TransformPoints removed from DR4.    */
+//#                      Rearranged #ifdef's for better portability */
+//#                      across platforms.                          */
+//# 133968  8/23/95 jso  Port dr3                                   */
+//# 120349  5/15/95 map  Fix problem with //# comment on #endifs    */
+//# <OS2>   8/27/94 MAP  Port A8C3                                  */
+//#******************************************************************/
+//#
+//#	File:		Trnsform.idl
+//#
+//#	Contains:	ODTransform, Mac-specific extensions to ODBaseTransform.
+//#
+//#	Owned by:	Jens Alfke
+//#
+//#	Copyright:	(r) 1993-95 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <7>	  9/8/95	jpa		IDL cleanup [1281687]
+//#		 <6>	 12/5/94	jpa		Code review fixes. [1203923]
+//#		 <5>	 8/17/94	jpa		Added "functionprefix" directive. [1181512]
+//#		 <4>	 7/26/94	eeh		ODQDPoint -> Point
+//#		 <3>	 7/15/94	jpa		No change, but must modify file to force
+//#									.xh and .xih to rebuild after change to
+//#									ODQDPoint defn in ODTypes.idl.
+//#		 <2>	  6/8/94	jpa		Privatized change history.
+//#		 <1>	  6/8/94	jpa		first checked in
+//#		 <5>	 5/26/94	jpa		Tweaked IDL, removed overrides.
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _TRNSFORM_
+#define _TRNSFORM_
+
+#ifndef _TRNSFRMB_
+#include "TrnsfrmB.idl"      
+#endif
+
+
+//==============================================================================
+// Constants & types defined in this interface
+//==============================================================================
+#ifdef _PLATFORM_OS2_
+struct OS2MATRIXLF {
+   long  fxM11;
+   long  fxM12;
+   long  lM13;
+   long  fxM21;
+   long  fxM22;
+   long  lM23;
+   long  lM31;
+   long  lM32;
+   long  lM33;
+};
+typedef OS2MATRIXLF MATRIXLF;
+#endif // _PLATFORM_OS2_
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODTransform;
+
+//==============================================================================
+// ODTransform
+//==============================================================================
+
+
+interface ODTransform :  ODBaseTransform
+{
+    //# Needed ONLY when subclassing. Do not use otherwise.
+    void InitTransform();
+
+    //*********************
+    // Macintosh Specific
+    //*********************
+#ifdef _PLATFORM_MACINTOSH_
+
+    ODBoolean IsQDOffset();
+
+    Point GetQDOffset();
+	
+    ODTransform SetQDOffset(in Point point);
+
+#endif  // _PLATFORM_MACINTOSH_
+
+
+    //*********************
+    // OS/2 Specific
+    //*********************
+#ifdef _PLATFORM_OS2_
+
+    ODBoolean IsIntegerOffset();
+
+    void GetMATRIXLF(out MATRIXLF mtx);
+
+    void SetMATRIXLF(in MATRIXLF mtx);
+
+    void TransformPoints( in ODByteArray points, in ODULong npoints );
+
+#endif // _PLATFORM_OS2_
+
+
+    //*********************
+    // Windows Specific
+    //*********************
+#ifdef _PLATFORM_WIN32_
+
+    ODBoolean IsIntegerOffset();
+
+    Point GetOffsetAsPoint();
+	
+    ODTransform SetOffsetUsingPoint(in Point point);
+
+    void TransformPoints( in ODByteArray points, in ODULong npoints );
+
+#endif // _PLATFORM_WIN32_
+
+    //*********************
+    // UNIX Specific
+    //*********************
+#ifdef _PLATFORM_UNIX_
+
+    ODBoolean IsIntegerOffset();
+
+    Point GetOffsetAsPoint();
+	
+    ODTransform SetOffsetUsingPoint(in Point point);
+
+    void TransformPoints( in ODByteArray points, in ODULong npoints );
+
+#endif // _PLATFORM_UNIX_
+
+
+
+
+#ifdef __SOMIDL__
+  implementation
+  {
+    releaseorder:
+      InitTransform,
+
+#ifdef _PLATFORM_MACINTOSH_
+      IsQDOffset,
+      GetQDOffset,
+      SetQDOffset;
+#endif  // _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_OS2_
+      IsIntegerOffset,
+      GetMATRIXLF,
+      SetMATRIXLF,
+      TransformPoints;
+#endif //  _PLATFORM_OS2_
+
+#ifdef _PLATFORM_WIN32_
+      IsIntegerOffset,
+      GetOffsetAsPoint,
+      SetOffsetUsingPoint,
+      TransformPoints;
+#endif  // _PLATFORM_WIN32_
+
+#ifdef _PLATFORM_AIX_
+      IsIntegerOffset,
+      GetOffsetAsPoint,
+      SetOffsetUsingPoint,
+      TransformPoints;
+#endif //  _PLATFORM_AIX_
+
+    majorversion = 1; minorversion = 0;
+
+    functionprefix = ODTransform;
+
+  };
+#endif
+};
+
+
+#endif //# _TRNSFORM_
+
+

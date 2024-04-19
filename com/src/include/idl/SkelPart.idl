@@ -1,0 +1,130 @@
+/* @(#)Z 1.2 com/src/include/idl/SkelPart.idl, odcore, od96os2, odos29646d 96/11/15 15:25:41 (96/07/15 18:15:25) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifndef _SKELPART_
+#define _SKELPART_
+
+#ifndef _PART_
+#include "Part.idl"
+#endif
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken MyPart;
+#endif
+
+module Apple
+{
+
+interface SkeletonPart :ODPart
+{
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1;
+		minorversion = 0;
+		
+	override:
+        FulfillPromise,
+        DropCompleted,
+        DragEnter,
+        DragWithin,
+        DragLeave,
+        Drop,
+        ContainingPartPropertiesChanged,
+        GetContainingPartProperties,
+        RevealFrame,
+        EmbeddedFrameSpec,
+        CreateEmbeddedFramesIterator,
+        AddDisplayFrame,
+        AttachSourceFrame,
+        RemoveDisplayFrame,
+        CloseDisplayFrame,
+        FrameShapeChanged,
+        ViewTypeChanged,
+        PresentationChanged,
+        WritePartInfo,
+        ReadPartInfo,
+        Open,
+        CreateEmbeddedFrame,
+        RemoveEmbeddedFrame,
+        RequestFrameShape,
+        UsedShapeChanged,
+        AdjustBorderShape,
+        FacetAdded,
+        FacetRemoved,
+        CanvasChanged,
+        ClipShapeChanged,
+        ExternalTransformChanged,
+        Draw,
+        CanvasUpdated,
+        HighlightChanged,
+        GetPrintResolution,
+        CreateLink,
+        LinkUpdated,
+        RevealLink,
+        EmbeddedFrameChanged,
+        LinkStatusChanged,
+        BeginRelinquishFocus,
+        CommitRelinquishFocus,
+        AbortRelinquishFocus,
+        FocusAcquired,
+        FocusLost,
+        CloneInto,
+        ExternalizeKinds,
+        ChangeKind,
+        HandleEvent,
+        HandleEventInEmbedded,
+        MouseEnter,
+        MouseWithin,
+        MouseLeave,
+        AdjustMenus,
+        UndoAction,
+        RedoAction,
+        DisposeActionState,
+        WriteActionState,
+        ReadActionState,
+        InitPart,
+        InitPartFromStorage;
+
+	#ifdef __PRIVATE__
+		passthru C_xih = "
+		""
+		"class MyPart;"
+		"";
+		  MyPart*  fImplementation;
+	#endif
+	};
+#endif
+};
+
+};  //# Module SkeletonPart
+
+#endif //# _SKELPART_

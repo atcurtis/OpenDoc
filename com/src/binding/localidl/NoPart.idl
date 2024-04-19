@@ -1,0 +1,195 @@
+/* @(#)Z 1.11 com/src/binding/localidl/NoPart.idl, odconfig, od96os2, odos29646d 96/11/15 15:24:44 (96/10/29 09:15:37) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odconfig
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifndef _NOPART_
+#define _NOPART_
+
+#ifndef _PART_
+#include "Part.idl"
+#endif
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODFrame;
+interface ODPartWrapper;
+interface  ODEmbeddedFramesIterator;
+interface  ODFacet;
+interface  ODFrame;
+interface  ODMenuBar;
+interface  ODFocusSet;
+interface  ODShape;
+interface  ODStorageUnit;
+interface  ODSession;
+interface  ODWindow;
+interface  ODPlatformMenu;
+interface  M_NoPart;
+
+//=============================================================================
+// NoPart interface
+//=============================================================================
+interface NoPart : ODPart
+{
+#ifdef __PRIVATE__
+
+        void      Initialize();
+
+        void      CheckAndAddProperties(in ODStorageUnit storageUnit);
+
+        ODBoolean HandleMouseUp(        in ODEventData event,
+                                        in ODFrame frame,
+                                        in ODFacet facet);
+
+        ODBoolean HandleMenuEvent(      in ODFrame frame,
+                                        in ODEventData event );
+
+        ODBoolean ActivateFrame(        in ODFrame frame);
+
+        ODWindow  MakeWindow(           in ODFrame frame);
+
+        void      ActivatingWindow(     in ODFrame frame);
+
+        void      DeactivatingWindow(   in ODFrame frame);
+
+#endif
+
+
+#ifdef __SOMIDL__
+        implementation
+        {
+        majorversion = 1;
+        minorversion = 0;
+        functionprefix = NoPart;
+
+        override:
+        somInit,
+        somUninit,
+        FulfillPromise,
+        DropCompleted,
+        DragEnter,
+        DragWithin,
+        DragLeave,
+        Drop,
+        RevealFrame,
+        EmbeddedFrameSpec,
+        CreateEmbeddedFramesIterator,
+        DisplayFrameAdded,
+        DisplayFrameRemoved,
+        DisplayFrameConnected,
+        DisplayFrameClosed,
+        AttachSourceFrame,
+        FrameShapeChanged,
+        ViewTypeChanged,
+        PresentationChanged,
+        SequenceChanged,
+        WritePartInfo,
+        ReadPartInfo,
+        Open,
+        RequestEmbeddedFrame,
+        RemoveEmbeddedFrame,
+        RequestFrameShape,
+        UsedShapeChanged,
+        AdjustBorderShape,
+        FacetAdded,
+        FacetRemoved,
+        CanvasChanged,
+        GeometryChanged,
+        Draw,
+        CanvasUpdated,
+        HighlightChanged,
+        GetPrintResolution,
+        CreateLink,
+        LinkUpdated,
+        RevealLink,
+        LinkStatusChanged,
+        BeginRelinquishFocus,
+        CommitRelinquishFocus,
+        AbortRelinquishFocus,
+        FocusAcquired,
+        FocusLost,
+        CloneInto,
+        ExternalizeKinds,
+        Externalize,
+        ChangeKind,
+        HandleEvent,
+        AdjustMenus,
+        UndoAction,
+        RedoAction,
+        DisposeActionState,
+        WriteActionState,
+        ReadActionState,
+        InitPart,
+        ClonePartInfo,
+        InitPartFromStorage;
+
+        releaseorder:
+#ifdef __PRIVATE__
+                Initialize,
+                CheckAndAddProperties,
+                HandleMouseUp,
+                HandleMenuEvent,
+                ActivateFrame,
+                MakeWindow,
+                ActivatingWindow,
+                DeactivatingWindow;
+#else
+
+                reserved1,
+                reserved2,
+                reserved3,
+                reserved4,
+                reserved5,
+                reserved6,
+                reserved7,
+                reserved8;
+#endif
+
+        #ifdef __PRIVATE__
+                ODSession       fSession;
+                ODFocusSet      fFocusSet;
+                ODTypeToken     fSelectionFocus;
+                ODTypeToken     fMenuFocus;
+                ODTypeToken     fKeyFocus;
+                ODTypeToken     fModalFocus;
+                ODTypeToken     fFrameView;
+                ODTypeToken     fLargeIconView;
+                ODTypeToken     fSmallIconView;
+                ODTypeToken     fThumbnailView;
+                ODTypeToken     fMainPresentation;
+                ODStorageUnit   fPartSU;
+                ODMenuBar       fMenuBar;
+                ODID            fWindowID;
+                ODPart          fPartWrapper;
+        #endif
+        };
+#endif
+};
+
+
+#endif //# _NOPART_

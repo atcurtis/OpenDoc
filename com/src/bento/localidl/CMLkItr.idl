@@ -1,0 +1,177 @@
+/* @(#)Z 1.5 com/src/bento/localidl/CMLkItr.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:45 (96/10/29 09:14:22) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           CMLkItr.idl
+//#
+//#     Contains:       Definition of CMLinkIterator class.
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#              <3>     8/15/95        CC              1275241: IDL review.
+//#              <2>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#              <1>     8/11/94        CC              first checked in
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CMLKITR_
+#define _CMLKITR_
+
+#ifndef _LINKITR_
+#include "LinkItr.idl"
+#endif
+
+#ifdef __PRIVATE__
+ #ifdef _PLATFORM_OS2_
+  #ifndef _CMLinkItrNode_
+    typedef somToken CMLinkItrNode;
+  #endif
+ #endif /*_PLATFORM_OS2 */
+#endif /* PRIVATE */
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  CMLinkIterator;
+
+#ifdef __PRIVATE__
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface   CMDraft;
+interface   ODLink;
+
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken CMObject;
+typedef somToken CMContainer;
+typedef somToken CMProperty;
+typedef somToken CMType;
+
+#endif //# __PRIVATE__
+
+//=====================================================================================
+// Class CMLinkIterator
+//=====================================================================================
+
+interface CMLinkIterator : ODLinkIterator
+{
+#ifdef __PRIVATE__
+        void InitCMLinkIterator(in CMDraft draft);
+  #ifdef _PLATFORM_OS2_
+        void Add(in ODStorageUnitID linkSUID);
+        // Adds a link storage unit id to a linked list.
+
+        ODLink AcquireFirst();
+        // Acquires and returns the first link in the list,
+        // or kODNull if it is empty. It is the responsibility
+        // of the caller to later Release the link.
+
+        ODLink AcquireNext();
+        // Acquires and returns the next link in the list,
+        // or kODNull if there are no more link sources in the list.
+        // It is the responsibility  of the caller to later Release the link.
+ #endif /* _PLATFORM_OS2_ */
+#endif
+
+#ifdef __SOMIDL__
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = CMLinkIterator;
+
+                override:
+                        somUninit,
+                        IsNotComplete,
+                        First,
+                        Next;
+
+                releaseorder:
+                #ifdef __PRIVATE__
+                  #ifndef _PLATFORM_OS2_
+                    InitCMLinkIterator;
+                  #else /* _PLATFORM_OS2_ */
+                    InitCMLinkIterator,
+                    Add,
+                    AcquireFirst,
+                    AcquireNext;
+                  #endif /* _PLATFORM_OS2_ */
+                 #else
+                  #ifndef _PLATFORM_OS2_
+                    reserved1;
+                  #else /*_PLATFORM_OS2_*/
+                    reserved1,
+                    reserved2,
+                    reserved3,
+                    reserved4;
+                  #endif /* _PLATFORM_OS2_ */
+                #endif
+
+                #ifdef __PRIVATE__
+                        passthru C_xih =
+                                ""
+                                "#ifndef __CM_API__"
+                                "#include <CMAPI.h>"
+                                "#endif"
+                                "";
+                #ifdef __PRIVATE__
+                  #ifdef _PLATFORM_OS2_
+                        CMLinkItrNode* fCMLinkItrList;
+                        CMLinkItrNode* fCurrentNode;
+                  #endif /*_PLATFORM_OS2_*/
+                #endif /*__PRIVATE__*/
+
+                        CMDraft                 fDraft;
+                        ODLink                  fLink;
+                        CMObject                fCurrent;
+                        CMContainer             fContainer;
+                        CMProperty              fProperty;
+                        CMType                  fType;
+                        ODULong                 fSize;
+                        ODPtr                   fBuffer;
+        #endif //# __PRIVATE__
+        };
+#endif //# __SOMIDL__
+};
+
+#endif  // _CMLKITR_

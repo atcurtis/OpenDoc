@@ -1,0 +1,171 @@
+/* @(#)Z 1.5 com/src/bento/localidl/EmbedCtr.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:47 (96/10/29 09:14:41) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		EmbedCtr.idl
+//#
+//#	Contains:	class definition for Bento Embedded Container
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994-95 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<14>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		<13>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<12>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<11>	 3/31/95	EL		1234685: Add private field fTargetObject.
+//#		<10>	  3/6/95	EL		1182275: We don't need
+//#									 DraftPropertiesObject.
+//#		 <9>	 2/21/95	EL		1182275: Add private method
+//#									SetDraftPropertiesObject.
+//#		 <8>	 2/15/95	EL		1182275: Add private method SetMergeFlag.
+//#		 <7>	 11/1/94	VL		1151339: Preparation for MergeContainer by
+//#									adding fShouldMerge.
+//#		 <6>	  7/5/94	VL		Added GetUseMode.
+//#		 <5>	 6/30/94	CC		Added private methods GetCMContainer() &
+//#									GetHandlers() and private fields
+//#									fCMContainer & fHandlers.
+//#		 <4>	 6/29/94	CC		Removed nonexistent overrides.
+//#		 <3>	 6/22/94	VL		Changed XMP to OD.
+//#		 <2>	 6/15/94	CC		Added functionprefix to eliminate Undefined
+//#									entry, name: "_%CREATE".
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _EMBEDCTR_
+#define _EMBEDCTR_
+
+#ifndef _CMCTR_
+#include "CMCtr.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface ODEmbeddedContainer;
+
+#ifdef __PRIVATE__
+
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken CMContainerUseMode;
+typedef somToken CMValue;
+#endif
+
+//==============================================================================
+// ODContainer
+//==============================================================================
+
+interface ODEmbeddedContainer : ODBentoContainer 
+{
+
+#ifdef __PRIVATE__
+
+	typedef struct ODEmbeddedContainerID_struct {
+		CMValue		cmValue;
+		ODBoolean	shouldMerge;
+	} ODEmbeddedContainerID;
+	
+	ODContainer	Abort();
+	CMContainerUseMode	GetUseMode();
+	void SetMergeFlag(in ODBoolean flag);
+#endif
+
+#ifdef __SOMIDL__
+	implementation
+	{
+	majorversion = 1; minorversion = 0;
+	functionprefix = ODEmbeddedContainer;
+	override:
+		somUninit,
+		Release,
+		Purge,
+		GetName,
+		SetName,
+		AcquireDocument,
+		#ifdef __PRIVATE__
+			InitContainer,
+			GetCMContainer,
+			GetHandlers,
+			Create,
+			Open,
+			Close,
+			ReleaseDocument;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6,
+			reserved7;
+		#endif
+	releaseorder:
+		#ifdef __PRIVATE__
+			Abort,
+			GetUseMode,
+			SetMergeFlag;
+		#else
+			reserved1,
+			reserved2,
+			reserved3;
+		#endif
+
+	#ifdef __PRIVATE__
+		passthru C_xih = 
+				"#include <BentoHdr.h>"
+				"";
+		passthru C_xh = ""
+				"class ODBentoHandlers;"
+				"#include <CMAPI.h>"
+				"";
+
+		CMContainer			fCMContainer;
+		ODBentoHandlers*	fHandlers;
+		CMContainerUseMode	fUseMode;
+		ODBoolean			fShouldMerge;
+		CMValue				fTargetValue;
+	#endif
+
+	};
+#endif
+};
+
+#endif  // _EMBEDCTR_

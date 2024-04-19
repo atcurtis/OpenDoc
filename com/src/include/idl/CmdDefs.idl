@@ -1,0 +1,294 @@
+/* @(#)Z 1.22 com/src/include/idl/CmdDefs.idl, odcore, od96os2, odos29646d 96/11/15 15:25:33 (96/10/29 09:27:51) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+
+//#
+//#     File:           CmdDefs.idl
+//#
+//#     Contains:       constants for menu commands
+//#
+//#     Owned by:       Richard Rodseth
+//#
+//#     Copyright:      (r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#   06/18/96         brr add definition for EDIT_SEPARATOR5
+//#   04/11/96   21029 law added _PLATFORM_OS2_ and _PLATFORM_AIX_ flags
+//#   03/15/96   20444 brr Changed HELP_INDEX to HELP_INDEX_OD because HELP_INDEX
+//#                        is already defined in winuser.h for WIN32.
+//#   03/15/96   20444 brr merge Added defines for EDIT_COPYLINKTO and EDIT_PASTELINKFROM
+//#                        which are marked in the ODRES.RC file and NEXT_RELEASE,
+//#                        but EDIT_COPYLINKTO was being used in Menubar.cpp so added them
+//#   03/15/96   20444 brr merge OS/2 cmddefs.idl with Apples and add WIN32 support
+//#   11/08/95  142420 st  merge odmenuid.h with cmddefs
+//#----------------------------------------------------------------------------
+//#
+//#             <12>     6/20/95        Te              1217754 BB: Delete Document command
+//#             <11>     4/14/95        Te              #1239888 Need to remove obsolete constants
+//#                                                                     in CmdDefs.idl
+//#             <10>     4/10/95        Te              #1236210        BB: "Show Parts Bin" menu item
+//#                                                                     must be removed from the Edit menu
+//#              <9>      3/1/95        RR              # 1164863 Added command numbers for Apple,
+//#                                                                     Doc and Edit menus. Reserved ranges and
+//#                                                                     renumbered 'em all.
+//#              <8>     10/7/94        Te              #1187826 Document Info functionality
+//#              <7>     8/18/94        Te              #1181622 Set Owned by: field to Richard
+//#              <6>      6/7/94        RR              Privatize change history
+//#              <4>      5/4/94        RR              Removed module, added #pragma somemittypes
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CMDDEFS_
+#define _CMDDEFS_
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+// The C/C++ output for this file can be compiled by C/C++ and Rez, since
+// It contains #defines for the command numbers of the standard menu items
+// of the document shell
+
+// Command numbers below 20000 are reserved for the shell or container apps.
+// Command numbers above 20000 are reserved for parts.
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes on
+#endif
+
+// ** NOTE if any values change in here be sure to update the
+// ** src/include/c/odres.h file also to reflect identical
+// ** values.
+
+#ifndef _COMMANDS_
+#define _COMMANDS_
+
+const ODMenuID MENUID_ROOTPART_FIRST =     0X3000;
+const ODMenuID MENUID_ROOTPART_LAST  =     0X3FFF;
+
+const ODMenuID MENUID_SHPLGIN_FIRST    =   0x4000;
+const ODMenuID MENUID_SHPLGIN_LAST     =   0x4FFF;
+
+const ODMenuID MENUID_ACTIVEPART_FIRST =   0x5000;
+const ODMenuID MENUID_ACTIVEPART_LAST  =   0x7FFF;
+
+const ODMenuID MENUID_ACTIVEPART_USER  =   0x6F00;
+
+const ODMenuID IDMS_DOCUMENT           =   2000;
+const ODMenuID DOC_NEW                 =   2001;
+const ODMenuID DOC_OPENAS              =   2002;
+const ODMenuID DOC_INSERT              =   2003;
+const ODMenuID DOC_SEPARATOR1          =   2004;
+const ODMenuID DOC_SAVE                =   2005;
+const ODMenuID DOC_SAVECOPY            =   2006;
+const ODMenuID DOC_REVERTTOSAVED       =   2007;
+const ODMenuID DOC_SEPARATOR2          =   2008;
+const ODMenuID DOC_DRAFTS              =   2009;
+const ODMenuID DOC_DRAFTS_MENU         =   2009;  /* MENU ID - same as DOC_DRAFTS */
+const ODMenuID DOC_DRAFTCREATE         =   2010;
+const ODMenuID DOC_DRAFTHISTORY        =   2011;
+const ODMenuID DOC_PROPERTIES          =   2012;
+const ODMenuID DOC_SETUP               =   2013;
+const ODMenuID DOC_SEPARATOR3          =   2014;
+const ODMenuID DOC_PRINT               =   2015;
+const ODMenuID DOC_SEPARATOR4          =   2016;
+const ODMenuID DOC_CLOSE               =   2017;
+const ODMenuID DOC_CLOSEDLG            =   2018;
+const ODMenuID DOC_SAVECH              =   2019;
+const ODMenuID DOC_DISCARD             =   2020;
+const ODMenuID DOC_CANCEL              =   2021;
+
+const ODMenuID IDMS_EDIT               =   2100;
+const ODMenuID EDIT_UNDO               =   2101;
+const ODMenuID EDIT_REDO               =   2102;
+const ODMenuID EDIT_SEPARATOR1         =   2103;
+const ODMenuID EDIT_CREATE             =   2104;
+const ODMenuID EDIT_CUT                =   2105;
+const ODMenuID EDIT_COPY               =   2106;
+const ODMenuID EDIT_PASTE              =   2107;
+const ODMenuID EDIT_PASTEAS            =   2108;
+const ODMenuID EDIT_LINK_MENU          =   2109;  /* MENU ID  */
+const ODMenuID EDIT_PASTELINK          =   2110;
+const ODMenuID EDIT_BREAKLINK          =   2111;
+const ODMenuID EDIT_COPYLINKTO         =   2112;
+const ODMenuID EDIT_PASTELINKFROM      =   2113;
+const ODMenuID EDIT_SEPARATOR2         =   2114;
+const ODMenuID EDIT_DELETE             =   2115;
+const ODMenuID EDIT_SEPARATOR3         =   2116;
+const ODMenuID EDIT_SELECTALL          =   2117;
+const ODMenuID EDIT_DESELECTALL        =   2118;
+const ODMenuID EDIT_SEPARATOR4         =   2119;
+const ODMenuID EDIT_OPENSEL            =   2120;
+const ODMenuID EDIT_SELPROPERTIES      =   2121;
+const ODMenuID EDIT_INSERT             =   2122;
+const ODMenuID EDIT_VIEWINWINDOW       =   2312;
+const ODMenuID EDIT_SEPARATOR5         =   2124;
+const ODMenuID EDIT_LINKINFO           =   2125;
+
+const ODMenuID IDMS_HELP               =   2200;
+const ODMenuID HELP_INDEX_OD           =   2201;
+const ODMenuID HELP_GENERAL            =   2202;
+const ODMenuID HELP_USING              =   2203;
+const ODMenuID HELP_SEPARATOR1         =   2204;
+const ODMenuID HELP_PRODUCTINFO        =   2205;
+
+const ODMenuID IDMS_VIEW               =   2350;
+const ODMenuID VIEW_OPENAS             =   2300;
+const ODMenuID VIEW_OAICON             =   2301;
+const ODMenuID VIEW_OATREE             =   2302;
+const ODMenuID VIEW_OADETAILS          =   2303;
+const ODMenuID VIEW_OAWINDOW           =   2304;
+const ODMenuID VIEW_PROPERTIES         =   2305;
+const ODMenuID VIEW_SHOWAS             =   2306;
+const ODMenuID VIEW_SASMALLICON        =   2307;
+const ODMenuID VIEW_SALARGEICON        =   2308;
+const ODMenuID VIEW_SATHUMBNAIL        =   2309;
+const ODMenuID VIEW_SAFRAME            =   2310;
+const ODMenuID VIEW_SEPARATOR1         =   2311;
+const ODMenuID VIEW_VIEWINWINDOW       =   2312;
+
+const ODMenuID ID_BASEPOPUP            =   501;
+
+// ole interop items
+const ODMenuID DOC_EXIT                =  10020;
+const ODMenuID DOC_UPDATE              =  10021;
+
+#endif // _COMMANDS_
+
+#if defined(_PLATFORM_MACINTOSH)
+const ODCommandID  kODCommandShellFirst     = 1000;
+const ODCommandID  kODCommandShellLast      = 20000;
+
+const ODCommandID  kODCommandAppleMenu      = 1000;
+const ODCommandID  kODCommandAbout          = 1001;
+
+const ODCommandID  kODCommandDocumentMenu   = 2000;
+const ODCommandID  kODCommandNew            = 2001;
+const ODCommandID  kODCommandOpenDocument   = 2003;
+const ODCommandID  kODCommandDeleteDocument = 2006;
+const ODCommandID  kODCommandSave           = 2007;
+const ODCommandID  kODCommandSaveACopy      = 2008;
+const ODCommandID  kODCommandRevert         = 2009;
+const ODCommandID  kODCommandDrafts         = 2010;
+const ODCommandID  kODCommandDocumentInfo   = 2011;
+const ODCommandID  kODCommandPageSetup      = 2012;
+const ODCommandID  kODCommandPrint          = 2013;
+const ODCommandID  kODCommandClose          = 2005;
+
+const ODCommandID  kODCommandEditMenu       = 3000;
+const ODCommandID  kODCommandUndo           = 3001;
+const ODCommandID  kODCommandRedo           = 3002;
+const ODCommandID  kODCommandCut            = 3003;
+const ODCommandID  kODCommandCopy           = 3004;
+const ODCommandID  kODCommandPaste          = 3005;
+const ODCommandID  kODCommandPasteAs        = 3006;
+const ODCommandID  kODCommandClear          = 3007;
+const ODCommandID  kODCommandSelectAll      = 3008;
+const ODCommandID  kODCommandGetPartInfo    = 3009;
+const ODCommandID  kODCommandOpen           = 2002;
+const ODCommandID  kODCommandPreferences    = 3010;
+const ODCommandID  kODCommandViewAsWin      = 3011;
+#elif defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_) || defined(_PLATFORM_OS2_)
+const ODCommandID  kODCommandDocumentMenu    = IDMS_DOCUMENT;
+const ODCommandID  kODCommandNew             = DOC_NEW;
+const ODCommandID  kODCommandOpenDocument    = DOC_OPENAS;
+const ODCommandID  kODCommandSave            = DOC_SAVE;
+const ODCommandID  kODCommandSaveACopy       = DOC_SAVECOPY;
+const ODCommandID  kODCommandRevert          = DOC_REVERTTOSAVED;
+const ODCommandID  kODCommandDraft           = DOC_DRAFTS;
+const ODCommandID  kODCommandDraftsMenu      = DOC_DRAFTS;
+const ODCommandID  kODCommandDraftCreate     = DOC_DRAFTCREATE;
+const ODCommandID  kODCommandDraftHist       = DOC_DRAFTHISTORY;
+const ODCommandID  kODCommandDocumentInfo    = DOC_PROPERTIES;
+const ODCommandID  kODCommandPageSetup       = DOC_SETUP;
+const ODCommandID  kODCommandPrint           = DOC_PRINT;
+const ODCommandID  kODCommandClose           = DOC_CLOSE;
+const ODCommandID  kODCommandCloseDlg        = DOC_CLOSEDLG;
+const ODCommandID  kODCommandSaveChanges     = DOC_SAVECH;
+const ODCommandID  kODCommandDiscardChanges  = DOC_DISCARD;
+const ODCommandID  kODCommandCancel          = DOC_CANCEL;
+const ODCommandID  kODCommandExit            = DOC_EXIT;
+const ODCommandID  kODCommandUpdate          = DOC_UPDATE;
+
+const ODCommandID  kODCommandEditMenu        = IDMS_EDIT;
+const ODCommandID  kODCommandUndo            = EDIT_UNDO;
+const ODCommandID  kODCommandRedo            = EDIT_REDO;
+const ODCommandID  kODCommandCreate          = EDIT_CREATE;
+const ODCommandID  kODCommandCut             = EDIT_CUT;
+const ODCommandID  kODCommandCopy            = EDIT_COPY;
+const ODCommandID  kODCommandPaste           = EDIT_PASTE;
+const ODCommandID  kODCommandPasteAs         = EDIT_PASTEAS;
+const ODCommandID  kODCommandLinksMenu       = EDIT_LINK_MENU;
+const ODCommandID  kODCommandPasteLink       = EDIT_PASTELINK;
+const ODCommandID  kODCommandBreakLink       = EDIT_BREAKLINK;
+const ODCommandID  kODCommandLinkInfo        = EDIT_LINKINFO;
+const ODCommandID  kODCommandDelete          = EDIT_DELETE;
+const ODCommandID  kODCommandSelectAll       = EDIT_SELECTALL;
+const ODCommandID  kODCommandDeselectAll     = EDIT_DESELECTALL;
+const ODCommandID  kODCommandOpen            = EDIT_OPENSEL;
+const ODCommandID  kODCommandPartInfo        = EDIT_SELPROPERTIES;
+const ODCommandID  kODCommandInsert          = EDIT_INSERT;
+
+const ODCommandID  kODCommandViewMenu        = IDMS_VIEW;
+const ODCommandID  kODCommandViewOpenAs      = VIEW_OPENAS;
+const ODCommandID  kODCommandViewOAIcon      = VIEW_OAICON;
+const ODCommandID  kODCommandViewOATree      = VIEW_OATREE;
+const ODCommandID  kODCommandViewOADetails   = VIEW_OADETAILS;
+const ODCommandID  kODCommandViewOAWindow    = VIEW_OAWINDOW;
+const ODCommandID  kODCommandViewProperties  = VIEW_PROPERTIES;
+const ODCommandID  kODCommandViewShowAs      = VIEW_SHOWAS;
+const ODCommandID  kODCommandViewSmallIcon   = VIEW_SASMALLICON;
+const ODCommandID  kODCommandViewLargeIcon   = VIEW_SALARGEICON;
+const ODCommandID  kODCommandViewThumbNail   = VIEW_SATHUMBNAIL;
+const ODCommandID  kODCommandViewFrame       = VIEW_SAFRAME;
+const ODCommandID  kODCommandViewAsWin       = VIEW_VIEWINWINDOW;
+
+const ODCommandID  kODCommandHelpMenu        = IDMS_HELP;
+const ODCommandID  kODCommandHelpIndex       = HELP_INDEX_OD;
+const ODCommandID  kODCommandHelpGeneral     = HELP_GENERAL;
+const ODCommandID  kODCommandHelpUsing       = HELP_USING;
+const ODCommandID  kODCommandHelpInfo        = HELP_PRODUCTINFO;
+
+const ODCommandID  kODCommandBasePopup       = ID_BASEPOPUP;
+#endif
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes off
+#endif
+
+module OpenDoc_Commands
+{
+        const string OpenDoc_Commands_Version = "1.0.";
+};
+
+#endif  //# _CMDDEFS_

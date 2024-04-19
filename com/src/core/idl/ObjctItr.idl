@@ -1,0 +1,141 @@
+/* @(#)Z 1.5 com/src/core/idl/ObjctItr.idl, odcore, od96os2, odos29646d 96/11/15 15:24:59 (96/10/29 09:22:34) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		ObjctItr.idl
+//#
+//#	Contains:	Interface for ODObjectIterator class
+//#
+//#	Owned by:	David McCusker
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <5>	 8/18/95	DM		#1275241: IDL Cleanup
+//#		 <4>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <3>	  5/2/95	DM		1237286: make Init methods private
+//#		 <2>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <1>	 7/29/94	CG		first checked in
+//#		 <3>	 6/24/94	CG		Added functionprefix.
+//#		 <2>	 6/15/94	CG		Added passthroughs.
+//#		 <1>	  6/8/94	CG		first checked in
+//#		 <1>	  6/8/94	CG		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _OBJCTITR_
+#define _OBJCTITR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODObjectIterator;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+#ifdef __PRIVATE__
+interface  ODObjectNameSpace;
+#endif
+
+
+#ifdef __PRIVATE__
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken StringHashTableIterator;
+#endif
+
+//==============================================================================
+// ODObjectIterator
+//==============================================================================
+
+interface ODObjectIterator :  ODObject
+{
+	void	First(out ODISOStr key,
+   				   out ODObject object,
+				   out ODULong objectLength);
+	void	Next(out ODISOStr key,
+   				  out ODObject object,
+				  out ODULong objectLength);
+	ODBoolean IsNotComplete();
+
+#ifdef __PRIVATE__
+	void InitObjectIterator(in ODObjectNameSpace nameSpace);
+#endif 
+   
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+			
+		functionprefix = ODObjectIterator;
+		
+		override:
+			somUninit;
+			
+		releaseorder:
+			First,
+			Next,
+			IsNotComplete,
+
+#ifdef __PRIVATE__
+			InitObjectIterator;
+#else
+			reserved1;
+#endif
+	
+		#ifdef __PRIVATE__
+			passthru C_xih = 
+			""
+			"class StringHashTableIterator;"
+			"";
+			ODObjectNameSpace			fNameSpace;
+			StringHashTableIterator*	fStrHashIterator;
+		#endif //# __PRIVATE__
+	};
+#endif //# __SOMIDL__
+};
+
+#endif // _OBJCTITR_

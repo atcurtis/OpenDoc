@@ -1,0 +1,116 @@
+/* @(#)Z 1.4 com/src/core/idl/Extensn.idl, odcore, od96os2, odos29646d 96/11/15 15:24:57 (96/10/29 09:22:08) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		Extensn.idl
+//#
+//#	Contains:	Class definition for ODExtension
+//#
+//#	Owned by:	Nick Pilch
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <9>	 8/16/95	NP		1275241: IDL Review. Add version.
+//#		 <8>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <7>	 6/20/95	JP		1251250: Added Release method
+//#		 <6>	 8/28/94	VL		1181298: ODExtension is a subclass of
+//#									REfCntObject now.
+//#		 <5>	 8/19/94	NP		1181622: Ownership fix.
+//#		 <4>	 8/15/94	Te		#1181162 Added BaseRemoved, IsValid &
+//#									CheckValid
+//#		 <3>	  7/8/94	NP		Fixed InitExtension.
+//#		 <2>	 6/23/94	CG		Added functionprefix.
+//#		 <1>	  6/8/94	CG		first checked in
+//#		 <4>	  6/7/94	RR		Privatise change log
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _EXTENSN_
+#define _EXTENSN_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODExtension;
+
+//==============================================================================
+// ODExtension
+//==============================================================================
+
+interface ODExtension : ODRefCntObject
+{
+   
+   void InitExtension(in ODObject base);
+
+   ODObject GetBase();
+   
+   void BaseRemoved();
+   
+   ODBoolean IsValid();
+   
+   void CheckValid();
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODExtension;
+	
+		override:
+			Release;
+			
+		releaseorder:
+			InitExtension,
+			GetBase,
+			BaseRemoved,
+			IsValid,
+			CheckValid;
+			
+		#ifdef __PRIVATE__
+		  ODObject  fBase;
+		#endif
+	};
+#endif
+};
+
+#endif // _EXTENSN_

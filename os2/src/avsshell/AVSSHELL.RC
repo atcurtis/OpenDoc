@@ -1,0 +1,348 @@
+// @(#)Z 1.5 os2/src/avsshell/avsshell.rc, oddataxfer, od96os2, odos29646d 96/11/15 15:50:55 (96/09/30 13:45:39)
+//====START_GENERATED_PROLOG======================================
+//
+//
+//   COMPONENT_NAME: oddataxfer
+//
+//   CLASSES: none
+//
+//   ORIGINS: 82,27
+//
+//
+//   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//   All Rights Reserved
+//   Licensed Materials - Property of IBM
+//   US Government Users Restricted Rights - Use, duplication or
+//   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//   	
+//   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//   OR PERFORMANCE OF THIS SOFTWARE.
+//
+//====END_GENERATED_PROLOG========================================
+//
+#include "dsres.h"
+#include "odres.h"
+#include <os2.h>
+
+//#include "bbrowse.h"
+
+
+#define  EDIT_SIZE                 2125
+#define  EDIT_MOVE                 2126
+#define  SEL_NOSELECTED            2127
+#define  SEL_OPENAS                2128
+#define  SEL_OAICON                2129
+#define  SEL_OATREE                2130
+#define  SEL_OADETAILS             2131
+#define  SEL_PROPERTIES            2132
+#define  SEL_SHOWAS                2133
+#define  SEL_SASMALLICON           2134
+#define  SEL_SALARGEICON           2135
+#define  SEL_SATHUMBNAIL           2136
+#define  SEL_SAFRAME               2137
+#define  VIEW_SHOWLINKS            2311
+#define  VIEW_SHOWFRAMEOUTLINE     2312
+#define  IDMS_VIEW                  508
+#define  IDMS_SELECTED              509
+#define  ID_BASESELMENUBAR          510
+#define  ID_SELPOPUP                511
+#define  IDMS_DRAFT                 512
+#define  IDMS_DRAFT_PROPERTIES      513
+#define  IDMS_DRAFT_CREATE          514
+#define  IDMS_DRAFT_PRINT           515
+#define  IDMS_DRAFT_SEL             516
+#define  IDMS_SEL_OPEN              517
+#define  IDMS_SEL_PROPERTIES        518
+#define  IDMS_SEL_PRINT             519
+#define  IDMS_SEL_SAVCOPY           520
+#define  IDMS_DRAFT_EDIT            521
+#define  IDMS_EDIT_DEL              522
+#define  IDMS_EDIT_SELALL           523
+#define  IDMS_EDIT_DESELALL         524
+#define  IDMS_DRAFT_VIEW            525
+#define  IDMS_VIEW_ICONS            526
+#define  IDMS_VIEW_DETAILS          527
+#define  IDMP_DRAFT_OPEN            528
+#define  IDMP_DRAFT_PROP            529
+#define  IDMP_DRAFT_PRINT           530
+#define  IDMP_DRAFT_DELETE          531
+
+// this is basically here so that our exe has an icon under WPS
+ICON ROOT_SHELLMENU_RESID DOCSHELL.ICO
+ICON ROOT_DRAFTS_RESID DOCSHELL.ICO
+
+POINTER ROOT_DRAFTS_RESID DOCSHELL.ICO
+
+/******************************************************************************
+*
+*  Description : Opendoc menu templates
+*
+*            Base Menubar menu template
+*******************************************************************************/
+
+MENU ROOT_SHELLMENU_RESID PRELOAD
+BEGIN
+   SUBMENU  "~Document",              IDMS_DOCUMENT,         MIS_TEXT
+     BEGIN
+     MENUITEM  "Dra~fts",             DOC_DRAFTS,            MIS_TEXT
+     MENUITEM  "~Save",               DOC_SAVE,              MIS_TEXT
+     MENUITEM  "Revert to saved",     DOC_REVERTTOSAVED,     MIS_TEXT
+     MENUITEM   SEPARATOR
+     MENUITEM  "~Print",              DOC_PRINT,             MIS_TEXT
+     END
+
+   SUBMENU  "~Edit",                  IDMS_EDIT,             MIS_TEXT
+     BEGIN
+     MENUITEM  "~Undo",               EDIT_UNDO,             MIS_TEXT
+     MENUITEM  "~Redo",               EDIT_REDO,             MIS_TEXT
+     MENUITEM   SEPARATOR
+     MENUITEM  "Cre~ate",             EDIT_CREATE,           MIS_TEXT
+     MENUITEM  "Cu~t",                EDIT_CUT,              MIS_TEXT
+     MENUITEM  "~Copy",               EDIT_COPY,             MIS_TEXT
+     MENUITEM  "~Paste",              EDIT_PASTE,            MIS_TEXT
+     MENUITEM  "Paste as...",         EDIT_PASTEAS,          MIS_TEXT
+     MENUITEM  "Break link",          EDIT_BREAKLINK,        MIS_TEXT
+     MENUITEM  "~Delete",             EDIT_DELETE,           MIS_TEXT
+     MENUITEM   SEPARATOR
+     MENUITEM  "~Select all",         EDIT_SELECTALL,        MIS_TEXT
+     MENUITEM  "Dese~lect all",       EDIT_DESELECTALL,      MIS_TEXT
+     MENUITEM   SEPARATOR
+     MENUITEM  "Size",                EDIT_SIZE,             MIS_TEXT
+     MENUITEM  "Move",                EDIT_MOVE,             MIS_TEXT
+     END
+
+   SUBMENU  "~View",                  IDMS_VIEW,             MIS_TEXT
+     BEGIN
+     SUBMENU   "Open as",             VIEW_OPENAS,           MIS_TEXT
+       BEGIN
+       MENUITEM  "Icon",              VIEW_OAICON,           MIS_TEXT
+       MENUITEM  "Tree",              VIEW_OATREE,           MIS_TEXT
+       MENUITEM  "Details",           VIEW_OADETAILS,        MIS_TEXT
+       END
+     MENUITEM  "Propert~ies",         VIEW_PROPERTIES,       MIS_TEXT
+     SUBMENU   "~Show as",            VIEW_SHOWAS,           MIS_TEXT
+       BEGIN
+       MENUITEM  "Small Icon",        VIEW_SASMALLICON,      MIS_TEXT
+       MENUITEM  "Large Icon",        VIEW_SALARGEICON,      MIS_TEXT
+       MENUITEM  "Thumbnail",         VIEW_SATHUMBNAIL,      MIS_TEXT
+       MENUITEM  "Frame",             VIEW_SAFRAME,          MIS_TEXT
+       END
+     MENUITEM   SEPARATOR
+     MENUITEM  "Show Links",          VIEW_SHOWLINKS,        MIS_TEXT
+     MENUITEM  "Show Frame Outline",  VIEW_SHOWFRAMEOUTLINE, MIS_TEXT
+     END
+
+
+   SUBMENU  "~Selected",              IDMS_SELECTED,         MIS_TEXT
+     BEGIN
+     MENUITEM  "Nothing selected",    SEL_NOSELECTED,        MIS_TEXT
+     END
+
+//#ifdef DEBUG
+//   SUBMENU "~Bento", IDMS_BENTO, MIS_TEXT
+//      {
+//      }
+//#endif
+
+
+//   SUBMENU  "~Help",                  IDMS_HELP,             MIS_TEXT
+//     BEGIN
+//     MENUITEM  "Help ~Index",          HELP_INDEX,           MIS_TEXT | MIS_HELP
+//     MENUITEM  "~General Help",        HELP_GENERAL,         MIS_TEXT | MIS_HELP
+//     MENUITEM  "~Using Help",          HELP_USING,           MIS_TEXT | MIS_HELP
+//     END
+END
+
+
+
+/******************************************************************************
+*
+*  Description : Opendoc menu templates
+*
+*            selected Menubar menu template
+*******************************************************************************/
+MENU ID_BASESELMENUBAR LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+   SUBMENU  "~Selected",              IDMS_SELECTED,       MIS_TEXT
+     BEGIN
+     SUBMENU   "~Open as",            SEL_OPENAS,          MIS_TEXT
+       BEGIN
+       MENUITEM  "~Icon",             SEL_OAICON,          MIS_TEXT
+       MENUITEM  "~Tree",             SEL_OATREE,          MIS_TEXT
+       MENUITEM  "~Details",          SEL_OADETAILS,       MIS_TEXT
+       END
+     MENUITEM  "Propert~ies",         SEL_PROPERTIES,      MIS_TEXT
+     SUBMENU   "~Show as",            SEL_SHOWAS,          MIS_TEXT
+       BEGIN
+       MENUITEM  "Small Icon",        SEL_SASMALLICON,     MIS_TEXT
+       MENUITEM  "Large Icon",        SEL_SALARGEICON,     MIS_TEXT
+       MENUITEM  "Thumbnail",         SEL_SATHUMBNAIL,     MIS_TEXT
+       MENUITEM  "Frame",             SEL_SAFRAME,         MIS_TEXT
+       END
+     END
+END
+
+
+
+/******************************************************************************
+*
+*  Description : Opendoc menu templates
+*
+*            base popup menu template
+*******************************************************************************/
+MENU ID_BASEPOPUP LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+   MENUITEM "Propert~ies",            VIEW_PROPERTIES,       MIS_TEXT
+END
+
+
+
+/******************************************************************************
+*
+*  Description : Opendoc menu templates
+*
+*            selected popup menu template
+*******************************************************************************/
+MENU ID_SELPOPUP LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+   SUBMENU  "~Selected",                IDMS_SELECTED,       MIS_TEXT
+     BEGIN
+     MENUITEM "Propert~ies",            SEL_PROPERTIES,      MIS_TEXT
+     END
+END
+
+
+
+
+
+
+//<crs>-12/06/94-create string table <BLB> -03/21/95 status line support
+STRINGTABLE
+ BEGIN
+   IDS_INVALID_BENTO,      "The file specified is not a valid OpenDoc file."
+   DOC_DRAFTS,             " Display current drafts of the document."
+   DOC_SAVE,               " Saves a copy of the current document "
+   DOC_REVERTTOSAVED,      " Reverts to the last saved version of a document"
+   DOC_PRINT,              " Print the document"
+   VIEW_OAICON,            " Display part in icon view"
+   VIEW_OATREE,            " Display part in a tree view."
+   VIEW_OADETAILS,         " Display part in details view"
+//   HELP_INDEX              " Help index on active part"
+//   HELP_GENERAL,           " Help for the active part"
+//   HELP_USING,             " Using Help, how to navigate through help."
+ END
+
+#ifdef DEBUG
+
+ICON ID_BENTO DOCSHELL.ICO
+
+MENU ID_BENTO PRELOAD
+{
+   SUBMENU "~File",   IDMS_BENTO_FILE, MIS_TEXT
+   {
+      MENUITEM "~Create",   IDMS_BENTO_CREATE,  MIS_TEXT
+      MENUITEM "~Open",     IDMS_BENTO_OPEN,    MIS_TEXT
+      MENUITEM "~Save As",  IDMS_BENTO_SAVE,    MIS_TEXT
+      MENUITEM "~TextFile", IDMS_BENTO_TEXT,    MIS_TEXT
+   }
+   MENUITEM "~Root",       IDMS_BENTO_ROOT,    MIS_TEXT
+   MENUITEM "~Clipboard",  IDMS_BENTO_CLIP,    MIS_TEXT
+}
+
+#endif
+
+MENU ROOT_DRAFTS_RESID
+{
+   SUBMENU "~Draft", IDMS_DRAFT,        MIS_TEXT
+   {
+        MENUITEM "P~roperties", IDMS_DRAFT_PROPERTIES, MIS_TEXT, MIA_DISABLED
+        MENUITEM "~Create Draft", IDMS_DRAFT_CREATE, MIS_TEXT
+        MENUITEM "~Print", IDMS_DRAFT_PRINT      ,     MIS_TEXT, MIA_DISABLED
+   }
+   SUBMENU "~Selected", IDMS_DRAFT_SEL, MIS_TEXT
+   {
+        MENUITEM "~Open", IDMS_SEL_OPEN,               MIS_TEXT, MIA_DISABLED
+        MENUITEM "P~roperties", IDMS_SEL_PROPERTIES,   MIS_TEXT
+        MENUITEM "~Print", IDMS_SEL_PRINT,           MIS_TEXT, MIA_DISABLED
+        MENUITEM "~Save A Copy", IDMS_SEL_SAVCOPY,     MIS_TEXT, MIA_DISABLED
+   }
+   SUBMENU "~Edit", IDMS_DRAFT_EDIT,    MIS_TEXT
+   {
+        MENUITEM "~Delete",IDMS_EDIT_DEL,              MIS_TEXT
+        MENUITEM "~Select All",IDMS_EDIT_SELALL,       MIS_TEXT
+        MENUITEM "D~eselect All", IDMS_EDIT_DESELALL,  MIS_TEXT
+   }
+   SUBMENU "~View", IDMS_DRAFT_VIEW,    MIS_TEXT
+   {
+        MENUITEM "~Icons", IDMS_VIEW_ICONS,            MIS_TEXT
+        MENUITEM "~Details", IDMS_VIEW_DETAILS,        MIS_TEXT
+   }
+//   SUBMENU "~Help", IDMS_DRAFT_HELP,    MIS_TEXT
+//   {
+//        MENUITEM "~General Help", IDMS_HELP_GENHLP,    MIS_TEXT, MIA_DISABLED
+//        MENUITEM "~Using Help", IDMS_HELP_USEHLP,      MIS_TEXT, MIA_DISABLED
+//   }
+}
+
+MENU POPUP_DRAFTS_RESID
+{
+   MENUITEM "~Open", IDMP_DRAFT_OPEN,            MIS_TEXT, MIA_DISABLED
+   MENUITEM "P~roperties", IDMP_DRAFT_PROP,      MIS_TEXT
+   MENUITEM "~Print", IDMP_DRAFT_PRINT,          MIS_TEXT, MIA_DISABLED
+   MENUITEM "~Delete", IDMP_DRAFT_DELETE,        MIS_TEXT
+//   SUBMENU "~Help", IDMP_DRAFT_HELP,            MIS_TEXT
+//   {
+//        MENUITEM "General Help", IDMP_HELP_GENHLP, MIS_TEXT, MIA_DISABLED
+//        MENUITEM "Using Help", IDMP_HELP_USEHLP, MIS_TEXT, MIA_DISABLED
+//   }
+}
+
+DLGTEMPLATE ID_DLG_DRAFT_CREATE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Create Draft", ID_DLG_DRAFT_CREATE, 24, 13, 285, 115, WS_VISIBLE, FCF_SYSMENU |
+            FCF_TITLEBAR
+    BEGIN
+        ENTRYFIELD      "",DRAFT_NAME, 87, 78, 163, 8, ES_MARGIN
+        LTEXT           "Name:", 657, 50, 78, 27, 8
+        LTEXT           "Comments:", 658, 30, 58, 48, 8
+        PUSHBUTTON      "Create", DID_CREATE, 148, 5, 49, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 216, 5, 49, 14
+        LTEXT           "Draft #x", DRAFT_TEXT_ID, 86, 95, 49, 10
+        MLE             "", DRAFT_COMMENTS, 85, 33, 167, 32, MLS_WORDWRAP | MLS_HSCROLL |
+                        MLS_VSCROLL | WS_GROUP
+    END
+END
+
+DLGTEMPLATE ID_NB_DRAFTS LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Draft Information", ID_NB_DRAFTS, 12, 1, 215, 170, NOT
+            FS_DLGBORDER
+    BEGIN
+        LTEXT           "Draft #:", 659, 27, 139, 36, 12
+        ENTRYFIELD      "", ID_NB_DRAFTNUM, 65, 143, 25, 8, ES_MARGIN |
+                        ES_READONLY
+        LTEXT           "Draft Title:", 660, 13, 124, 50, 10
+        ENTRYFIELD      "", ID_NB_DRAFT_TITLE, 65, 126, 128, 8, ES_MARGIN |
+                        ES_READONLY
+        LTEXT           "Creator:", 661, 25, 106, 38, 11
+        ENTRYFIELD      "", ID_NB_DRAFT_CREATOR, 65, 109, 114, 8, ES_MARGIN | ES_READONLY
+        GROUPBOX        "Draft Information", 665, 7, 98, 194, 67
+        LTEXT           "Create Time:", 662, 17, 75, 58, 10
+        LTEXT           "Create Date:", 663, 18, 64, 58, 8
+        ENTRYFIELD      "", ID_NB_DRAFT_CR_TIME, 76, 77, 50, 8, ES_MARGIN |
+                        ES_READONLY
+        ENTRYFIELD      "", ID_NB_DRAFT_CR_DATE, 76, 64, 50, 8, ES_MARGIN |
+                        ES_READONLY
+        GROUPBOX        "Time/Date Information", 309, 7, 56, 128, 40
+        MLE             "", ID_NB_DRAFT_COMMENTS, 61, 8, 136, 41,
+                        MLS_READONLY | MLS_WORDWRAP | MLS_HSCROLL |
+                        MLS_VSCROLL | WS_GROUP
+        LTEXT           "Comments:", 664, 13, 40, 48, 8
+    END
+END
+

@@ -1,0 +1,233 @@
+/* @(#)Z 1.6 com/src/imaging/idl/ShapeB.idl, odimaging, od96os2, odos29646d 96/11/15 15:25:06 (96/10/29 09:26:02) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//#          2/22/96 jab  Merged DR4 with OS/2 Feb. 13 drop.        */
+//#  146581 12/10/95 map  IDL validation                            */
+//#  137664  9/21/95 aml  API change for CopyPolygon                */
+//#  133698  8/23/95 jso  port dr3                                  */
+//#  120349  5/15/95 map  Fix up IDL copyright                      */
+//#******************************************************************/
+//#
+//#	File:		ShapeB.idl
+//#
+//#	Contains:	ODBaseShape class: Geometric shapes for layout.
+//#
+//#	Owned by:	Jens Alfke
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <8>	 9/13/95	DM		1277216 GM:API return no ODPoints nor
+//#									ODPolygons
+//#		 <7>	  9/8/95	jpa		IDL cleanup [1281687]
+//#		 <6>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <5>	 12/5/94	jpa		Code review fixes. [1203923]
+//#		 <4>	  9/9/94	jpa		Descend from ODRefCntObject. [1185660]
+//#		 <3>	 8/17/94	jpa		Added "functionprefix" directive. [1181512]
+//#		 <2>	  8/8/94	jpa		Added Outset, NewShape, Reset [1178690,
+//#									1179574]
+//#		 <1>	  6/8/94	jpa		first checked in
+//#		 <2>	  6/7/94	jpa		Tweaked more params.
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _SHAPEB_
+#define _SHAPEB_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"  
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface ODBaseShape;
+
+//==============================================================================
+// Classes used in this interface
+//==============================================================================
+
+interface ODShape;
+interface ODTransform;
+interface ODStorageUnit;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken RealShape;
+#endif
+
+
+//==============================================================================
+// ODBaseShape
+//==============================================================================
+
+interface ODBaseShape :  ODRefCntObject
+{
+	
+	//#---------------------------------
+	//# factories:
+
+	ODShape			NewShape();
+    ODShape			Copy();
+
+	//#---------------------------------
+	//# getters/setters
+	
+	ODGeometryMode	GetGeometryMode();
+	void			SetGeometryMode(in ODGeometryMode mode);
+	void			GetBoundingBox(out ODRect bounds);
+	ODShape			SetRectangle(in ODRect rect);
+	void			CopyPolygon(out ODPolygon copy);
+	ODShape			SetPolygon(in ODPolygon polygon);
+	ODPlatformShape	GetPlatformShape(in ODGraphicsSystem graphicsSystem);
+	void			SetPlatformShape(in ODGraphicsSystem graphicsSystem,
+									  in ODPlatformShape platformShape);
+	void			Reset();
+	
+	//#---------------------------------
+	//# input / output:
+	
+	void			WriteShape(in ODStorageUnit storageUnit);
+	ODShape			ReadShape(in ODStorageUnit storageUnit);
+	
+	//#---------------------------------
+	//# comparison/testing functions
+	
+	ODBoolean		IsSameAs(in ODShape compareShape);
+	ODBoolean		IsEmpty();
+	ODBoolean		ContainsPoint(in ODPoint point);
+	ODBoolean		IsRectangular();
+	ODBoolean		HasGeometry();
+	
+	//#---------------------------------
+	//# geometry operations
+	
+	void		CopyFrom(in ODShape sourceShape);
+	ODShape		Transform(in ODTransform transform);
+	ODShape		InverseTransform(in ODTransform transform);
+	ODShape		Subtract(in ODShape diffShape);
+	ODShape		Intersect(in ODShape sectShape);
+	ODShape		Union(in ODShape unionShape);
+	ODShape		Outset( in ODCoordinate distance );
+	  
+#ifdef __PRIVATE__
+
+	//# Private to implementation
+	void		InitBaseShape();
+	RealShape*  GetRealShape( );
+  
+#endif
+#ifdef __SOMIDL__
+	implementation
+	{
+		override:
+			somUninit,
+			Purge,
+			Release;
+			
+		releaseorder:
+			SetGeometryMode,
+			GetGeometryMode,
+			GetBoundingBox,
+			SetRectangle,
+			CopyPolygon,
+			SetPolygon,
+			GetPlatformShape,
+			SetPlatformShape,
+			WriteShape,
+			ReadShape,
+			IsSameAs,
+			IsEmpty,
+			ContainsPoint,
+			IsRectangular,
+			HasGeometry,
+			Copy,
+			CopyFrom,
+			Transform,
+			InverseTransform,
+			Subtract,
+			Intersect,
+			Union,
+			Outset,
+			NewShape,
+			Reset,
+		#ifdef __PRIVATE__
+			InitBaseShape,
+			GetRealShape;
+		#else
+			reserved1,
+			reserved2;
+		#endif
+		
+		#ifdef __PRIVATE__
+		passthru C_xh = 
+		""
+		"class RealShape;"
+		"";
+
+		RealShape*   fShape;
+		ODGeometryMode  fMode;
+		#endif
+			
+		majorversion = 1; minorversion = 0;
+		
+		functionprefix = ODBaseShape;
+		
+	};
+#endif
+};
+
+#endif // _SHAPEB_
+
+

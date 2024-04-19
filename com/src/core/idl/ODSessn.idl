@@ -1,0 +1,222 @@
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/* @(#) 1.11 com/src/core/idl/ODSessn.idl, odcore, od96os2, odos29646d 10/31/96 12:43:28 [11/15/96 15:24:58] */
+
+#ifdef __PRIVATE__
+//#
+//#     File:           ODSessn.idl
+//#
+//#     Contains:       Interface for ODSession class
+//#
+//#     Owned by:       Nick Pilch
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <17>     4/10/95        NP              1287722: Change signature of
+//#                                                                     ODSession::GetUserName.
+//#             <16>     8/16/95        NP              1275241: IDL Review. Add version.
+//#             <15>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <14>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <13>     10/7/94        CC              1191489 - Moved UniqueChangeID() in from
+//#                                                                     base class.
+//#             <12>     8/19/94        NP              1181622: Ownership fix.
+//#             <11>     8/12/94        NP              1180762-Added setters. changed getusername.
+//#                                                                     Removed GetSemtInterface.
+//#             <10>     7/29/94        CG              Got rid of Object registration calls.
+//#              <9>     7/11/94        Te              added GetInfo, SetInfo, _fInfo
+//#              <8>     6/30/94        CG              Uncommented messaging-related fields and
+//#                                                                     methdos.
+//#              <7>     6/23/94        CG              Added functionprefix, temporary comments.
+//#              <6>     6/19/94        MB              Implement GetDefaultHeap
+//#              <5>     6/18/94        MB              Add GetDefaultHeap to session
+//#              <4>     6/14/94        CG              Moved NameSpaceManager and Binding to
+//#                                                                     ODSession instead of ODBaseSession.
+//#              <3>      6/8/94        CG              Forgot #endif.
+//#              <2>      6/8/94        CG              Privatize change history.
+//#              <1>      6/8/94        CG              first checked in
+//#              <5>      6/1/94        RR              Parameter to Tokenize is in, not inout
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODSESSN_
+#define _ODSESSN_
+
+#ifndef _ODSESSNB_
+#include "ODSessnB.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface   ODSession;
+#ifdef _PLATFORM_WIN32_
+    interface   OpenDocShell;
+    interface   ODHelp;
+#endif
+
+
+#ifdef _PLATFORM_OS2_
+#pragma somemittypes on
+   typedef unsigned long ODPlatformWindowCreateOptions;
+   const ODPlatformWindowCreateOptions ODPlatformWindowDefaultCreateOptions = 0x0000783F;
+                                    // FCF_STANDARD & ~FCF_SHELLPOSITION & ~ FCF_ACCELTABLE
+#pragma somemittypes off
+   interface ODPerWindowFocusModule;
+   interface ODStatusLineExtension;
+   interface IODLinkService;
+   interface ODHelp;
+   typedef somToken SWP;
+   typedef somToken TID;
+#endif // _PLATFORM_OS2_
+
+//==============================================================================
+// ODSession
+//==============================================================================
+
+interface ODSession :  ODBaseSession
+{
+#ifdef _PLATFORM_WIN32_
+   void InitSession(in OpenDocShell shell);
+#else
+   void InitSession();
+#endif
+   void GetUserName(out ODIText *name);
+
+#ifdef _PLATFORM_OS2_  /******** strom@watson ********/
+  #ifdef __PRIVATE__
+    enum State {UNINIT, DOC_SESSION, AS_SESSION};
+    void StartServer(in string alias); // Called by AvsShell to start
+                                            //  DSOM msg loop.
+    void   SetLinkONOFFflag(in char flag);  // 131199
+    char   GetLinkONOFFflag();              // 131199
+  #endif
+
+  void  InitAvailServerSession (
+          in string alias /* public name of this availability server */
+        ); // Called in place of InitSession
+  IODLinkService GetLinkService(); // public method to get link service
+#endif //_PLATFORM_OS2_
+
+  //#---------------------------------
+  //# Data Interchange
+
+   ODUpdateID UniqueUpdateID();
+
+#ifdef _PLATFORM_OS2_  // JSO
+  //---------------------------------
+  // Virtual functions
+
+  ODPlatformWindow CreatePlatformWindow( in ODPlatformWindowCreateOptions options );
+  ODHelp GetHelp();
+#endif // _PLATFORM_OS2_
+
+#ifdef __SOMIDL__
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODSession;
+
+                #ifdef _PLATFORM_WIN32_
+                #ifdef __PRIVATE__
+                    passthru C_xh = "#include <ODShell.xh>";
+                #endif
+                #endif
+
+                #ifdef _PLATFORM_OS2_
+                passthru C_xih = " "
+                                 "#define INCL_ERRORS"
+                                 "#define INCL_WIN"
+                                 "#define INCL_DOS"
+                                 "#include <os2.h> ";
+                passthru C_xh = " "
+                                "#define INCL_ERRORS"
+                                "#define INCL_WIN"
+                                "#define INCL_DOS"
+                                "#include <os2.h> ";
+                passthru C_hh = " "
+                                "#define INCL_ERRORS"
+                                "#define INCL_WIN"
+                                "#define INCL_DOS"
+                                "#include <os2.h> ";
+                #endif // _PLATFORM_OS2_
+
+                override:
+                        somUninit,
+                        Purge;
+
+                releaseorder:
+                        UniqueUpdateID,
+                        GetUserName,
+                      #ifdef _PLATFORM_OS2_ // CED
+                        InitSession,
+                        CreatePlatformWindow,
+                        GetHelp,
+                        InitAvailServerSession,
+                        GetLinkService,
+                       #ifdef __PRIVATE__
+                        StartAvailServer,
+                        SetLinkONOFFflag,
+                        GetLinkONOFFflag,
+                        StartServer;
+                       #else
+                        reserved1,
+                        reserved2,
+                        reserved3,
+                        reserved4;
+                       #endif //__PRIVATE__
+                      #else
+                        InitSession;
+                      #endif // _PLATFORM_OS2_
+
+
+                #ifdef __PRIVATE__
+                  #ifdef _PLATFORM_OS2_
+                     ODPerWindowFocusModule fMenuFocusModule;
+                     ODStatusLineExtension  fStatusLineExtension;
+                     ODHelp                 fHelp;
+                     TID                    fDSOMThreadID;
+                     IODLinkService         fLinkService;
+                     State                  fState;
+                     char                   fLinkONOFFflag;
+                  #endif
+                #endif
+  };
+#endif
+};
+
+
+#endif // _ODSESSN_

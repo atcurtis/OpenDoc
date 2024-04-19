@@ -1,0 +1,156 @@
+/* @(#)Z 1.21 com/src/docshell/idl/ODShell.idl, odshell, od96os2, odos29646d 96/11/15 15:49:30 (96/10/29 09:24:36) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odshell
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifndef _OPENDOCSHELL_
+#define _OPENDOCSHELL_
+
+#include <somobj.idl>
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface   OpenDocShell;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface   ODSession;
+interface   ODWindowState;
+interface   ODWindow;
+interface   ODDispatcher;
+interface   DocumentManager;
+interface   ODPlatformWindow;
+interface   somf_TPrimitiveLinkedList;
+interface   somf_TPrimitiveLinkedListIterator;
+interface   ODDraft;
+
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken WindowSystemData;
+
+//==============================================================================
+// OpenDocShell
+//==============================================================================
+
+interface OpenDocShell :  SOMObject
+{
+    void			InitOpenDocShell();
+    ODBoolean			DispatchEvent(in ODEventData* event);
+    void			Terminate();
+    DocumentManager		CreateDocumentManager();
+    void			DeleteDocumentManager(
+						in DocumentManager docMgr);
+    void                        UpdateActiveDocumentManager(
+						in ODWindow odWindow);
+    DocumentManager             GetActiveDocumentManager();
+    void                        SetActiveDocumentManager(
+                                      in DocumentManager docMgr);
+    DocumentManager             GetDocumentManagerOfDraft(in ODDraft draft);
+    somf_TPrimitiveLinkedListIterator  CreateDocumentManagerIterator();
+    void                        DeleteDocumentManagerIterator(
+			              in somf_TPrimitiveLinkedListIterator 
+				             docMgrIter);
+    ODSession                   GetSession();
+    ODDispatcher                GetDispatcher();
+    ODWindowState               GetWindowState();
+    void			SubClassResponsibility(in char *methodName);
+    WindowSystemData*		GetWindowSystemData();
+    void			SetWindowSystemData(
+					in WindowSystemData* windowSystemData);
+    long			GetArgc();
+    void			SetArgc(in long argc);
+    char**			GetArgv();
+    void			SetArgv(in char** argv);
+
+
+#ifdef __SOMIDL__
+    implementation
+    {
+        majorversion = 1; minorversion = 0;
+
+        functionprefix = OpenDocShell;
+
+        override:
+            somUninit;
+
+        releaseorder:
+            InitOpenDocShell,
+            DispatchEvent,
+            Terminate,
+            CreateDocumentManager,
+            DeleteDocumentManager,
+            UpdateActiveDocumentManager,
+            GetActiveDocumentManager,
+            SetActiveDocumentManager,
+            CreateDocumentManagerIterator,
+            DeleteDocumentManagerIterator,
+            GetSession,
+            GetDispatcher,
+            GetWindowState,
+            SubClassResponsibility,
+            GetWindowSystemData,
+            SetWindowSystemData,
+            GetArgc,
+            SetArgc,
+            GetArgv,
+            SetArgv,
+            GetDocumentManagerOfDraft;
+
+           passthru C_xh =
+                "#ifndef _ODTYPES_"
+                "#include \"ODTypes.h\""
+                "#endif"
+                "#ifndef SOM_ODWindowState_xh"
+                "#include \"WinStat.xh\""
+                "#endif"
+	        "";
+
+        #ifdef __PRIVATE__
+            ODSession			fSession;
+            ODWindowState		fWindowState;
+	    ODDispatcher		fDispatcher;
+            somf_TPrimitiveLinkedList	fDocumentManagerList;
+            DocumentManager             fActiveDocumentManager;
+            WindowSystemData            fWindowSystemData;
+            long			fArgc;
+            char**			fArgv;
+        #endif
+  };
+#endif
+};
+
+
+#endif // _OPENDOCSHELL_

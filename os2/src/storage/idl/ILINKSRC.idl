@@ -1,0 +1,232 @@
+/* @(#)Z 1.6 os2/src/storage/idl/ILINKSRC.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:29:39 (96/10/01 12:46:59) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*                                                                  */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/********************************************************************/
+
+#ifndef _ILINKSRC_
+#define _ILINKSRC_
+
+#include <LinkSrc.idl>
+#include <ILTr2LSr.idl>
+#include <ICIDItr.idl>
+
+#ifdef __PRIVATE__
+  #ifndef _OpenHashTable_
+    #define _OpenHashTable_
+    typedef somToken OpenHashTable;
+  #endif
+
+  #ifndef _HEV_
+    #define _HEV_
+    typedef somToken HEV;
+  #endif
+#endif //__PRIVATE__
+
+interface IODMutex;
+interface IODConnIDIterator;
+
+interface IODLinkSource : ODLinkSource,
+                          IODLinkTargetToLinkSource
+{
+
+  #ifdef __PRIVATE__
+
+    enum State {
+      EMPTY,      // E state
+      INITED,     // I state
+      CONNECTED   // C state
+    };
+      //# Possible states of the LinkSource
+
+    enum LockState {
+      UNLOCKED,//nobody holds a lock on the content SU; Lock requests are OK
+      LOCKED,  //somebody holds a lock on an INDOC instance of the content SU
+      LOCKEDINAS, //somebody holds a lock on an INAS instance of the content SU
+     BROKEN    //nobody holds a lock on the content SU; lock requests not OK
+    };
+
+    #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+        // an instance of this structure is allocated for
+        // each caller who is currently unable to get the lock
+        // and is waiting until either:
+        //  the lock becomes available
+        //  a timeout happens
+        //  or the linksource closes down and breaks all locks
+      typedef struct LWE
+      {
+        IODMutex mutex; // to serialize access by unlock, release, and wait
+        HEV event;    // posted when lock wait terminated
+        ODLinkKey key; // key: nonzero means successful lock
+        ODBoolean timedout; // true if timed out and waiter detected this
+        ODBoolean broken; // true if linksrc is breaking all locks
+        LWE* next;// next on linked list
+      }LockWaitElement ;
+
+   #endif/* _PLATFORM_OS2_  or _PLATFORM_WIN32_ */
+
+    void GetPersistentLinkInfo(out ODLinkID linkID,
+                               out ODISOStr ASName);
+      // called:
+      // (1) when a persistent linkspec is made from a linksource
+      // (2) when a linktarget is copied together with its
+      // linksource and the linktarget needs to get the
+      // new linkinfo for the copied linksource
+
+    void InitILinkSource (in ODStorageUnit su,
+                          in ODPart srcPart,
+                          in ODISOStr hostName,
+                          in ODISOStr docName);
+
+      // Called in Draft::CreateLinkSource to initialize the LinkSource after
+      //    it is created.
+      // LinkSource will not be fully init until CompleteInitILinkSource called
+
+    ODLinkID InitILinkSourceFromStorage (in ODStorageUnit su);
+      // Called in Draft::AcquireLinkSource to initialize the LinkSource from
+      //    a pre-existing storage unit.
+      // Returns the stored linkid
+      // LinkSource will not be fully init until CompleteInitILinkSource called
+
+   void CompleteInitILinkSource(in ODStorageUnit su,
+                                 in ODLinkID linkIDIfNew,
+                                 in IODAuxiliaryState auxState,
+                                 in ODBoolean isLocked,
+                                 in ODISOStr ASName);
+    // called after InitILinkSource or InitILinkSourceFromStorage
+    // linkIDIFNew will always be supplied (nonzero) for a brand new link source
+    // linkIDIfNew will be supplied for a previously stored link source
+    //     only if the draft determines that this link source is
+    //     a copy in which case a new linkid will be supplied
+
+    void GetAuxState (out IODAuxiliaryState* auxState);
+
+    void ResetAuxState (in IODAuxiliaryState auxState);
+
+  #endif //__PRIVATE__
+
+   void WritePersistentLinkSpec(in ODStorageUnit su);
+    // eventually this method will be moved to ODLinkSource and
+    // will become public.
+    // This writes out a linkspec giving rights to link to this linksource
+
+  #ifdef __SOMIDL__
+    implementation {
+      override:
+        somInit,
+        somUninit,
+        #ifdef __PRIVATE__
+          AddLinkTarget,
+          ForwardGetUpdateID,
+          ForwardGetChangeTime,
+          ForwardGetContentStorageUnit,
+          ForwardLock,
+          ForwardUnlock,
+          GetSourcePartDescription,
+          LinkTargetClosed,
+          LinkTargetRemoved,
+          LinkTargetReopened,
+          LockToRead,
+          RegisterTrackedLinkTarget,
+          RegisterUntrackedLinkTarget,
+          ShowSourceContentFor,
+          TargetPartDescriptionChanged,
+          UnregisterLinkTarget,
+          GetConnectionData,
+          GetLink,
+          GetLinkConnectionData,
+          GetLinkConnections,
+          InitCallBackMode,
+          BreakLinkConnection,
+          SetDescription,
+          GetDescription,
+        #endif /*__PRIVATE__*/
+        CloneInto,
+        Externalize,
+        Release,
+        ReleaseAll,
+        SetAutoUpdate,
+        Lock,
+        Unlock;
+
+
+      releaseorder:
+        WritePersistentLinkSpec, 
+        #ifdef __PRIVATE__
+          InitILinkSource,
+          InitILinkSourceFromStorage,
+          CompleteInitILinkSource,
+          GetAuxState,
+          ResetAuxState,
+          GetPersistentLinkInfo;
+        #else
+          reserved1,
+          reserved2,
+          reserved3,
+          reserved4,
+          reserved5,
+          reserved6;
+        #endif //__PRIVATE__
+
+      #ifdef __PRIVATE__
+        passthru C_xh = ""
+                        "#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32)"
+                        "typedef unsigned long EditionContainerSpec;"
+                        "#endif // _PLATFORM_OS2_ or _PLATFORM_WIN32"
+                        ""
+                        "#ifdef _PLATFORM_OS2_"
+                        "#define INCL_WINATOM"
+                        "#include <os2.h>"
+                        "#endif // _PLATFORM_OS2_"
+                        "";
+      #endif /*__PRIVATE__*/
+
+      #ifdef __PRIVATE__
+        ODLinkConnectionID    fIDCounter;
+        ODLinkID           fLinkID;
+        OpenHashTable*       fLocalLinkInfos;
+        OpenHashTable*       fRemoteLinkInfos;
+        IODMutex           fMutex;
+        ODLinkConnectionData fSrcConnData;
+        State              fState;
+        ODBoolean          fTrackTrgts;
+        LockState          fLockState;
+        ODULong            fPID;
+        ODULong            fVersion;
+        LockWaitElement* fFirstWE;
+        LockWaitElement* fLastWE;
+        ODISOStr           fASName;
+      #endif //__PRIVATE__
+    };
+#endif //__SOMIDL__
+};
+
+#endif //_ILINKSRC_

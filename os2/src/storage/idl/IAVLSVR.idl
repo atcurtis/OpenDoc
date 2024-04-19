@@ -1,0 +1,212 @@
+/* @(#)Z 1.5 os2/src/storage/idl/IAVLSVR.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:29:39 (96/08/23 01:43:18) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*                                                                  */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/********************************************************************/
+
+#ifndef _IAVLSVR_
+#define _IAVLSVR_
+
+#include <somobj.idl>
+#include <snglicls.idl>
+#include <ILSv2AS.idl>
+#include <ILTr2LSr.idl>
+
+// #ifdef __PRIVATE__
+//   #ifndef _AEHashTable_
+//     #define _AEHashTable_
+//     typedef somToken AEHashTable;
+//   #endif
+// #endif //__PRIVATE__
+
+#ifdef __PRIVATE__
+  #ifndef _OpenHashTable_
+    #define _OpenHashTable_
+    typedef somToken OpenHashTable;
+  #endif
+#endif //__PRIVATE__
+
+// Defect 22446
+#ifndef _AVSShell_
+  #define _AVSShell_
+  typedef somToken AvsShell;
+#endif
+
+
+interface IODAvailServerToLinkService;
+interface ODDraft;
+interface IODMutex;
+
+/*
+ * AvailServer is the interface to the Availability Server (AS).  There is
+ * at least one instance of an AS per file system.  Usually there is one
+ * AS per machine.  The main purpose of the AS is to make link content
+ * available to inter-document link targets when the source document is not
+ * open.  If a document registers with a particular AS, then all
+ * of its LinkSource objects will register with this AS.
+ *
+ * The AS consists of a manager and a dispatcher (in one object).
+ *
+ * Targets of registered LinkSources are given a pointer to the dispatcher,
+ * which exposes the IODLinkTargetToLinkSource interface.
+ * (This interface is used by
+ * IODLink objects and is hidden from part programmers).  The dispatcher
+ * forwards all target calls to the LinkSource object in the document if
+ * the document is open.  Otherwise the dispatcher forwards the calls to
+ * a LinkSourceSurrogate object in the AS.
+ *
+ * The AS manager is responsible
+ * for tracking registered documents and whether they are open or not.  It
+ * also internalizes/externalizes LinkSourceSurrogates when needed by
+ * opening the appropriate document file container and locating the appropriate
+ * LinkSource SU.  If a document is open but a particular LinkSource
+ * requested by the dispatcher is not yet opened, the AS manager will contact
+ * the linkservice of the document and ask that this LinkSource be
+ * internalized.
+ *
+ * The state of each LinkSource is divided into 3 categories:
+ * the "main" state, the "auxiliary" state, and the lock.  The main state
+ * has two properties: (1) it cannot change while the document is closed;
+ * (2) it reverts upon a crash or an explicit rollback to an earlier draft.
+ * Main state includes a changeID, the contentSU, and
+ * references to intra-document targets.  The auxiliary
+ * state can change as a result of actions of remote documents,
+ * and wherever possible is kept up-to-data despite crashes and rollbacks.
+ * The auxiliary state includes information about registered and
+ * tracked targets.
+ * The lock flag is handled separately since the AS Manager
+ * must retain locked LinkSourceSurrogates in the AS even though
+ * a LinkSource is also being created in the document.  During
+ * the time that both a LinkSource and a LinkSourceSurrogate
+ * exist, the LinkSourceSurrogate can only be used for the
+ * purpose of reading its ContentSU.  It will be freed up
+ * as soon as the lock is released.
+ *
+ * LinkSources externalize both their main state and auxiliary
+ * state into their document's container.  LinkSourceSurrogates
+ * additionally maintain the auxiliary state in an SU belonging
+ * to the AS "document".  As an optimization, the surrogate
+ * auxiliary state SU is absent if there is no change from the
+ * last saved auxiliary state of the document.  Saved auxiliary
+ * states are tagged with version numbers.
+ * When a link source is closed, the auxiliary state is
+ * passed to the availability server, which creates
+ * an auxiliary state SU for it.  This will be empty if the
+ * auxiliary state did not change between the last save
+ * and the time of close.  When a link source is re-opened,
+ * the auxiliary state is passed back from the availability
+ * server to the link source.  If this auxiliary state is empty,
+ * the link source uses its last saved value from the document.
+ * If it is not empty, then the LinkSource will initialize
+ * its auxiliary state from the most recent version of the version
+ * in the document and the version in the AS.
+ */
+interface IODAvailServer : IODLinkServiceToAvailServer,
+                           IODLinkTargetToLinkSource
+{
+  void InitAvailServer(in ODBoolean isNew,
+                       in AvsShell* shell,
+                       in ODDraft asDraft,
+                       in ODDraft surrogateDraft);
+    // InitAvilServer is called by the AS Shell to initialize the AS.
+    // It supplies
+    // the AS with 2 drafts.  asDraft contains the persistent storage used
+    // by the AS: it contains the AS manager tables and the
+    // SurrogateWriteableState for each LinkSource registered with this AS.
+    // surrogateDraft is a temporary (in-memory) draft containing the
+    // opened LinkSourceSurrogates and their referenced contentSUs.
+
+  #ifdef __SOMIDL__
+    implementation {
+      metaclass = SOMMSingleInstance;
+
+      override:
+        somInit,
+        somUninit,
+      #ifdef __PRIVATE__
+        ForwardGetUpdateID,
+        ForwardGetChangeTime,
+        ForwardGetContentStorageUnit,
+        ForwardLock,
+        ForwardUnlock,
+        GetSourcePartDescription,
+        LinkTargetClosed,
+        LinkTargetRemoved,
+        LinkTargetReopened,
+        AddLinkTarget,
+        LockToRead,
+        RegisterTrackedLinkTarget,
+        RegisterUntrackedLinkTarget,
+        ShowSourceContentFor,
+        TargetPartDescriptionChanged,
+        UnregisterLinkTarget,
+        #endif  // __PRIVATE__
+        RegisterDoc,
+        UnregisterDoc,
+        DocOpened,
+        DocClosed,
+        DocMoved,
+        RegisterLink,
+        LinkOpened,
+        LinkClosed,
+        RemoveLink;
+
+      releaseorder:
+        InitAvailServer;
+
+      #ifdef __PRIVATE__
+//        AEHashTable   *fDocuments;    // IODDocumentID->
+        OpenHashTable   *fDocuments;    // IODDocumentID->
+                                      // <pathname,
+                                      //  list of linkids,
+                                      //  LinkService>
+//        AEHashTable   *fLinks;        // ODLinkID->
+        OpenHashTable   *fLinks;        // ODLinkID->
+                                      // <state: unloaded/indoc/inas/inboth,
+                                      //  IODDocumentID,
+                                      //  SUID AuxiliaryState,
+                                      //  ODBoolean IsLocked
+                                      //  IODLinkTargetToLinkSource ASLinkSrc,
+                                      //  IODLinkTargetToLinkSource DocLinkSrc>
+
+        IODMutex      fMutex;
+        IODDocumentID fDocIDCounter;  // current value of counter
+        ODLinkID      fLinkIDCounter; // current value of counter
+        AvsShell*      fShell;
+        ODDraft       fAsDraft;
+        ODDraft       fSurrogateDraft;
+//      TBD: linked list of loaded LinkIds, ordered by last access time
+      #endif  // __PRIVATE__
+    };
+  #endif //__SOMIDL__
+};
+
+#endif //_IAVLSVR_

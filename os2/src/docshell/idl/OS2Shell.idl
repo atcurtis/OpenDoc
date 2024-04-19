@@ -1,0 +1,101 @@
+/* @(#)Z 1.4 os2/src/docshell/idl/OS2Shell.idl, odshell, od96os2, odos29646d 96/11/15 15:51:39 (96/10/03 15:18:09) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odshell
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifndef _OS2SHELL_
+#define _OS2SHELL_
+
+#include <somobj.idl>
+#include "AppShell.idl"
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface   OS2Shell;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+
+//==============================================================================
+// OS2Shell
+//==============================================================================
+
+interface OS2Shell :  ApplicationShell
+{
+
+#ifdef __SOMIDL__
+    implementation
+    {
+        majorversion = 1; minorversion = 0;
+
+        functionprefix = OS2Shell;
+
+        override:
+            CreateMenuBar,
+            InitWindowSystem,
+            Exec,
+            MainLoop,
+            GetEventType,
+            GetEventSubType,
+            GetEventWindow,
+            DocumentClose,
+            CloseCleanup,
+            Terminate;
+
+        #ifdef __PRIVATE__
+           passthru C_xh =
+                "#ifndef __OS2_H__"
+                "#include \"os2.h\""
+                "#endif"
+                "#ifndef _ODTYPES_"
+                "#include \"ODTypes.h\""
+                "#endif"
+                "";
+           passthru C_xih =
+                "#ifndef __OS2_H__"
+                "#include \"os2.h\""
+                "#endif"
+                "";
+        #else
+        #endif
+  };
+#endif
+};
+
+#endif // _OS2SHELL_

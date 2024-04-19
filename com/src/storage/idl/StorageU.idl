@@ -1,0 +1,282 @@
+/* @(#)Z 1.4 com/src/storage/idl/StorageU.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:59 (96/10/29 09:33:16) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#	File:		StorageU.idl
+//#
+//#	Contains:	Definition of ODStorageUnit.
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<15>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		<14>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<13>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<12>	 5/19/95	VL		1249626: in length and out byteArray for
+//#									GetValue and GetPromiseValue.
+//#		<11>	 5/17/95	VL		1249181: Made Init method private.
+//#		<10>	 4/24/95	VL		1234914: Changed inout to out for
+//#									GetPromiseValue.
+//#		 <9>	 3/27/95	VL		1231412: Removed CopyTo.
+//#		 <8>	 3/10/95	VL		1226116: Added SetStorageUnitRef.
+//#		 <7>	 1/26/95	VL		#???: SURef is now a 4-byte array.
+//#		 <6>	12/20/94	VL		1195012: Make Storage calls be
+//#									marshallable.
+//#		 <5>	 8/26/94	VL		1183174: Removed CloneTo.
+//#		 <4>	 8/11/94	VL		1180299: Added CreateCursor and modified
+//#									CreateView.
+//#		 <3>	  7/5/94	VL		Fixed in/out.
+//#		 <2>	 6/21/94	VL		Added functionprefix.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _STORAGEU_
+#define _STORAGEU_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface   ODStorageUnit;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+interface   ODDraft;
+interface   ODSession;
+interface   ODPart;
+interface   ODStorageUnitCursor;
+interface   ODStorageUnitView;
+interface   ODStorageUnitRefIterator;
+
+//==============================================================================
+// ODStorageUnit
+//==============================================================================
+
+interface ODStorageUnit :  ODRefCntObject 
+{
+#ifdef __PRIVATE__
+	void InitStorageUnit(in ODDraft draft,
+						in ODStorageUnitID suid);
+#endif
+	ODDraft		GetDraft();
+	
+	ODSession	GetSession();
+	
+	ODBoolean	Exists(in ODPropertyName propertyName,
+					in ODValueType valueType, 
+					in ODValueIndex valueIndex);
+	
+	ODBoolean  ExistsWithCursor(in ODStorageUnitCursor cursor);
+	
+	ODULong  CountProperties();
+	
+	ODULong  CountValues();
+	
+	ODStorageUnit   Focus(in ODPropertyName propertyName,
+							in ODPositionCode propertyPosCode,
+							in ODValueType valueType,
+							in ODValueIndex valueIndex,
+							in ODPositionCode  valuePosCode);
+	
+	ODStorageUnit   FocusWithCursor(in ODStorageUnitCursor cursor);
+		
+	ODStorageUnit   Externalize();
+	
+	ODStorageUnit   Internalize();
+	
+	ODID      GetID();
+	
+	ODStorageUnitName GetName();
+	
+	void SetName(in ODStorageUnitName name);
+	
+	ODStorageUnit   AddProperty(in ODPropertyName propertyName);
+	
+	ODStorageUnit  AddValue(in ODValueType type);
+	
+	ODStorageUnit   Remove();
+	
+	void      CloneInto(in ODDraftKey key,
+						in ODStorageUnit destStorageUnit,
+						in ODID scopeID);
+	
+	ODStorageUnitView   CreateView();
+	
+	ODStorageUnitCursor	CreateCursorWithFocus();
+	
+	ODStorageUnitCursor CreateCursor(in ODPropertyName propertyName,
+									in ODValueType valueType,
+									in ODValueIndex valueIndex);
+	
+	ODPropertyName  GetProperty();
+	
+	ODValueType  GetType();
+	
+	void      SetType(in ODValueType valueType);
+	
+	void      SetOffset(in ODULong offset);
+	
+	ODULong    GetOffset();
+	
+	ODULong    GetValue(in ODULong length, out ODByteArray value);
+	
+	void      SetValue(in ODByteArray value);
+	
+	void      InsertValue(in ODByteArray value);
+	
+	void      DeleteValue(in ODULong length);
+	
+	ODULong    GetSize();
+	
+	ODBoolean    IsValidStorageUnitRef(in ODStorageUnitRef aRef);
+	
+	void GetStrongStorageUnitRef(in ODStorageUnitID embeddedSUID, out ODStorageUnitRef strongRef);
+	
+	void GetWeakStorageUnitRef(in ODStorageUnitID embeddedSUID, out ODStorageUnitRef weakRef);
+	
+	ODBoolean    IsStrongStorageUnitRef(in ODStorageUnitRef ref);
+	
+	ODBoolean    IsWeakStorageUnitRef(in ODStorageUnitRef ref);
+	
+	ODStorageUnit   RemoveStorageUnitRef(in ODStorageUnitRef aRef);
+	
+	ODStorageUnitID  GetIDFromStorageUnitRef(in ODStorageUnitRef aRef);
+	
+	ODStorageUnitRefIterator  CreateStorageUnitRefIterator();
+
+	void 	SetStorageUnitRef(in ODStorageUnitID embeddedSUID,
+											in ODStorageUnitRef ref);
+	
+	ODULong      GetGenerationNumber();
+	
+	ODULong      IncrementGenerationNumber();
+	
+	ODBoolean  IsPromiseValue();
+	
+	void    SetPromiseValue(in ODValueType valueType, 
+							in ODULong offset,
+							in ODByteArray value, 
+				  			in ODPart sourcePart);
+	
+	ODULong  GetPromiseValue(in ODValueType valueType,
+							in ODULong offset,
+							in ODULong length,
+							out ODByteArray value,
+							out ODPart sourcePart);
+	
+	void    ClearAllPromises();
+	
+	void	ResolveAllPromises();
+	
+	ODStorageUnitKey  Lock(in ODStorageUnitKey key);
+	
+	void        Unlock(in ODStorageUnitKey key);
+#ifdef __SOMIDL__
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+  	functionprefix = ODStorageUnit;
+    override:
+		somUninit,
+		Acquire,
+        Release,
+        Purge;
+    releaseorder:
+#ifdef __PRIVATE__
+        InitStorageUnit,
+#else
+		reserved1,
+#endif
+        GetDraft,
+        GetSession,
+        Exists,
+        ExistsWithCursor,
+        CountProperties,
+        CountValues,
+        Focus,
+        FocusWithCursor,
+        Externalize,
+        Internalize,
+        GetID,
+        GetName,
+        SetName,
+        AddProperty,
+        AddValue,
+        Remove,
+        CloneInto,
+        CreateView,
+        CreateCursor,
+		CreateCursorWithFocus,
+		GetProperty,
+        GetType,
+        SetType,
+        SetOffset,
+        GetOffset,
+        GetValue,
+        SetValue,
+        InsertValue,
+        DeleteValue,
+        GetSize,
+        IsValidStorageUnitRef,
+        GetStrongStorageUnitRef,
+        GetWeakStorageUnitRef,
+        IsStrongStorageUnitRef,
+        IsWeakStorageUnitRef,
+        RemoveStorageUnitRef,
+        GetIDFromStorageUnitRef,
+        CreateStorageUnitRefIterator,
+ 		SetStorageUnitRef,
+		GetGenerationNumber,
+        IncrementGenerationNumber,
+        IsPromiseValue,
+        SetPromiseValue,
+        GetPromiseValue,
+        ClearAllPromises,
+        ResolveAllPromises,
+        Lock,
+        Unlock;
+  };
+#endif
+};
+
+#endif  // _STORAGEU_
+

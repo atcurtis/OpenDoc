@@ -1,0 +1,261 @@
+/* @(#)Z 1.2 os2/src/ui/idl/MenuAdO.idl, odui, od96os2, odos29646d 96/11/15 16:00:29 (96/09/29 16:02:47) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+#ifdef __PRIVATE__
+// -------------------------------------------------------------------------
+//   File:	MenuAdO.idl
+//   Contains:	Class definition for ODOS2MenuAdapter
+//   $Author:	purple $
+//   $Date:	1996/09/09 14:54:01 $
+//   $Source:	
+//   $Revision: 1.1 $
+// -------------------------------------------------------------------------
+// 
+// 	Copyright:	1994 by Apple Computer, Inc., all rights reserved.
+// 	Copyright:	1994 International Business Machines, Inc.
+// 
+// 	Change History (most recent first):
+// 	<1>	purple 96/07/23		modify from AIX PltMenuX.idl
+//
+#endif // __PRIVATE__
+
+#ifndef _OS2MENUADAPTER_
+#define _OS2MENUADAPTER_
+
+#include "Part.idl"
+
+//=============================================================================
+// Classes defined in this interface
+//=============================================================================
+
+interface  ODOS2MenuAdapter;
+
+struct ODOS2MenuItemAdapter {
+    ODMenuItemID        id;
+    ODOS2MenuAdapter*   parentAdapter;
+    ODOS2MenuAdapter*   subMenuAdapter;
+
+    ODBoolean           enabled;
+    ODBoolean           hidden;
+    ODBoolean           checked;
+    ODBoolean           separator;
+    string              text;
+};
+
+//=============================================================================
+// Classes used by this interface
+//=============================================================================
+#ifdef __PRIVATE__
+interface  ODPart;
+#endif //  __PRIVATE
+
+#ifdef __PRIVATE__
+//=============================================================================
+// Implementation Types
+//=============================================================================
+
+typedef somToken OrderedCollection;
+
+#endif //  __PRIVATE
+
+//=============================================================================
+// Class ODOS2MenuAdapter
+//=============================================================================
+
+interface ODOS2MenuAdapter : ODObject
+{
+    void Init			(in ODMenuID id,
+				 in HWND parentHWND);
+
+    void AddItemsFromPlatMenu	(in ODPlatformMenu platMenu);
+
+    ODMenuID MenuID		();
+
+    ODBoolean IsMenuEnabled	();
+
+    void DisableMenu		();
+
+    void EnableMenu		();
+
+    ODUShort GetMenuText	(out string menuString);
+
+    ODBoolean SetMenuText	(in string menuString);
+
+    ODUShort GetMenuItemText	(in ODMenuItemID menuItemID,
+				 out string menuItemString);
+
+    ODBoolean SetMenuItemText	(in ODMenuItemID menuItemID,
+				 in string menuItemString);
+
+    ODBoolean SetHideMenuItem	(in ODMenuItemID menuItemID);
+
+    ODBoolean SetShowMenuItem	(in ODMenuItemID menuItemID);
+
+    ODBoolean CheckMenuItem	(in ODMenuItemID menuItemID,
+				 in ODBoolean check);
+
+    ODBoolean EnableMenuItem	(in ODMenuItemID menuItemID,
+				 in ODBoolean enable);
+
+    ODBoolean AddMenuItemBefore	(in ODMenuItemID itemID,
+				 in ODPlatformMenuItem item,
+				 in ODMenuItemID beforeID);
+
+    ODBoolean AddMenuItemLast	(in ODMenuItemID itemID,
+				 in ODPlatformMenuItem item);
+
+    ODBoolean AddSubMenuBefore	(in ODMenuID subMenuID,
+				 in ODPlatformMenu subMenu,
+				 in ODMenuItemID beforeID);
+
+    ODBoolean AddSubMenuLast	(in ODMenuID subMenuID,
+				 in ODPlatformMenu subMenu);
+
+    ODPlatformMenu GetSubMenu	(in ODMenuID subMenuID);
+
+    ODBoolean ItemExists	(in ODMenuItemID menuItemID);
+
+    ODBoolean IsItemEnabled	(in ODMenuItemID menuItemID);
+
+    ODBoolean IsItemChecked	(in ODMenuItemID menuItemID);
+
+    ODBoolean IsItemHidden	(in ODMenuItemID menuItemID);
+
+    ODBoolean RemoveMenuItem	(in ODMenuItemID menuItemID);
+
+    ODBoolean GetPlatMenuItem	(in ODOS2MenuItemAdapter* itemAd,
+				 out ODPlatformMenuItem platMenuItem);
+
+    ODBoolean GetPlatMenu	(out ODPlatformMenu platMenu);
+
+    ODBoolean GetSubMenuAdapter(in ODMenuID subMenuID,
+				out ODOS2MenuAdapter subMenuAd);
+
+    void GetParentAdapter	(out ODOS2MenuAdapter parentAd);
+
+    void SetParentAdapter	(in ODOS2MenuAdapter parentAd);
+
+#ifdef __PRIVATE__
+    ODPart GetPart		();
+
+    void SetPart		(in ODPart part);
+
+    ODBoolean GetMenuItemAdapter(in  ODMenuItemID id,
+				 out ODOS2MenuItemAdapter* itemAd);
+
+    ODBoolean GetMenuItemPosition(in  ODMenuItemID id,
+				  out ODUShort pos);
+#endif
+
+#ifdef __SOMIDL__
+    implementation
+    {
+	majorversion   = 1; minorversion = 0;
+	functionprefix = ODOS2MenuAdapter;
+
+	override: somInit, somUninit;
+
+	passthru C_xh_before =
+		"typedef struct ODOS2MenuItemAdapter {"
+		"    ODMenuItemID        id;"
+		"    ODOS2MenuAdapter*   parentAdapter;"
+		"    ODOS2MenuAdapter*   subMenuAdapter;"
+		""
+		"    ODBoolean           enabled;"
+		"    ODBoolean           hidden;"
+		"    ODBoolean           checked;"
+		"    ODBoolean           separator;"
+		"    string              text;"
+		"};"
+		""
+		"";
+
+	releaseorder:
+	    Init,
+	    AddItemsFromPlatMenu,
+	    MenuID,
+	    IsMenuEnabled,
+	    DisableMenu,
+	    EnableMenu,
+	    GetMenuText,
+	    SetMenuText,
+	    GetMenuItemText,
+	    SetMenuItemText,
+	    SetHideMenuItem,
+	    SetShowMenuItem,
+	    CheckMenuItem,
+	    EnableMenuItem,
+	    AddMenuItemBefore,
+	    AddMenuItemLast,
+	    AddSubMenuBefore,
+	    AddSubMenuLast,
+	    GetSubMenu,
+	    ItemExists,
+	    IsItemEnabled,
+	    IsItemChecked,
+	    IsItemHidden,
+	    RemoveMenuItem,
+	    GetPlatMenuItem,
+	    GetPlatMenu,
+	    GetSubMenuAdapter,
+	    GetParentAdapter,
+	    SetParentAdapter,
+	#ifdef __PRIVATE__
+	    GetPart,
+	    SetPart,
+	    GetMenuItemAdapter,
+	    GetMenuItemPosition;
+	#else
+	    reserved1,
+	    reserved2,
+	    reserved3,
+	    reserved4;
+	#endif
+
+	#ifdef __PRIVATE__
+	    passthru C_xih =
+		""
+		"class OrderedCollection;"
+		"";
+
+	    ODMenuID    	fMenuID;
+	    ODBoolean   	fMenuIsEnabled;
+	    OrderedCollection*  fMenuItems;
+
+	    ODPart		fPart;
+	    char*		fMenuLabel;
+	    HWND		fMenuHWND;
+	    HWND		fParentHWND;
+
+	    ODOS2MenuAdapter	fParentAdapter;
+	#endif // __PRIVATE__
+
+    };
+#endif // __SOMIDL__
+
+}; // end class ODOS2MenuAdapter
+
+#endif //  _OS2MENUADAPTER_

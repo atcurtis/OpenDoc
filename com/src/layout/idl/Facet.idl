@@ -1,0 +1,613 @@
+/* @(#)Z 1.34 com/src/layout/idl/Facet.idl, odlayout, od96os2, odos29646d 96/11/15 15:25:31 (96/10/29 17:45:41) */
+
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odlayout
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+//# IBM Change History (most recent first):                         */
+//# 20657  03/29/96 sa   Merged OS2 changes                         */
+//# 138899 11/12/95 ced  Change SetHandleMouseEvents param from     */
+//#                      ODBoolean to ODULong w/ flags. add         */
+//#                      GetHandleMouseEvents.                      */
+//# 130552  7/22/95 ced  Change ret type of CreatePlatformWindowCanvas*/
+//# 125700  6/14/95 ced  Add SetHandleMouseEvents method.           */
+//# 125697  6/14/95 ced  Add _fUpdateShape & AcquireUpdateShape()   */
+//#                      to support kODNULL invalidShape param in   */
+//#                      Update method when called recursively.     */
+//# 124854  6/07/95 ced  change GetFrameAggregateClipShape and      */
+//#                      GetWindowFrameAggregateClipShape to        */
+//#                      AcquireXXXX                                */
+//# 122394  6/01/95 map  Fix again problem with //# comments        */
+//# 122943  5/21/95 map  Method name changes for multi-threading    */
+//# 120349  5/15/95 map  Fix problem with //# comment on #endifs    */
+//# 120604  4/28/95 ced  Merge with B1C16 Apple code.               */
+//# 119888   4/21/95  ced   Added IvalidateBorderShape private      */
+//#                          method                                 */
+//# 117472   3/31/95  ced   Add CreatePlatformCanvas &              */
+//#                          CreatePlatformWindowCanvas             */
+//#******************************************************************/
+#ifdef __PRIVATE__
+//#
+//#    File:       Facet.idl
+//#
+//#    Contains:   SOM class definition for ODFacet
+//#
+//#    Owned by:   Joshua Susser
+//#
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#    Change History (most recent first):
+//#
+//#        <14>     8/18/95    JBS     1275241 IDL Review
+//#        <13>      8/3/95    RR      #1257260: Collapse B classes. Remove
+//#                                    somInit methods. Don't call IsInitialized
+//#                                    or SubclassResponsibility
+//#        <12>     6/20/95    JBS     1249190 make init methods private; 1257315
+//#                                    change AcquireWindow to GetWindow; 1260681
+//#                                    remove BaseFacet class
+//#        <11>     5/25/95    VL      1251403: Multithreading naming support.
+//#        <10>     2/28/95    JBS     1198509 added fActiveBorderShape, moved
+//#                                    active border display code to border.cpp
+//#         <9>     1/13/95    RR      Remove MouseEnter, MouseWithin and
+//#                                    MouseLeave 1192147, 1201708
+//#         <8>    10/18/94    JBS     1174640: added fIsUpdating field
+//#         <7>     8/16/94    JBS     1180387: add CreateCanvas()
+//#         <6>     8/15/94    JBS     1180387: added Imaging factory methods
+//#         <5>     8/12/94    JBS     1179920: move fWindow from Facet to Frame
+//#         <4>     8/10/94    JBS     1179919: coordinate system bias changes
+//#         <3>     6/22/94    JBS     add functionprefix
+//#         <2>      6/8/94    NP      Restore lost changes.
+//#         <6>      6/7/94    RR      Privatise change log
+//#         <5>     5/23/94    RR      ChangeGeometry replaces ChangeClipShape and
+//#                                    ChangeExternalTransform
+//#
+#else
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _FACET_
+#define _FACET_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODFacet;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+interface  ODCanvas;
+interface  ODDragItemIterator;
+interface  ODFacetIterator;
+interface  ODFrame;
+interface  ODShape;
+interface  ODTransform;
+interface  ODWindow;
+#if defined (_PLATFORM_OS2_) || defined (_PLATFORM_WIN32_) || defined (_PLATFORM_UNIX_)
+interface  ODPlatformCanvas;
+#endif // _PLATFORM_OS2_ ||  _PLATFORM_WIN32_ || _PLATFORM_UNIX_
+
+#if defined (_PLATFORM_OS2_) || defined (_PLATFORM_WIN32_) 
+interface  M_ODFacet;
+
+#endif // _PLATFORM_OS2_ ||  _PLATFORM_WIN32_ 
+
+#ifdef _PLATFORM_OS2_
+interface ODOS2StandardCanvas;
+interface ODOS2WindowCanvas;
+#endif //_PLATFORM_OS2_
+
+#ifdef _PLATFORM_WIN32_
+interface ODWin32StandardCanvas;
+#endif // _PLATFORM_WIN32_
+
+#ifdef _PLATFORM_UNIX_
+interface ODAIXStandardCanvas;
+typedef somToken Display;
+typedef somToken Pixmap;
+typedef somToken GC;
+typedef somToken Widget;
+typedef somToken Window;
+#endif // UNIX
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken FacetNode;
+
+
+#endif
+
+#ifdef _PLATFORM_OS2_
+//=====================================================================================
+// Constants used in this interface
+//=====================================================================================
+
+// Bitfield flags used by Set/GetHandleMouseEvents
+
+#pragma somemittypes on
+const ODULong kODPartHandlesMouseEvents = 1;
+const ODULong kODPartHandlesDragDropEvents = 2;
+#pragma somemittypes off
+
+#endif // _PLATFORM_OS2_
+
+//=====================================================================================
+// ODFacet
+//=====================================================================================
+
+interface ODFacet :  ODObject
+{
+   ODFrame GetFrame();
+
+   ODFacet CreateEmbeddedFacet(in ODFrame frame,
+                               in ODShape clipShape,
+                               in ODTransform externalTransform,
+                               in ODCanvas canvas,
+                               in ODCanvas biasCanvas,
+                               in ODFacet siblingFacet,
+                               in ODFramePosition position);
+
+   void RemoveFacet(in ODFacet facet);
+
+   void MoveBefore(in ODFacet child,
+                   in ODFacet sibling);
+
+   void MoveBehind(in ODFacet child,
+                   in ODFacet sibling);
+
+   ODFacet GetContainingFacet();
+
+   ODFacetIterator CreateFacetIterator(in ODTraversalType traversalType,
+                                       in ODSiblingOrder siblingOrder);
+
+   ODShape CreateShape();
+
+   ODShape AcquireClipShape(in ODCanvas biasCanvas);
+
+   void ChangeGeometry(in ODShape clipShape,
+                       in ODTransform transform,
+                       in ODCanvas biasCanvas);
+
+   ODShape AcquireAggregateClipShape(in ODCanvas biasCanvas);
+
+   ODShape AcquireWindowAggregateClipShape(in ODCanvas biasCanvas);
+
+   ODShape AcquireActiveShape(in ODCanvas biasCanvas);
+
+   void ChangeActiveShape(in ODShape activeShape, in ODCanvas biasCanvas);
+
+   ODTransform CreateTransform();
+
+   ODTransform AcquireExternalTransform(in ODCanvas biasCanvas);
+
+   ODTransform AcquireFrameTransform(in ODCanvas biasCanvas);
+
+   ODTransform AcquireContentTransform(in ODCanvas biasCanvas);
+
+   ODTransform AcquireWindowFrameTransform(in ODCanvas biasCanvas);
+
+   ODTransform AcquireWindowContentTransform(in ODCanvas biasCanvas);
+
+   ODCanvas CreateCanvas(in ODGraphicsSystem graphicsSystem,
+                         in ODPlatformCanvas platformCanvas,
+                         in ODBoolean isDynamic,
+                         in ODBoolean isOffscreen);
+
+   ODBoolean HasCanvas();
+
+   ODCanvas GetCanvas();
+
+   void ChangeCanvas(in ODCanvas canvas);
+
+   ODWindow GetWindow();
+
+   ODInfoType GetPartInfo();
+
+   void SetPartInfo(in ODInfoType partInfo);
+
+   ODDragResult DragEnter(in ODPoint point,
+                          in ODDragItemIterator dragInfo,
+                          in ODCanvas biasCanvas);
+
+   ODDragResult DragWithin(in ODPoint point,
+                           in ODDragItemIterator dragInfo,
+                           in ODCanvas biasCanvas);
+
+   void DragLeave(in ODPoint point,
+                  in ODCanvas biasCanvas);
+
+   ODDropResult Drop(in ODPoint point,
+                     in ODDragItemIterator dropInfo,
+                     in ODCanvas biasCanvas);
+
+   void Update(in ODShape invalidShape, in ODCanvas biasCanvas);
+
+   void Invalidate(in ODShape invalidShape, in ODCanvas biasCanvas);
+
+   void Validate(in ODShape validShape, in ODCanvas biasCanvas);
+
+   void Draw(in ODShape invalidShape, in ODCanvas biasCanvas);
+
+   void DrawChildren(in ODShape invalidShape, in ODCanvas biasCanvas);
+
+   void DrawChildrenAlways(in ODShape invalidShape, in ODCanvas biasCanvas);
+
+   void DrawnIn(in ODShape shape, in ODCanvas biasCanvas);
+
+   void InvalidateActiveBorder();
+
+   void DrawActiveBorder();
+
+   ODBoolean ContainsPoint(in ODPoint point, in ODCanvas biasCanvas);
+
+   ODBoolean ActiveBorderContainsPoint(in ODPoint point, in ODCanvas biasCanvas);
+
+   ODBoolean IsSelected();
+
+   void SetSelected(in ODBoolean isSelected);
+
+   ODHighlight GetHighlight();
+
+   void ChangeHighlight(in ODHighlight highlight);
+
+#ifdef _PLATFORM_WIN32_
+  HWND GetFacetHWND();
+
+  ODWin32StandardCanvas CreatePlatformCanvas( in HDC hdc);
+
+#endif
+
+#ifdef _PLATFORM_OS2_
+  HWND GetFacetHWND();
+
+  ODOS2StandardCanvas CreatePlatformCanvas( in HPS hps );
+
+  void SetHandleMouseEvents(in ODULong flags);
+
+  ODULong GetHandleMouseEvents();
+
+  ODRgnHandle CopyAggregateClipRegion( in HPS hps );
+#endif // _PLATFORM_OS2_
+
+#ifdef _PLATFORM_UNIX_
+
+  Widget GetFacetWidget();
+
+  ODBoolean IsEventInActiveBorder( in ODEventData event);
+   
+  ODAIXStandardCanvas CreatePlatformCanvas( in Display* display,
+					    in Pixmap   pixmap,
+					    in GC       gc      );
+
+#endif // UNIX
+
+//# Private to implementation
+#ifdef __PRIVATE__
+
+   void InternalTransformChanged();
+
+   void InvalidateAggregateClipShape();
+
+   void InvalidateAggregateTransforms();
+
+   void InitFacet(in ODFrame frame,
+                  in ODShape clipShape,
+                  in ODTransform externalTransform,
+                  in ODCanvas canvas,
+                  in ODCanvas biasCanvas);
+
+   void InitChildFacet(in FacetNode* node,
+                       in ODFrame frame,
+                       in ODShape clipShape,
+                       in ODTransform externalTransform,
+                       in ODCanvas canvas,
+                       in ODCanvas biasCanvas
+
+                       );
+
+   FacetNode* GetNode();
+
+   ODBoolean NeedsUpdate();
+
+   void SetNeedsUpdate(in ODBoolean needsUpdate);
+
+#if defined (_PLATFORM_OS2_) || defined (_PLATFORM_WIN32_)
+   HWND CreateFacetWindow(in HWND parentHWND);
+
+   void SetFacetWindowPos(in HWND facetHWND, in HWND siblingHWND);
+
+   void SetFacetWindowRgn(in ODBoolean IsUsedShape);
+#endif // _PLATFORM_OS2 || _PLATFORM_WIN32_
+
+#ifdef _PLATFORM_OS2_
+
+   ODShape AcquireUpdateShape( in ODCanvas biasCanvas);
+
+#endif // _PLATFORM_OS2_
+
+#ifdef _PLATFORM_UNIX_
+
+   Widget CreateFacetWidget(in Widget parentWidget, in ODPlatformCanvas platformCanvas);
+
+   void CreateActiveBorderWidget();
+
+   void SetFacetWidgetSize();
+
+   void SetFacetWidgetRegion(in ODBoolean IsUsedShape);
+
+   void SetFacetWidgetWinPos(in Window childwindow, in Window siblingwindow, in ODBoolean MoveBeforeSibling);
+
+#endif  // UNIX
+
+#endif // PRIVATE
+
+#ifdef __SOMIDL__
+  implementation
+  {
+   majorversion = 1; minorversion = 0;
+
+   functionprefix = ODFacet;
+  #if defined (_PLATFORM_OS2_) || defined (_PLATFORM_WIN32_) 
+   metaclass = M_ODFacet;
+  #endif // _PLATFORM_OS2_ || _PLATFORM_WIN32_ 
+
+   override:
+       somUninit,
+       Purge;
+
+   releaseorder:
+       GetFrame,
+       CreateEmbeddedFacet,
+       RemoveFacet,
+       MoveBefore,
+       MoveBehind,
+       GetContainingFacet,
+       CreateFacetIterator,
+       CreateShape,
+       AcquireClipShape,
+       ChangeGeometry,
+       AcquireAggregateClipShape,
+       AcquireWindowAggregateClipShape,
+       AcquireActiveShape,
+       ChangeActiveShape,
+       CreateTransform,
+       AcquireExternalTransform,
+       AcquireFrameTransform,
+       AcquireContentTransform,
+       AcquireWindowFrameTransform,
+       AcquireWindowContentTransform,
+       CreateCanvas,
+       HasCanvas,
+       GetCanvas,
+       ChangeCanvas,
+       GetWindow,
+       GetPartInfo,
+       SetPartInfo,
+       DragEnter,
+       DragWithin,
+       DragLeave,
+       Drop,
+       Update,
+       Invalidate,
+       Validate,
+       Draw,
+       DrawChildren,
+       DrawChildrenAlways,
+       DrawnIn,
+       InvalidateActiveBorder,
+       DrawActiveBorder,
+       ContainsPoint,
+       ActiveBorderContainsPoint,
+       IsSelected,
+       SetSelected,
+       GetHighlight,
+       ChangeHighlight,
+     #ifdef _PLATFORM_WIN32_
+       GetFacetHWND,
+       CreatePlatformCanvas,
+     #endif
+     #ifdef _PLATFORM_OS2_
+       GetFacetHWND,
+       CreatePlatformCanvas,
+       SetHandleMouseEvents,
+       GetHandleMouseEvents,
+       CopyAggregateClipRegion,
+     #endif // _PLATFORM_OS2_
+     #ifdef _PLATFORM_UNIX_
+       GetFacetWidget,
+       IsEventInActiveBorder,
+       CreatePlatformCanvas,
+     #endif //UNIX
+
+   #ifdef __PRIVATE__
+       InternalTransformChanged,
+       InvalidateAggregateClipShape,
+       InvalidateAggregateTransforms,
+       InitFacet,
+       InitChildFacet,
+       GetNode,
+       NeedsUpdate,
+     #ifdef _PLATFORM_MACINTOSH_
+       SetNeedsUpdate;
+     #endif // _PLATFORM_MACINTOSH_
+
+     #ifdef _PLATFORM_UNIX_
+       SetNeedsUpdate,
+       CreateFacetWidget,
+       CreateActiveBorderWidget,
+       SetFacetWidgetSize,
+       SetFacetWidgetRegion,
+       SetFacetWidgetWinPos;
+     #endif
+
+     #ifdef _PLATFORM_WIN32_
+       SetNeedsUpdate,
+       CreateFacetWindow,
+       SetFacetWindowPos,
+       SetFacetWindowRgn;
+     #endif // _PLATFORM_WIN32_
+
+     #ifdef _PLATFORM_OS2_
+       SetNeedsUpdate,
+       CreateFacetWindow,
+       SetFacetWindowPos,
+       SetFacetWindowRgn,
+       AcquireUpdateShape;
+     #endif // _PLATFORM_OS2_
+
+   #else
+       reserved1,
+       reserved2,
+       reserved3,
+       reserved4,
+       reserved5,
+       reserved6,
+       reserved7,
+     #ifdef _PLATFORM_MACINTOSH_
+       reserved8;
+     #endif  // _PLATFORM_MACINTOSH_
+
+     #ifdef _PLATFORM_UNIX_
+       reserved8,
+       reserved9,
+       reserved10,
+       reserved11,
+       reserved12,
+       reserved13;
+     #endif
+
+     #ifdef _PLATFORM_WIN32_
+       reserved8,
+       reserved9,
+       reserved10,
+       reserved11;
+     #endif // _PLATFORM_WIN32_
+
+     #ifdef _PLATFORM_OS2_
+       reserved8,
+       reserved9,
+       reserved10,
+       reserved11,
+       reserved12;
+     #endif // _PLATFORM_OS2_
+   #endif
+
+   #ifdef __PRIVATE__
+   passthru C_xh =
+     #if defined (_PLATFORM_OS2_) || defined (_PLATFORM_WIN32_)
+     "/* Facet window proc window data words */"
+     "/* QWL_USER contains facet pointer */"
+     "#define QWL_FACETPTR                0"
+     "#define QWP_FACETWINDOWDATA         4"
+     "#define QWL_HITTESTFACET            8"
+     "#define QWL_PARTHANDLESMOUSEEVENTS 12"
+     "#define QWL_FACETWINDOWRGN         16"
+     "#define NUM_FACETWINDOWDATAWORDS    5"
+     #endif // _PLATFORM_OS2_  || _PLATFORM_WIN32_
+   ""
+   "class FacetNode;"
+   "";
+
+   ODFrame         fFrame;
+   ODShape         fClipShape;
+   ODShape         fActiveShape;
+   ODTransform     fExternalTransform;
+   ODCanvas        fCanvas;
+   ODInfoType      fPartInfo;
+   ODBoolean       fIsSelected;
+   ODHighlight     fHighlight;
+   FacetNode*      fNode;
+   ODBoolean       fNeedsUpdate;
+   ODBoolean       fIsUpdating;
+   ODShape         fAggregateClipShape;
+   ODShape         fWindowAggregateClipShape;
+   ODTransform     fFrameTransform;
+   ODTransform     fContentTransform;
+   ODTransform     fWindowFrameTransform;
+   ODTransform     fWindowContentTransform;
+   ODShape         fActiveBorderShape;
+#ifdef _PLATFORM_OS2_
+   ODPlatformWindow fFacetHWND;
+   ODShape       fUpdateShape;
+   ODULong       fPartHandlesMouseEvents;
+#endif // _PLATFORM_OS2_
+
+#ifdef _PLATFORM_UNIX_
+   Widget 	  fActiveBorderWidget;
+   Widget 	  fFacetWidget;
+#endif // UNIX
+
+#ifdef _PLATFORM_WIN32_
+   ODRgnHandle    fUsedShapeRgn;
+#endif // WIN32
+
+#if defined (_PLATFORM_OS2_) || defined (_PLATFORM_WIN32_) || defined (_PLATFORM_UNIX_)
+   ODBoolean       fIsRegionSet;
+#endif  // OS2 or WIN32 or UNIX
+
+   #endif
+
+  };
+#endif   // __SOMIDL__
+};
+
+#if defined (_PLATFORM_OS2_) || defined (_PLATFORM_WIN32_) 
+interface M_ODFacet : SOMClass
+{
+  ODFacet clsGetFacetFromHWND(in HWND hwnd);
+
+#ifdef __SOMIDL__
+  implementation
+  {
+    functionprefix = M_ODFacet;
+    releaseorder:
+      clsGetFacetFromHWND;
+  };
+#endif // __SOMIDL__
+};
+#endif // _PLATFORM_OS2_ || _PLATFORM_WIN32_ 
+
+#endif // _FACET_

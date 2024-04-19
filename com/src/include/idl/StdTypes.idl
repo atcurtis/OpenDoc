@@ -1,0 +1,225 @@
+/* @(#)Z 1.12 com/src/include/idl/StdTypes.idl, odcore, od96os2, odos29646d 96/11/15 15:25:49 (96/10/29 09:28:16) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           StdTypes.idl
+//#
+//#     Contains:       Standard Types
+//#
+//#     Owned by:       Tantek eelik
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <22>    10/17/95        jpa             1293659: Added page-setup types.
+//#             <21>    10/13/95        EL              1287340: Use standard ISO prefix
+//#             <20>     10/5/95        CC              1288919: Added kODCloneKind.
+//#             <19>     9/14/95        EL              1238410: OpenDoc should use CILabs ISO
+//#                                                                     String Prefix.
+//#             <18>     8/16/95        jpa             Added platform icon-family value types.
+//#                                                                     [1212507]
+//#             <17>     6/12/95        CC              1255414: Added kODISOStrList.
+//#             <16>     3/29/95        NP              1232216: Remove kODASCIIText.
+//#             <15>     1/26/95        eeh             1214080: Created new kODMacIText
+//#                                                                     ODValueType.
+//#             <14>     1/18/95        VL              1193559: Added kODObjectType.
+//#             <13>     10/7/94        Te              #1180922 Remove obsolete types
+//#             <12>     9/29/94        eeh             #1182230: removed kODID
+//#             <11>     9/23/94        VL              1182227: Removed Bento Types.
+//#             <10>      9/7/94        CC              #1185056 - Remove kODLinkStatus value type
+//#                                                                     that was added yesterday.  Oops.
+//#              <9>      9/6/94        CC              1153777 - Added kODLinkStatus value type
+//#              <8>     8/26/94        Te              #1181761 rename obsolete kOD IDs to correct
+//#                                                                     kODStrong/WeakStorageUnitRefs, removed kOD
+//#                                                                     IDs
+//#              <7>     8/16/94        Te              #1180922  Remove more obsolete types from
+//#                                                                     StdTypes.idl
+//#              <6>     8/15/94        Te              #1180922 Removed most obsolete types from
+//#                                                                     StdTypes.idl
+//#
+//#     To Do:
+//# In Progress:
+//#
+//#
+#else
+//#     Copyright:      (r) 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _STDTYPES_
+#define _STDTYPES_
+
+#ifndef _ODTYPESB_
+#include "ODTypesB.idl"
+#endif
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+  This file is used to store all the standard persistent types. It must
+  be compiled by the SOM compiler with -D EMIT_GLOBAL_CONSTANTS
+*/
+
+//==============================================================================
+// Constants
+//==============================================================================
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes on
+#endif
+
+//# Universal Types
+
+const  ODValueType  kODBoolean          = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:Boolean";
+const  ODValueType  kODUShort           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:UShort";
+const  ODValueType  kODSShort           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:SShort";
+const  ODValueType  kODULong            = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:ULong";
+const  ODValueType  kODSLong            = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:SLong";
+
+const  ODValueType  kODISOStr           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:ISOStr";
+const  ODValueType  kODISOStrList   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:ISOStrList";
+
+const  ODValueType  kODMacIText         = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:Type:IntlText";
+const  ODValueType  kODWindowsIText     = "+//ISO 9070/ANSI::113722::US::CI LABS::Windows:Type:IntlText";
+const  ODValueType  kODOS2IText         = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:IntlText";
+const  ODValueType  kODAIXIText         = "+//ISO 9070/ANSI::113722::US::CI LABS::AIX:Type:IntlText";
+const  ODValueType  kODIntlText         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:IntlText";
+
+    // Platform image types
+    // These types are used for the Drag and Drop drag image, but
+    // are not specific to drag and drop.
+    // Each of these types is available on all platforms to allow
+    // any future translation of image types that may be done
+    // [Win32 RegionHandle to AIX Region, for example]
+
+const  ODValueType  kODWindowsRegionHandle    = "+//ISO 9070/ANSI::113722::US::CI LABS::Windows:Type:HRGN";
+const  ODValueType  kODOS2RegionHandle        = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:HRGN";
+const  ODValueType  kODOS2DragImage           = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:DRAGIMAGE";
+const  ODValueType  kODAIXRegion              = "+//ISO 9070/ANSI::113722::US::CI LABS::AIX:Type:Region";
+
+#ifdef _PLATFORM_WIN32_
+const ODValueType kODPlatformIText      = kODWindowsIText;
+#endif
+#ifdef _PLATFORM_OS2_
+const ODValueType kODPlatformIText      = kODOS2IText;
+#endif
+#ifdef _PLATFORM_AIX_
+const ODValueType kODPlatformIText      = kODAIXIText;
+#endif
+
+const  ODValueType  kODTime_T           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:Time_T";
+
+const  ODValueType  kODPoint            = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:Point";
+const  ODValueType  kODRect             = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:Rect";
+const  ODValueType  kODPolygon          = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:Polygon";
+
+const  ODValueType  kODIconFamily       = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:IconFamily";
+const  ODValueType  kODIconFamilyMac    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:IconFamily:Macintosh";
+const  ODValueType  kODIconFamilyWin    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:IconFamily:Windows";
+const  ODValueType  kODIconFamilyOS2    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:IconFamily:OS2";
+const  ODValueType  kODIconFamilyAIX    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:IconFamily:AIX";
+
+const  ODValueType  kODTransform        = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:Transform";
+
+const  ODValueType  kODEditor           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:Editor";
+
+const  ODType      kODStrongStorageUnitRef  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:StorageUnitRef";
+const  ODType      kODWeakStorageUnitRef    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:StorageUnitRef";
+
+const  ODType      kODStrongStorageUnitRefs  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:StorageUnitRefs";
+const  ODType      kODWeakStorageUnitRefs    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:StorageUnitRefs";
+
+const  ODValueType      kODLinkSpec             = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:LinkSpec";
+const  ODValueType      kODCloneKind    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:CloneKind";
+
+const  ODValueType      kODObjectType   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:ObjectType";
+
+const  ODType           kODFileType     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Type:FileType";
+
+  // Value ids for the data stored under the Attached Script Property (kODPropAttachedScriptType)
+const  ODValueType      kODDSComponentIdValue    = "+//ISO 9070/ANSI::113722::US::IBM::OpenDoc:Type:ODDS_Component_ID"    ;
+const  ODValueType      kODDSExtensionNamesValue = "+//ISO 9070/ANSI::113722::US::IBM::OpenDoc:Type:ODDS_Extension_Names" ;
+const  ODValueType      kODDSComponentDataValue  = "+//ISO 9070/ANSI::113722::US::IBM::OpenDoc:Type:ODDS_Component_Data"  ;
+
+
+#ifdef _PLATFORM_WIN32_
+const  ODValueType kODDocfile           = "OpenDoc:Type:Docfile";                //OLE2
+const  ODValueType kODChangeID          = "OpenDoc:Type:ChangeID";               //OLE2
+const  ODValueType kODLinkSpecDescriptor= "OpenDoc:Type:OleLinkSpecDescriptor";  //OLE2
+const  ODValueType kODObjSpec                   = "OpenDoc:Type:OleObjSpec";     //OLE2
+const  ODValueType kODObjSpecDescriptor = "OpenDoc:Type:OleObjSpecDescriptor";   //OLE2
+const  ODValueType kODASCIIText                 = "OpenDoc:Type:Text";           //OLE2
+#ifdef __PRIVATE__                                                               //OLE2
+const  ODValueType kODDataObject                = "OpenDoc:Type:OleIDataObject"; //OLE2
+#endif
+#endif // _PLATFORM_WIN32
+
+#ifdef _PLATFORM_MACINTOSH_
+//# Mac specific types:
+
+//# Printing (use in kODPropPageSetup property):
+const ODPropertyName  kODTypeQuickDrawPageSetup                 = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:Type:QuickDrawPageSetup";
+const ODPropertyName  kODTypeGXPageSetup                                = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:Type:GXPageSetup";
+
+#endif //_PLATFORM_MACINTOSH_
+
+
+#ifdef _PLATFORM_OS2_
+const ODValueType kODHashTable        = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:HashTable";  /*watson*/
+const ODValueType kODPartDescription  = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:PartDescription";/*watson*/
+const ODValueType kODPOINTL   = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:POINTL";
+// const ODType kODFileType      = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:FileType";
+const ODType kODFileTypeEA    = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:FileTypeEA";
+const ODType kODDragitem      = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:Dragitem";
+const ODType kODDragOperation = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:DragOperation";
+const ODType kODSelectedRMF   = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:SelectedRMF";
+const ODType kODSelectedKind  = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:SelectedKind";
+
+//# defect 127139
+// standard types for IBM core parts (will be eventually replaced by CIL standard names
+// kODRGB2 is a RGB2 structure
+const ODType kODRGB2         = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:RGB2";
+// kODFontNameSize is a string of the font size and name in the same format as OS/2 presparams
+const ODType kODFontNameSize = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Type:FontNameSize";
+#endif // _PLATFORM_OS2_
+
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes off
+#endif
+
+module OpenDoc_StdTypes
+{
+        const string OpenDoc_StdTypes_Version = "1.0.";
+};
+
+#endif  // _STDTYPES_
+

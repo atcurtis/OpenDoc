@@ -1,0 +1,226 @@
+/* @(#)Z 1.5 com/src/binding/idl/PartWrap.idl, odconfig, od96os2, odos29646d 96/11/15 15:24:44 (96/10/29 09:15:32) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odconfig
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//# 133698  8/23/95 jso  Port dr3                                   */
+//# 122943  5/21/95 map  Method name changes for multi-threading    */
+//# 120349  5/15/95 map  Fix problem with //# comment on #endifs    */
+//# 120349  5/15/95 map  Fix up IDL copyright                       */
+//#******************************************************************/
+//#
+//#  File:    PartWrap.idl
+//#
+//#  Contains:  Interface for ODPartWrapper class
+//#
+//#  Owned by:   Caia Grisar
+//#
+//#  Copyright:  1994 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#  Change History (most recent first):
+//#
+//#    <10>    6/2/95  CC    1255477: Override EditInLinkAttempted.
+//#     <9>   5/25/95  VL    1251403: Multithreading naming support.
+//#     <8>   5/18/95  CG    #1249192  BB: Init Methods should be
+//#                  private.
+//#     <7>   5/17/95  VL    1170098: Added SetRealPart and removed
+//#                  ODEditor from InitPartWrapper.
+//#     <6>   4/13/95  JBS    1233726 added ClonePartInfo
+//#     <5>   1/13/95  RR    1192147, 1201708 Removed overrides of
+//#                  HandleEventInEmbedded, MouseEnter,
+//#                  MouseWithin and MouseLeave. Moved
+//#                  functionality to HandleEvent
+//#     <4>  12/23/94  JBS    1186869: hide ODPartWrapper from public
+//#                  API; 1192557: ODPartWrapper realPart access
+//#     <3>   9/21/94  CG    #1187347:  Added private fEditor field to
+//#                  store the part editor.
+//#     <2>   9/19/94  T‚    #1187347 PartWrapper Needs a mechanism for
+//#                  getting the current editor & real part
+//#     <1>    9/9/94  CG    first checked in
+//#     <1>   8/13/94  T‚    first checked in
+//#
+//#  To Do:
+//#
+#else
+//#  Copyright:  1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _PARTWRAP_
+#define _PARTWRAP_
+
+#ifndef _PART_
+#include "Part.idl"
+#endif
+
+
+interface ODPartWrapper : ODPart
+{
+#ifdef __PRIVATE__
+   void InitPartWrapper();
+ #endif
+  void SetRealPart(in ODPart realPart, in ODEditor editor);
+   void UseEditor(in ODEditor editor);
+   ODEditor GetEditor();
+
+#ifdef __SOMIDL__
+  implementation
+  {
+      functionprefix = ODPartWrapper;
+
+    majorversion = 1;
+    minorversion = 0;
+
+  override:
+    somInit,
+    somUninit,
+
+//# Override ODObject methods
+// IsInitialized not part of Base class, 4/18/96
+//  IsInitialized,
+        InitObject,
+        HasExtension,
+        AcquireExtension,
+        ReleaseExtension,
+        Purge,
+    IsEqualTo,
+    SubClassResponsibility,
+
+//# Override ODRefCntObject methods
+        InitRefCntObject,
+        Acquire,
+        Release,
+        GetRefCount,
+
+//# Override ODPersistentObject methods
+        InitPersistentObject,
+        InitPersistentObjectFromStorage,
+        ReleaseAll,
+        Externalize,
+        GetStorageUnit,
+        GetID,
+
+//# Override ODPart methods
+        FulfillPromise,
+        DropCompleted,
+        DragEnter,
+        DragWithin,
+        DragLeave,
+        Drop,
+        ContainingPartPropertiesUpdated,
+        AcquireContainingPartProperties,
+        RevealFrame,
+        EmbeddedFrameSpec,
+        CreateEmbeddedFramesIterator,
+        DisplayFrameAdded,
+        DisplayFrameRemoved,
+        DisplayFrameConnected,
+        DisplayFrameClosed,
+        AttachSourceFrame,
+        FrameShapeChanged,
+        ViewTypeChanged,
+        PresentationChanged,
+        SequenceChanged,
+        ReadPartInfo,
+        WritePartInfo,
+        ClonePartInfo,
+        Open,
+        RequestEmbeddedFrame,
+        RemoveEmbeddedFrame,
+        RequestFrameShape,
+        UsedShapeChanged,
+        AdjustBorderShape,
+        FacetAdded,
+        FacetRemoved,
+        CanvasChanged,
+        GeometryChanged,
+        Draw,
+        CanvasUpdated,
+        HighlightChanged,
+        GetPrintResolution,
+        CreateLink,
+        LinkUpdated,
+        RevealLink,
+        EmbeddedFrameUpdated,
+    EditInLinkAttempted,
+        LinkStatusChanged,
+        BeginRelinquishFocus,
+        CommitRelinquishFocus,
+        AbortRelinquishFocus,
+        FocusAcquired,
+        FocusLost,
+        CloneInto,
+        ExternalizeKinds,
+        ChangeKind,
+#ifdef _PLATFORM_MACINTOSH_
+        CreateRootMenuBar,
+#endif
+    IsRealPart,
+    GetRealPart,
+    ReleaseRealPart,
+        HandleEvent,
+        AdjustMenus,
+        UndoAction,
+        RedoAction,
+        DisposeActionState,
+        WriteActionState,
+        ReadActionState,
+        InitPart,
+        InitPartFromStorage;
+  releaseorder:
+  #ifdef __PRIVATE__
+    InitPartWrapper,
+  #else
+    reserved1,
+  #endif
+    UseEditor,
+    GetEditor,
+    SetRealPart;
+
+  #ifdef __PRIVATE__
+    ODPart    fPart;
+    ODEditor  fEditor;
+    ODBoolean  fPartInUse;
+  #endif
+  };
+#endif
+};
+
+#endif // _PARTWRAP_

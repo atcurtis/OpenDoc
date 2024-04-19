@@ -1,0 +1,183 @@
+/* @(#)Z 1.4 com/src/core/idl/ODObject.idl, odcore, od96os2, odos29646d 96/11/15 15:24:58 (96/10/29 09:22:21) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		ODObject.idl
+//#
+//#	Contains:	Interface for ODObject class
+//#
+//#	Owned by:	Richard Rodseth, Caia Grisar
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<15>	 8/26/95	Te		1273191 Lets eliminate
+//#									ODObject::IsInitialized
+//#		<14>	 8/18/95	DM		#1275241: IDL Cleanup
+//#		<13>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<12>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<11>	 9/15/94	NP		Wrap inclusion of Except.h with private
+//#									section.
+//#		<10>	  9/9/94	jpa		Include Except.h to enable auto-throw.
+//#									[1185656]
+//#		 <9>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <8>	 8/12/94	VL		Added IsEqualTo.
+//#		 <7>	 6/22/94	CG		Added functionprefix.
+//#		 <6>	 6/17/94	jpa		Fixed syntax error (caught only by
+//#									CodeWarrior) in passthru of includes.
+//#		 <5>	 6/15/94	NP		Removed another unneeded semi.
+//#		 <4>	 6/13/94	NP		Removed unneeded semi-colon.
+//#		 <3>	  6/8/94	CG		Privatize change history.
+//#		 <2>	  6/8/94	CG		Privatize change history.
+//#		 <1>	  6/8/94	CG		first checked in
+//#		 <9>	 5/23/94	RR		include GeoTypes and Polygon
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODOBJECT_
+#define _ODOBJECT_
+
+#include <somobj.idl>
+#include <somcls.idl>
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+#ifndef _GEOTYPES_
+#include "GeoTypes.idl"
+#endif
+
+#ifndef _POLYGON_
+#include "Polygon.idl"
+#endif
+
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODObject;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface  ODExtension;
+
+//==============================================================================
+// ODObject
+//==============================================================================
+
+interface M_ODObject : SOMClass
+{
+#ifdef __SOMIDL__
+	implementation
+	{
+		somNew : override;
+	};
+#endif //# __SOMIDL__
+};
+
+interface ODObject  : SOMObject
+{
+	void InitObject();
+	  
+	ODBoolean HasExtension(in ODType extensionName);
+  
+	ODExtension AcquireExtension(in ODType extensionName);
+  
+	void ReleaseExtension(in ODExtension extension);
+  
+    ODSize  Purge(in ODSize size);
+	
+	ODBoolean IsEqualTo(in ODObject object);
+	
+	void SubClassResponsibility();
+      
+#ifdef __SOMIDL__
+
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+
+	metaclass = M_ODObject;
+	
+  	functionprefix = ODObject;
+
+	passthru C_h =
+	""
+	"#include <ODTypes.h>"
+	""
+  #ifdef __PRIVATE__
+	"#ifndef _EXCEPT_"
+	"#include <Except.h>"	//# for SOMCHKEXCEPT
+	"#endif"
+  #endif //# __PRIVATE__
+	"";
+
+	passthru C_xh =
+	""
+	"#include <ODTypes.h>"
+	""
+  #ifdef __PRIVATE__
+	"#ifndef _EXCEPT_"
+	"#include <Except.h>"	//# for SOMCHKEXCEPT
+	"#endif"
+  #endif //# __PRIVATE__
+	"";
+
+	override:
+		somInit,
+		somUninit;
+	
+    releaseorder:
+        InitObject,
+        HasExtension,
+        AcquireExtension,
+        ReleaseExtension,
+        Purge,
+		IsEqualTo,
+		SubClassResponsibility;
+		
+  };
+  
+#endif //# __SOMIDL__
+
+};
+
+#endif // _ODOBJECT_
+

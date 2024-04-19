@@ -1,0 +1,276 @@
+/* @(#)Z 1.13 com/src/storage/idl/LinkSrcB.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:55 (96/10/28 13:40:48) */
+
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           LinkSrcB.idl
+//#
+//#     Contains:       Interface for Link Source base class
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <20>      9/1/95        CC              1280823: ShowSourceContent made private.
+//#                                                                     1281035: GetLink made private.
+//#             <19>     8/29/95        DM              1221778, 1276165: add
+//#                                                                     LinkUpdateAlertCompleted, _fSuspendedID,
+//#                                                                     to let LinkMgr show update alerts.
+//#             <18>     8/15/95        CC              1275241: IDL review.
+//#             <17>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <16>     7/28/95        CC              1183569: Added SetBaseLinkSourceDirty
+//#                                                                     method.
+//#             <15>     6/12/95        CC              1255414: Added fCleared field.
+//#             <14>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <13>     5/16/95        CC              1246729: Added private fKindsUsed field.
+//#             <12>     4/27/95        CC              1242550: Removed fContentChanged field.
+//#                                                                     Added fNewChangeID field.
+//#                                                                     Removed private method IsChanged.
+//#             <11>      3/9/95        CC              1221471: Added changesAllowed parameter to
+//#                                                                     ShowLinkSourceInfo().
+//#             <10>     1/19/95        CC               1183569 - Added fDirty flag.
+//#              <9>    12/16/94        CC              1203516 Removed ODLink parameter from
+//#                                                                     InitBaseLinkSource(); added SetLink().
+//#              <8>     10/7/94        CC              1160232 - Added fChangeLimit.
+//#              <7>     9/15/94        CC              1186669 - Remove CloneTo(); Override
+//#                                                                     CloneInto().
+//#              <6>      9/7/94        CC              #1185114 - KeyValid() returns void not
+//#                                                                     ODBoolean.
+//#              <5>     8/12/94        CC              1180598 - Added ODFacet parameter to
+//#                                                                     ShowLinkSourceInfo().
+//#              <4>     8/10/94        CC              1179943 - Moved in platform-independent
+//#                                                                     implementation from LinkSrc.
+//#              <3>      8/5/94        CC              #1179160 - ContentChanged() takes ODLinkKey
+//#                                                                     parameter.
+//#              <2>     6/24/94        CC              Added functionprefix.
+//#              <1>      6/8/94        CG              first checked in
+//#              <3>      6/7/94        RR              Privatise change log
+//#              <2>      5/4/94        CC              Adjustments to in/out/inout.
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINKSRCB_
+#define _LINKSRCB_
+
+#ifndef _PSTOBJ_
+#include "PstObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODBaseLinkSource;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODStorageUnit;
+interface ODPart;
+interface ODPartList;
+interface ODLink;
+interface ODDraft;
+interface ODFacet;
+
+#ifdef __PRIVATE__
+
+//==============================================================================
+// Implementation types
+//==============================================================================
+
+interface ODTypeList;
+
+#endif //# __PRIVATE__
+
+//==============================================================================
+// ODBaseLinkSource
+//==============================================================================
+
+interface ODBaseLinkSource :  ODPersistentObject
+{
+        ODBoolean Lock(in ODULong wait,
+                                        out ODLinkKey key);
+
+        void Unlock(in ODLinkKey key);
+
+        void Clear(in ODUpdateID id, in ODLinkKey key);
+
+        ODStorageUnit GetContentStorageUnit(in ODLinkKey key);
+
+        void ContentUpdated(in ODUpdateID id, in ODLinkKey key);
+
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_) || defined(_PLATFORM_OS2_)
+
+        ODBoolean ShowLinkSourceInfo(
+                                        in ODFacet facet,
+                                        in ODUpdateID change,
+                                        in ODBoolean changesAllowed,
+                                        out ODLinkInfoResult infoResult);
+
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_
+
+        //#---------------------------------
+        //# Getters
+
+        ODUpdateID GetUpdateID();
+        ODTime GetChangeTime();
+        ODBoolean IsAutoUpdate();
+
+        //#---------------------------------
+        //# Setters
+
+        void SetAutoUpdate(in ODBoolean automatic);
+        void SetSourcePart(in ODStorageUnit sourcePartSU);
+
+#ifdef __PRIVATE__
+
+        void InitBaseLinkSource(in ODStorageUnit storageUnit,
+                                                        in ODPart sourcePart);
+
+        void InitBaseLinkSourceFromStorage(in ODStorageUnit storageUnit);
+
+        void SetLink(in ODLink link);
+        ODLink GetLink();
+
+        void KeyValid(in ODLinkKey key);
+
+        void ShowSourceContent();
+
+        void LinkUpdateAlertCompleted(in ODLinkUpdateResult updateResult);
+
+        //#---------------------------------
+        //# Getters & Setters for subclasses only
+
+        void SetChangeTime(in ODTime changeTime, in ODLinkKey key);
+        void SetUpdateID(in ODUpdateID changeID, in ODLinkKey key);
+        ODStorageUnit AcquireSourcePart();
+
+        //# Private to implementation
+
+        void SetBaseLinkSourceDirty(in ODULong dirtyProperty);
+
+#ifdef _PLATFORM_OS2_
+        ODBoolean GetUpdateContinue();
+#endif
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODBaseLinkSource;
+
+                override:
+                        somInit,
+                        somUninit,
+                        Externalize,
+                        ReleaseAll,
+                        CloneInto;
+
+                releaseorder:
+                        Lock,
+                        Unlock,
+                        Clear,
+                        GetContentStorageUnit,
+                        ContentUpdated,
+                        GetUpdateID,
+                        SetAutoUpdate,
+                        IsAutoUpdate,
+                        SetSourcePart,
+                        GetChangeTime,
+                        ShowLinkSourceInfo,
+                #ifdef __PRIVATE__
+                        InitBaseLinkSource,
+                        InitBaseLinkSourceFromStorage,
+                        SetLink,
+                        GetLink,
+                        KeyValid,
+                        ShowSourceContent,
+                        LinkUpdateAlertCompleted,
+                        SetChangeTime,
+                        SetUpdateID,
+                        AcquireSourcePart,
+#ifdef _PLATFORM_OS2_
+                        SetBaseLinkSourceDirty,
+                        GetUpdateContinue;
+#else
+                        SetBaseLinkSourceDirty;
+#endif
+                #else
+                        reserved1,
+                        reserved2,
+                        reserved3,
+                        reserved4,
+                        reserved5,
+                        reserved6,
+                        reserved7,
+                        reserved8,
+                        reserved9,
+                        reserved10,
+                        reserved11;
+                #endif
+
+                #ifdef __PRIVATE__
+                        ODStorageUnit   fContentSU;
+                        ODUpdateID              fNewUpdateID;
+                        ODUpdateID              fUpdateID;
+                        ODTime                  fChangeTime;
+                        ODULong                 fChangeCount;
+                        ODULong                 fChangeLimit;
+                        ODBoolean               fAutoUpdate;
+                        ODBoolean               fSuspended;
+                        ODBoolean               fUpdatedAfterSuspended;
+                        ODLink                  fLink;
+                        ODStorageUnit   fSourcePartSU;
+                        ODULong                 fDirty;
+                        ODUShort                fUpdateModel;
+                        ODTypeList              fKindsUsed;
+                        ODBoolean               fCleared;
+#ifdef _PLATFORM_OS2_
+                        ODBoolean               fUpdateContinue;
+#endif
+                #endif //# __PRIVATE__
+        };
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_ or _PLATFORM_OS2_
+#endif //# __SOMIDL__
+};
+
+#endif //# _LINKSRCB_

@@ -1,0 +1,86 @@
+/* @(#)Z 1.4 com/src/include/idl/StdExts.idl, odcore, od96os2, odos29646d 96/11/15 15:25:48 (96/10/29 09:28:07) */
+
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#     File:           StdExts.idl
+//#
+//#     Contains:       standard extensions for OpenDoc
+//#
+//#     Owned by:       Tantek eelik
+//#
+//#     Copyright:      (r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#              <3>     1/25/95        jpa             Moved kODExtSemanticInterface here from
+//#                                                                     ODTypesB.idl.
+//#              <2>    11/30/94        RR              Made change history __PRIVATE__
+//#              <1>     9/15/94        Te              first checked in
+//#
+//#     To Do:
+//# In Progress:
+//#
+//#
+#else
+//#     Copyright:      (r) 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _STDEXTS_
+#define _STDEXTS_
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+/* $$$$$ The C/C++ output for this file needs to be compiled by C/C++ and Rez
+ If the C++ emitter ever changes to generate constants, this will
+ no longer be true.
+*/
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes on
+#endif
+
+const ODType kODShellPlugIn             = "OpenDoc:Extension:Shell:PlugIn";
+const ODType kODSettingsExtension       = "OpenDoc:Extension:Info:Settings";
+const ODType kODExtSemanticInterface= "OpenDoc:Extension:SemanticInterface";
+const ODType kODScriptExtension         = "OpenDoc:Extension:AttachedScript";
+
+
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes off
+#endif
+
+module OpenDoc_StandardExtensions
+{
+        const string OpenDoc_StandardExtensions_Version = "1.0.";
+};
+
+#endif //# _STDEXTS_

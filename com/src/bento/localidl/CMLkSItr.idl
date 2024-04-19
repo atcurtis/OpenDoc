@@ -1,0 +1,180 @@
+/* @(#)Z 1.6 com/src/bento/localidl/CMLkSItr.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:46 (96/10/29 09:14:26) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           CMLkSItr.idl
+//#
+//#     Contains:       Definition of CMLinkSourceIterator class.
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#              <3>     8/15/95        CC              1275241: IDL review.
+//#              <2>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#              <1>     8/11/94        CC              first checked in
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CMLKSITR_
+#define _CMLKSITR_
+
+#ifndef _LKSRCITR_
+#include "LkSrcItr.idl"
+#endif
+
+#ifdef __PRIVATE__
+ #ifdef _PLATFORM_OS2_
+  #ifndef _CMItrNode_
+    typedef somToken CMItrNode;
+  #endif
+ #endif /*_PLATFORM_OS2 */
+#endif /* PRIVATE */
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  CMLinkSourceIterator;
+
+#ifdef __PRIVATE__
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface   CMDraft;
+interface   ODLinkSource;
+
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken CMObject;
+typedef somToken CMContainer;
+typedef somToken CMProperty;
+typedef somToken CMType;
+
+#endif //# __PRIVATE__
+
+//=====================================================================================
+// Class CMLinkSourceIterator
+//=====================================================================================
+
+interface CMLinkSourceIterator : ODLinkSourceIterator
+{
+#ifdef __PRIVATE__
+        void InitCMLinkSourceIterator(in CMDraft draft);
+  #ifdef _PLATFORM_OS2_
+        void Add(in ODStorageUnitID linkSourceSUID);
+        // Adds a link source storage unit id to a linked list.
+
+        ODLinkSource AcquireFirst();
+        // Acquires and returns the first link source in the list,
+        // or kODNull if it is empty. It is the responsibility
+        // of the caller to later Release the link source.
+
+        ODLinkSource AcquireNext();
+        // Acquires and returns the next link source in the list,
+        // or kODNull if there are no more link sources in the list.
+        // It is the responsibility  of the caller to later Release the link source.
+ #endif /* _PLATFORM_OS2_ */
+#endif
+
+#ifdef __SOMIDL__
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = CMLinkSourceIterator;
+
+                override:
+                        somUninit,
+                        IsNotComplete,
+                        First,
+                        Next;
+
+                releaseorder:
+                #ifdef __PRIVATE__
+                  #ifndef _PLATFORM_OS2_
+                    InitCMLinkSourceIterator;
+                  #else /* _PLATFORM_OS2_ */
+                    InitCMLinkSourceIterator,
+                    Add,
+                    AcquireFirst,
+                    AcquireNext;
+                  #endif /* _PLATFORM_OS2_ */
+                #else
+                  #ifndef _PLATFORM_OS2_
+                    reserved1;
+                  #else /*_PLATFORM_OS2_*/
+                    reserved1,
+                    reserved2,
+                    reserved3,
+                    reserved4;
+                  #endif /* _PLATFORM_OS2_ */
+                #endif
+
+                #ifdef __PRIVATE__
+
+                        passthru C_xih =
+                                ""
+                                "#ifndef __CM_API__"
+                                "#include <CMAPI.h>"
+                                "#endif"
+                                "";
+
+                #ifdef __PRIVATE__
+                  #ifdef _PLATFORM_OS2_
+                        CMItrNode* fCMItrList;
+                        CMItrNode* fCurrentNode;
+                  #endif /*_PLATFORM_OS2_*/
+                #endif /*__PRIVATE__*/
+
+                        CMDraft                 fDraft;
+                        ODLinkSource    fLinkSource;
+                        CMObject                fCurrent;
+                        CMContainer             fContainer;
+                        CMProperty              fProperty;
+                        CMType                  fType;
+                        ODULong                 fSize;
+                        ODPtr                   fBuffer;
+        #endif //# __PRIVATE__
+        };
+#endif //# __SOMIDL__
+};
+
+#endif  // _CMLKSITR_

@@ -1,0 +1,276 @@
+/* @(#)Z 1.5 com/src/bento/localidl/CMSU.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:46 (96/10/29 09:14:32) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		CMSU.idl
+//#
+//#	Contains:	Definition of CMStorageUnit
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<17>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		<16>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<15>	 6/13/95	VL		1241352: Added fModificationDate and
+//#									fDirty.
+//#		<14>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<13>	 5/11/95	EL		1242515: remove SetCurValue.
+//#	   <12+>	 5/11/95	EL		1242515: remove SetCurValue.
+//#		<12>	 4/25/95	DM		1172791: avoid crash when AppleEvent
+//#									Manager not installed by replacing
+//#									AEHashTable with OpenHashTable
+//#		<11>	 3/27/95	VL		1231412: Removed CopyTo.
+//#		<10>	 3/10/95	VL		1226116: Added SetStorageUnitRef.
+//#		 <9>	 1/26/95	VL		#???: SURef is now a 4-byte array.
+//#		 <8>	  9/1/94	VL		1183174: Removed Clone and GetClonedIDs.
+//#		 <7>	 8/26/94	VL		1183174: Removed CloneTo.
+//#		 <6>	 8/11/94	VL		1180299: Added CreateCursor.
+//#		 <5>	 7/26/94	VL		Removed helper functions for promise
+//#									resolution.
+//#		 <4>	  7/5/94	VL		Fixed inout. Added a few calls to get/set
+//#									value, property.
+//#		 <3>	 6/22/94	VL		Added functionprefix.
+//#		 <2>	 6/15/94	RR		ODHeap -> ODMemoryHeap
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CMSU_
+#define _CMSU_
+
+#ifndef _STORAGEU_
+#include "StorageU.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface   CMStorageUnit;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+interface	CMDraft;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken CMContainer;
+typedef somToken CMValue;
+typedef somToken CMProperty;
+typedef somToken CMObject;
+typedef somToken CMObjectID;
+typedef somToken CMType;
+typedef somToken ODMemoryHeapID;
+typedef somToken PromiseResolver;
+typedef somToken SURefKeeper;
+typedef somToken SUCloneHelper;
+#endif
+
+//==============================================================================
+// CMStorageUnit
+//==============================================================================
+
+interface CMStorageUnit :  ODStorageUnit 
+{
+#ifdef __PRIVATE__
+
+	void		SetChangedFromPrevFlag(in ODBoolean changed);
+	
+	CMContainer	GetCMContainer();
+
+	void				CleanupAndFail(in ODError	err);
+	
+	void 	GetStorageUnitRef(in ODStorageUnitID embeddedSUID,
+											in ODBoolean strong,
+											out ODStorageUnitRef ref);
+																						
+	ODMemoryHeapID		GetHeap();
+	
+	ODID		GetObjectID();
+		
+	CMValue		GetCurValue();
+	
+	CMProperty	GetCurProperty();
+
+	CMType		GetCurType();
+
+	void		SetCurType(in CMType curType);
+
+	CMObject	GetObject();
+
+#endif
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+	  	functionprefix = CMStorageUnit;
+		
+		override:
+			somUninit,
+			Acquire,
+			Release,
+			Purge,
+			InitStorageUnit,
+			GetDraft,
+			GetSession,
+			Exists,
+			ExistsWithCursor,
+			CountProperties,
+			CountValues,
+			Focus,
+			FocusWithCursor,
+			Externalize,
+			Internalize,
+			GetID,
+			GetName,
+			SetName,
+			AddProperty,
+			AddValue,
+			Remove,
+			CloneInto,
+			CreateView,
+			CreateCursor,
+			CreateCursorWithFocus,
+			GetProperty,
+			GetType,
+			SetType,
+			SetOffset,
+			GetOffset,
+			GetValue,
+			SetValue,
+			InsertValue,
+			DeleteValue,
+			GetSize,
+			IsValidStorageUnitRef,
+			GetStrongStorageUnitRef,
+			GetWeakStorageUnitRef,
+			IsStrongStorageUnitRef,
+			IsWeakStorageUnitRef,
+			RemoveStorageUnitRef,
+			GetIDFromStorageUnitRef,
+			CreateStorageUnitRefIterator,
+			SetStorageUnitRef,
+			GetGenerationNumber,
+			IncrementGenerationNumber,
+			IsPromiseValue,
+			SetPromiseValue,
+			GetPromiseValue,
+			ClearAllPromises,
+			ResolveAllPromises,
+			Lock,
+			Unlock;
+		releaseorder:
+			#ifdef __PRIVATE__
+				SetChangedFromPrevFlag,
+				GetCMContainer,
+				CleanupAndFail,
+				GetStorageUnitRef,
+				GetHeap,
+				GetObjectID,
+				GetCurValue,
+				GetCurProperty,
+				GetCurType,
+				SetCurType,
+				GetObject;
+			#else
+				reserved1,
+				reserved2,
+				reserved3,
+				reserved4,
+				reserved5,
+				reserved6,
+				reserved7,
+				reserved8,
+				reserved9,
+				reserved10,
+				reserved11;
+			#endif
+			
+	#ifdef __PRIVATE__
+		passthru C_xh = 
+			""
+			"#include <CMAPI.h>"
+			"#include <ODMemory.h>"
+			"";
+		passthru C_xih = 
+			""
+			"class PromiseResolver;"
+			"class SURefKeeper;"
+			"class SUCloneHelper;"
+			"";
+
+		CMContainer			fCMContainer;
+		CMObject			fObject;
+		CMDraft				fDraft;
+		ODStorageUnitID		fID;	
+		CMObjectID			fObjectID;
+		CMProperty			fCurProperty;
+		ODBoolean			fHasPropertyLooped;
+		ODValueIndex		fCurValueIndex;
+		CMValue				fCurValue;
+		ODValueType			fCurValueType;
+		ODULong				fOffset;
+		CMType				fCurType;
+		ODBoolean			fHasValueLooped;
+		
+		ODULong				fCurrentKey;
+		ODULong				fLockCount;
+		
+		ODULong				fCurrentSURef;
+		
+		ODMemoryHeapID		fHeap;
+
+		PromiseResolver*	fPromiseResolver;
+		
+		SURefKeeper*		fSURefKeeper;
+		
+		SUCloneHelper*		fSUCloneHelper;
+
+		ODULong				fModificationDate;
+		
+		ODBoolean			fDirty;
+	#endif
+	};
+#endif
+};
+
+#endif  // _CMSU_

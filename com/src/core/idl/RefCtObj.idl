@@ -1,0 +1,111 @@
+/* @(#)Z 1.4 com/src/core/idl/RefCtObj.idl, odcore, od96os2, odos29646d 96/11/15 15:25:01 (96/10/29 09:22:53) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		RefCtObj.idl
+//#
+//#	Contains:	Interface for ODRefCntObject class
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <9>	  9/8/95	VL		1275241: Fixed header.
+//#		 <8>	 8/18/95	DM		#1275241: IDL Cleanup
+//#		 <7>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <6>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		 <5>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <4>	 6/23/94	CG		Added functionprefix.
+//#		 <3>	  6/8/94	CG		Forgot #endif.
+//#		 <2>	  6/8/94	CG		Privatize change history.
+//#		 <1>	  6/8/94	CG		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _REFCTOBJ_
+#define _REFCTOBJ_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODRefCntObject;
+
+//==============================================================================
+// ODRefCntObject
+//==============================================================================
+
+interface ODRefCntObject :  ODObject
+{     
+  void  InitRefCntObject();
+  
+  void  Acquire();
+    
+  void  Release();
+      
+  ODULong  GetRefCount();
+
+#ifdef __SOMIDL__
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+
+  	functionprefix = ODRefCntObject;
+
+	override: 
+		somUninit;
+		
+    releaseorder:
+        InitRefCntObject,
+        Acquire,
+        Release,
+        GetRefCount;
+
+    #ifdef __PRIVATE__
+      ODULong  fRefCount;
+    #endif
+
+  };
+#endif //# __SOMIDL__
+};
+
+#endif // _REFCTOBJ_
+

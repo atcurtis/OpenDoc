@@ -1,0 +1,318 @@
+/* @(#)Z 1.3 os2/src/storage/idl/ILNKSRVC.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:29:38 (96/08/23 01:43:28) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*                                                                  */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/********************************************************************/
+
+#ifndef _ILNKSRVC_
+#define _ILNKSRVC_
+
+#include <somobj.idl>
+#include <odtypesb.idl>
+#include <ODObject.idl>
+#include <IODDefs.idl>
+#include <ILSv2AS.idl>
+#include <IAS2Lsv.idl>
+#include <cmlksitr.idl>
+
+#ifdef __PRIVATE__
+  #ifndef _OpenHashTable_
+    #define _OpenHashTable_
+    typedef somToken OpenHashTable;
+  #endif
+#endif //__PRIVATE__
+
+interface IODLinkTarget;
+interface IODAvailServer;
+interface IODLinkTargetToLinkSource;
+interface ODDraft;
+interface ODLinkSource;
+interface ODPart;
+interface CMLinkSourceIterator;
+interface CMLinkIterator;
+interface IODMutex;
+
+
+/*
+ * The LinkService is analogous to the LinkManager in the Apple Design.
+ * There is one LinkService instance per ODSession.
+ * The LinkService keeps track of all the LinkSource
+ * objects in each writable draft.
+ * For each such writable draft (which we call an "opened" draft)
+ * it knows which Availability Server is responsible for
+ * serving as surrogate when the draft closes and for
+ * saving the auxiliary state.
+ * The LinkService is called by the doc-shell at open time,
+ * at close time, and at save time.It is called by the
+ * Draft at LinkSource creation time.
+ * The LinkService also is called from a LinkSpec when
+ * a target document tries to issue GetLink on that LinkSpec.
+ * (***note*** in the current implementation, we assume
+ * that link-service is in 1-1 correspondence with drafts.
+ * When we change the implementation so that this is no
+ * longer the case, LinkSpecs will either have to have
+ * draft parameters, or they will need to locate the
+ * draft via the part object.)
+ * Eventually , we want the linksrvc to have a table of link targets,
+ * so that there can be a centralized place to query all links owned
+ * by Document and show them(Note only loaded links, known to the
+ * Draft).
+ */
+
+
+
+interface IODLinkService : SOMObject
+{
+  #ifdef __PRIVATE__
+
+    void CleanupLinkServiceProperties ();
+
+    void EstablishLinkFromTSpec (in ODULong pid,
+                                 in ODStorageUnitID srcPartSUID,
+                                 in ODByteArray data,
+                                 in ODLinkConnectionData* trgtPartDesc,
+                                 in IODLinkTarget linkTrgt,
+                                 out ODLinkID linkid,
+                                 out IODLinkTargetToLinkSource linkSrc,
+                                 out ODLinkConnectionID trgtID,
+                                 out ODBoolean isLocal,
+                                 out ODBoolean trackTrgt,
+                                 out ODISOStr  ASName  /* name of availability server  */
+                                 );
+      // EstablishLinkFromTSpec:
+      // Called in LinkSpec::EstablishLink to establish a new link
+      // to the Part with sourcePartSUID.
+
+    void DraftOpened(in ODDraft draft,   /* draft owning linksources      */
+                     in ODBoolean isNew, /* True means use default AS and */
+                                         /* start empty LinkSrc Table     */
+                                         /* False means use AS saved in   */
+                                         /* draft props and get the       */
+                                         /* LinkSrc Table from draft props*/
+                     in IODFileName pathName /* name from which doc was read */
+                     );
+      // Called by the Docshell after new writeable draft of
+      // a read-write document is opened (internalized)
+      // Reads persistent information about an existing document
+      // and calls "Open" on the AS; else calls "Register" on
+      // the AS.  Initializes table of link sources for this draft.
+      // (In this implementation, only one table per LinkService supported
+
+
+    void DraftMoved(in ODDraft draft,   /* draft owning linksources */
+                    in IODFileName oldPathName, /* name of old path of doc file*/
+                    in IODFileName newPathName /* name of new path of doc file*/
+                   );
+      // Called by the Docshell when a draft is moved.
+      // The draft must be in open state.
+      // Gets the old pathname from draft properties, and passes
+      // both the new and the old pathnames to availability server's DocMoved.
+      // Saves the new pathname to storage.
+
+    void DraftClosing(in ODDraft draft);
+      // DraftClosing:
+      // Called by the Docshell when a draft opened with DraftOpened
+      // is closed.
+      // Goes over LinkSrcInfos table and:
+      // -For each unsaved LinkSrc notifies the AS to remove it.
+      // -For each open LinkSrc notifies the AS that it is closing.
+
+    void DraftSaving(in ODDraft draft);
+      // Called by the Docshell/Draft BEFORE a draft is saved.
+      // The LinkService will externalize its properties as
+      // well as the LinkSrcInfos hash table into the draft properties.
+      // The LinkService will go over LinkSrcInfos hash table
+      // and set the saved bit on each entry to true (in order
+      // to keep track of which linksources have never been saved).
+
+    ODBoolean UnsavedExportedLinks (in ODDraft draft);
+      // UnsavedExportedLinks: Currently unused.
+      // Allows LinkSource to discover whether there are cross-document
+      // links which would be lost if the user fails to save now.
+
+    ODLinkID RegisterLinkSource(in ODDraft draft,
+                                in ODStorageUnitID suid,
+                                in ODLinkSource linkSource,
+                                in ODPart part,
+                                out ODISOStr ASName);
+     // RegisterLinkSource:
+     // Called by draft when a new link source is being
+     // created.  The DocShell must have previously issued DraftOpened.
+     // The LinkService will remember the linkSource and
+     // suid; it will register the linkSource with the AS.
+     // What is returned is the linkid and ASname
+
+    void RegisterLinkTarget(in ODStorageUnitID trgtPartSUID,
+                                in IODLinkTarget linkTrgt);
+
+     // RegisterLinkTarget:
+     // Called by linkspec when a new link is being
+     // created.  Will add new target to target table.
+
+    ODLinkID OpenLinkSource(in ODDraft draft,
+                        in ODStorageUnitID suid, /* for checking only */
+                        in ODLinkSource linkSource,
+                        in ODLinkID linkid,
+                        out IODAuxiliaryState *auxState,
+                        out ODBoolean isLocked,
+                        out ODISOStr ASName);
+
+     // OpenLinkSource:
+     // Called by the draft when an existing link source is being
+     // internalized and the draft is read/write.  The draft must
+     // have previously issued DraftOpened.
+     // The LinkService will retrieve auxState and isLocked
+     // by calling the Availability server's OpenLinkSource;
+     // it will remember the location of the linkSource.
+     // If the linksource is detected as being a copy,
+     // the linkservice will register the linksource with
+     // the availability server.
+     // What is returned is the ASName and an ODLinkID
+     // which is 0 if the linksource is an original,
+     // and a new linkid if the linksource was a copy and
+     // re-registered.
+
+    ODLinkSource  InternalizeLinkSource( in ODLinkID linkid,
+                                           in IODAuxiliaryState auxState);
+
+     // InternalizeLinkSource:
+     // Called by the Availability Server to internalize a Link
+     // Source from storage.
+     // If the LS is already opened - will return a pointer to it.
+     // Otherwise, queries the LinkSrcInfos Hashtable for this
+     // Link Source's storage unit reference using the LinkId as key,
+     // Gets the storage unit ID from the storage unit reference,
+     // Calls draft to get back a linksource pointer, updates the
+     // table and returns the pointer to the Link Source.
+
+    ODStorageUnitID  GetLinkSrcInDraft(in ODDraft draft,   /* draft owning linksources */
+                                       in ODLinkID linkid  /* linkid of LinkSrc whose  */
+                                                           /* storage unit is needed   */
+                                      );
+      // Called by the AS Shell when a target requests a LinkSrc whose
+      // draft is closed and its surrogate has not yet been constructed.
+      // The AS Shell passes in a read-only draft and a linkid
+      // and needs to get back the storage unit id for this linkid
+      // in order to clone it.
+      // The LinkService will browse the draft properties under
+      // the LinkSourceInfos prop till it finds a match to the
+      // requested linkid. It will map the corresponding storage unit
+      // reference to a storage unit id and return it.
+
+    IODFileName       GetDocName();  /* returns the name from which doc was read */
+
+    void GetLinkSourcesForPart(in ODPart part,
+                               in CMLinkSourceIterator linkSourceIter);
+
+    void GetLinkTargetsForPart(in ODPart part,
+                               in CMLinkIterator linkTargetIter);
+
+    void GetPersistentLinkInfoFromTSpec(in ODStorageUnitID partSUID,
+                               in ODByteArray partData,
+                               out ODLinkID linkID,
+                               out ODISOStr ASName);
+
+
+  #endif //__PRIVATE__
+
+  #ifdef __SOMIDL__
+    implementation {
+      override:
+        somInit,
+        somUninit;
+
+      releaseorder:
+        #ifdef __PRIVATE__
+          CleanupLinkServiceProperties,
+          EstablishLinkFromTSpec,
+          InitLinkService,
+          DraftOpened,
+          DraftMoved,
+          DraftClosing,
+          DraftSaving,
+          UnsavedExportedLinks,
+          RegisterLinkSource,
+          OpenLinkSource,
+          InternalizeLinkSource,
+          GetLinkSrcInDraft,
+          GetDocName,
+          GetLinkSourcesForPart,
+          GetLinkTargetsForPart,
+          GetPersistentLinkInfoFromTSpec,
+          RegisterLinkTarget;
+        #else
+          reserved1,
+          reserved2,
+          reserved3,
+          reserved4,
+          reserved5,
+          reserved6,
+          reserved7,
+          reserved8,
+          reserved9,
+          reserved10,
+          reserved11,
+          reserved12,
+          reserved13,
+          reserved14,
+          reserved15,
+          reserved16;
+        #endif //__PRIVATE__
+
+      #ifdef __PRIVATE__
+        ODBoolean         fDraftOpened;  /* true if a docshell called DraftOpened*/
+        ODDraft           fDraft;        /* initialized if DraftOpened   */
+        ODDocumentID      fDocumentID;   /* initialized if fAvlSvr exists   */
+                                         /* or if !fIsNew                   */
+        IODAvailServer    fAvlSvr;       /* initialized the first time   */
+                                         /* a linksource is created/opened */
+                                         /* via OpenLinkSource or        */
+                                         /* RegisterLinkSource           */
+        OpenHashTable*      fLinkSrcInfos; /* a table of LinkSrcInfos
+                                             keyed by LinkId             */
+        OpenHashTable*      fLinkTrgtInfos; /* a table of LinkTrgtInfos
+                                             keyed by connection ids     */
+        IODFileName       fDocPathName;  /* name from which doc was read */
+        ODISOStr          fASName;       /* name of availability server  */
+        ODBoolean         fExistsUnsavedLink;  /* true if there is one or more */
+                                               /* registered link which has    */
+                                               /* not been saved yet.          */
+        ODBoolean         fIsNew;        /* initialized if DraftOpened   */
+                                         /* remembers DraftOpened parameter */
+
+        IODMutex           fMutex;
+        ODID              fTargetIDCounter;
+      #endif //__PRIVATE__
+    };
+  #endif //__SOMIDL__
+};
+
+#endif //_ILNKSRVC_

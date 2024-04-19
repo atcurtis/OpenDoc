@@ -1,0 +1,142 @@
+/* @(#)Z 1.4 com/src/storage/idl/ODCtr.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:56 (96/10/29 09:32:42) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+//#
+#ifdef __PRIVATE__
+//#	File:		ODCtr.idl
+//#
+//#	Contains:	Definition of ODCtr.
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <6>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		 <5>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <4>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		 <3>	 9/27/94	VL		1185464: Made this work for public
+//#									interfaces.
+//#		 <2>	 6/14/94	CC		Added functionprefix to avoid undefined
+//#									entry link error on Create.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODCTR_
+#define _ODCTR_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"
+#endif
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+interface   ODStorageSystem; 
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface   ODContainer;
+interface	ODDocument;
+
+//==============================================================================
+// ODContainer
+//==============================================================================
+
+interface ODContainer :  ODRefCntObject 
+{
+
+	ODStorageSystem  GetStorageSystem();
+	
+	ODContainerID GetID();
+	
+	ODContainerName GetName();
+		
+	void SetName(in ODContainerName name);
+	
+	ODDocument  AcquireDocument(in ODDocumentID id);
+
+#ifdef __PRIVATE__
+   void InitContainer(in ODStorageSystem system,
+   						in ODContainerID id);
+
+   ODContainer  Create();
+      
+   ODContainer  Open();
+  
+   ODContainer  Close();
+
+   ODContainer  ReleaseDocument( in ODDocument document);
+   
+#endif
+
+#ifdef __SOMIDL__
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+  	functionprefix = ODContainer;
+    override:
+		somUninit,
+		Acquire,
+        Release,
+        Purge;
+    releaseorder:
+        GetStorageSystem,
+        GetID,
+        GetName,
+        SetName,
+        AcquireDocument,
+		#ifdef __PRIVATE__
+			InitContainer,
+			Create,
+			Open,
+			Close,
+			ReleaseDocument;    
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5;
+		#endif
+  };
+#endif
+};
+
+
+#endif  // _ODCTR_
+

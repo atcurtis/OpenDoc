@@ -1,0 +1,196 @@
+/* @(#)Z 1.4 com/src/registry/localidl/PartInfi.idl, odconfig, od96os2, odos29646d 96/11/15 15:49:08 (96/10/29 09:29:56) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odconfig
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//#
+//#     File:           PartInfo.idl
+//#     
+//#     Contains:       Interface for ODPartHandlerInfoInt class
+//#     
+//#     Written by:     Kirk Searls           
+//#     
+//#     Copyright:      @1994 by International Business Machines, Inc., 
+//#                              all rights reserved.
+//#     
+//#     Change History (most recent first):
+//#     
+//#     <3>    6/23/95  jso  123479  Added WriteODPartHandlerKindInfo
+//#     <2>    8/27/94  MAP          Port A8C3
+//#     <1>    6/8/94   KLS  first checked in
+//#     
+//#     To Do:
+//#
+#else
+//#  Copyright:  1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _PARTINFI_
+#define _PARTINFI_
+
+#include <PartInfo.idl>
+
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+  This file defines class ODPartHandlerInfoInt.  This class contains information 
+  about a part handler class.  This information is kept by the OpenDoc part 
+  registry and is used by the OpenDoc shell and some OpenDoc utilities.
+*/
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODPartHandlerInfoInt;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+typedef somToken M_ODPart;
+typedef somToken PartKindName;
+typedef somToken Node;
+
+//==============================================================================
+// Types used by this interface that aren't defined in IDL
+//==============================================================================
+
+typedef long CMObject;
+
+
+//==============================================================================
+// ODPartHandlerInfoInt
+//==============================================================================
+
+interface ODPartHandlerInfoInt  : ODPartHandlerInfo 
+{
+  long                   InitODPartHandlerInfo( in string partClassName, 
+                                                in string DLLName,
+                                                in OperatingSystem os);
+  long                   InitODPartHandlerInfoIntWithStorage( in CMObject obj);
+  long                   WriteODPartHandlerInfoIntToStorage( in CMObject obj);
+  long                   WriteODPartHandlerInfoIntToRegistry( in Node partHandlers);
+  void                   InitPropertiesAndTypes( in CMObject obj);
+  ODPartHandlerInfoInt   Clone();
+  boolean                SupportsKind( in ISOString partKindName);
+  boolean                SupportsCategory( in string category);
+  boolean                SupportsFileType( in string fileType);
+  boolean                SupportsFileExtension( in string extension);
+  string                 GetKey();
+
+  attribute ISOString               partHandlerName;
+  attribute string                  partHandlerDisplayName;
+  attribute string                  partHandlerClassName;
+  attribute string                  DLLName;
+  attribute sequence <PartKindInfo> partKindInfo;
+  attribute string                  ole2ClassId;
+  attribute string                  windowsIconFilename;
+  attribute OperatingSystem         os;
+
+  long                   WriteODPartHandlerKindInfo( in CMObject obj, 
+                             in sequence<PartKindInfo> newKindInfo );
+      
+#ifdef __SOMIDL__
+
+  implementation
+  {
+    passthru C_xh =
+    ""
+    "#include <CMAPI.h>"
+    "#include <Node.h>"
+    "";
+
+    functionprefix = ODPartHandlerInfoInt;
+
+    override: somInit
+            , somUninit
+            , somDumpSelfInt
+            , GetPartHandlerClassName             
+            , GetPartHandlerName                  
+            , GetPartHandlerDisplayName           
+            , GetPartKindInfo                     
+            , GetOperatingSystem                  
+            , SetOperatingSystem                  
+            , GetOLE2ClassId
+            , GetWindowsIconFileName
+            , GetDLLName
+            ;
+    releaseorder: InitODPartHandlerInfo 
+                , InitODPartHandlerInfoIntWithStorage
+                , WriteODPartHandlerInfoIntToStorage
+                , WriteODPartHandlerInfoIntToRegistry
+                , InitPropertiesAndTypes
+                , Clone
+                , SupportsKind
+                , SupportsCategory
+                , GetKey
+                , _set_partHandlerName              
+                , _get_partHandlerName              
+                , _set_partHandlerDisplayName       
+                , _get_partHandlerDisplayName       
+                , _set_partHandlerClassName       
+                , _get_partHandlerClassName       
+                , _set_DLLName                      
+                , _get_DLLName                      
+                , _set_partKindInfo                 
+                , _get_partKindInfo                 
+                , _set_ole2ClassId                  
+                , _get_ole2ClassId                  
+                , _set_windowsIconFilename          
+                , _get_windowsIconFilename          
+                , _set_os                           
+                , _get_os
+                , WriteODPartHandlerKindInfo
+                , SupportsFileType
+                , SupportsFileExtension
+                ;
+  };
+  
+#endif
+
+};
+
+#endif // _ODOBJECT_
+
+

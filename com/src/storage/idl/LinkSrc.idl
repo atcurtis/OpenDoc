@@ -1,0 +1,432 @@
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27,94
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+// @(#) 1.16 com/src/storage/idl/LinkSrc.idl, oddataxfer, od96os2, odos29646d 9/10/96 18:52:59 [ 11/15/96 15:27:54 ]
+#ifdef __PRIVATE__
+//#
+//#     File:           LinkSrc.idl
+//#
+//#     Contains:       Interface of ODLinkSource class
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <18>      9/1/95        CC              1280823: Override of ShowSourceContent made
+//#                                                                     private.
+//#                                                                     1278590: Added SetStatus(ODError error).
+//#             <17>     8/15/95        CC              1275241: IDL review.
+//#             <16>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <15>     7/28/95        CC              1183569: Added SetLinkSourceDirty().
+//#             <14>     7/14/95        TJ              Made Some TypeDefs into Structs so SOM Slim
+//#                                                                     can get there correct Sizes.
+//#             <13>      3/3/95        CC              1223861: Added GetStatus() method and
+//#                                                                     fStatus field.
+//#             <12>     1/19/95        CC              1210953 Added override of SetSourcePart.
+//#                                                                     1183569 Added fDirty flag.
+//#             <11>    12/16/94        CC              1203516 Removed ODLink parameter from
+//#                                                                     InitLinkSource().
+//#             <10>    11/30/94        RR              #1188078 Use FSSpec, not ODFileSpec in
+//#                                                                     private methods
+//#              <9>     10/7/94        CC              1191089 - CloneFromMemoryContainer()
+//#                                                                     returns void.
+//#              <8>     10/4/94        CC              1190862 - Added override of Release().
+//#              <7>     9/15/94        CC              1186669 - Override CloneInto().
+//#              <6>     8/10/94        CC              1179943 - Moved platform-independent
+//#                                                                     implementation into LinkSrcB.
+//#              <5>      8/5/94        CC              #1179160 - Added fContentChanged field.
+//#              <4>     6/21/94        CC              Added functionprefix.
+//#              <3>     6/14/94        CC              Added passthru C_xh so clients of private
+//#                                                                     xh file will compile.
+//#              <2>     6/10/94        CC              Tweek UseLinkEdition() parameters.
+//#              <1>      6/8/94        CG              first checked in
+//#              <8>      6/7/94        RR              Privatise change log
+//#              <7>     5/12/94        CC              Added ShowLinkSourceInfo.
+//#              <6>      5/4/94        CC              Adjustments to in/out/inout.
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINKSRC_
+#define _LINKSRC_
+
+#ifndef _LINKSRCB_
+#include "LinkSrcB.idl"
+#endif
+
+#ifdef _PLATFORM_OS2_
+#ifndef _IODDEFS_
+#include <IODDefs.idl>
+#endif
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODLinkSource;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+#ifdef _PLATFORM_WIN32_
+interface ODSession;
+#endif //# _PLATFORM_WIN32_
+interface ODStorageUnit;
+interface ODPart;
+interface ODLink;
+
+#ifdef __PRIVATE__
+
+//==============================================================================
+// Implementation types
+//==============================================================================
+
+  #ifdef _PLATFORM_MACINTOSH_
+typedef somToken SectionHandle;
+typedef somToken EditionContainerSpec;
+typedef somToken FSSpec;                // THIS IS A BOGUS DEFINITION. DO NOT USE IN A FIELD!
+  #endif //# _PLATFORM_MACINTOSH_
+  #ifdef _PLATFORM_WIN32_
+typedef somToken LPVOID;
+
+typedef somToken OLEPromiseKeeper;
+
+typedef somToken DWORD;
+typedef somToken BOOL;
+typedef somToken time_t;
+  #endif //# _PLATFORM_WIN32_
+
+#endif //# __PRIVATE__
+
+//==============================================================================
+// ODLinkSource
+//==============================================================================
+
+interface ODLinkSource : ODBaseLinkSource
+{
+#ifdef __PRIVATE__
+
+        void InitLinkSource(in ODStorageUnit storageUnit,
+                                                in ODPart sourcePart);
+
+        void InitLinkSourceFromStorage(in ODStorageUnit storageUnit);
+
+  #ifdef _PLATFORM_OS2_
+        void SetDescription (in ODLinkDescription desc);
+                // Called by source Part to set its description.
+
+        void GetDescription (out ODLinkDescription desc);
+                // Called by source Part to get its description.
+
+        void GetLinkConnectionData (in ODLinkConnectionID connID,
+                              out ODLinkConnectionData* ConnData);
+                // Called by source Part or source Draft to retrieve the description of
+                //   the given LinkTarget.
+
+
+        //void GetLinkTargets (out IODConnIDIterator trgtIDs);
+        void GetLinkConnections (out sequence<ODLinkConnectionID> connIDs);
+                // Called by source Part to obtain the list of LinkTarget connection ID's
+                //   in the LinkSource.
+
+        void InitCallBackMode (in ODBoolean trackTrgt);
+                // Called by Part after creation to initialize the mode of tracking
+                //   LinkTargets.
+                // By default LinkSource only tracks local or registered LinkTargets.
+
+        //void RemoveLinkTarget (in IODConnectionID trgtID);
+        void BreakLinkConnection (in ODLinkConnectionID connID);
+                // Called by source Part to break the link with the given LinkTarget.
+
+        //void DescribeSelf ( out IODPartDescription* srcPartDesc);
+        void GetConnectionData (out ODLinkConnectionData* srcConnData);
+                // Called by source Part to retrieve the description of itself.
+
+  #endif // _PLATFORM_OS2_
+  #ifdef _PLATFORM_MACINTOSH_
+
+        void UseLinkEdition(in EditionContainerSpec editionContainer,
+                                        in FSSpec *documentSpec,
+                                        in ODULong sectionID,
+                                        in ODLinkKey key);
+
+        void ReadLinkEdition(in ODLinkKey key);
+
+  #endif //# _PLATFORM_MACINTOSH_
+
+  #ifdef _PLATFORM_WIN32_
+
+        void SetLocked( in ODBoolean locked );
+
+        ODBoolean GetLocked( );
+
+        ODLinkKey GetCurrentKey( );
+
+        void SetCurrentKey( in ODLinkKey key );
+
+        void UseMoniker( in void                *pmkFull,
+                                         in ODLinkKey   key);
+
+        void ReadMoniker(in ODLinkKey key);
+
+        BOOL StoreMoniker( in ODStorageUnit             su,
+                                           in ODPropertyName    property,
+                                           in LPVOID                    pmk );
+
+        void RestoreMoniker( in  ODStorageUnit  storageUnit,
+                                                 in  ODPropertyName     property,
+                                                 out LPVOID                     ppmk );
+
+        void OnClose( );
+
+        void OnDataChange( );
+
+        void OnRename( in LPVOID        ppmk );
+
+  #endif //# _PLATFORM_WIN32_
+
+  #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_)
+        void SetStatus(in ODError error);
+        ODError GetStatus();
+  #endif // MAC or OS/2
+
+        //# Private to implementation
+
+        void CloneFromMemoryContainer(in ODStorageUnit contentSU,
+                                                                in ODHandle containerHandle);
+
+  #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+        void SetLinkSourceDirty();
+  #endif // MAC or OS/2 or WIN32
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+  #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODLinkSource;
+
+                override:
+                        somUninit,
+                        Release,
+                        Externalize,
+                        ReleaseAll,
+                        CloneInto,
+                        SetAutoUpdate,
+    #ifdef __PRIVATE__
+                        ShowSourceContent,
+    #endif //# __PRIVATE__
+                        SetSourcePart;
+
+                releaseorder:
+                        #ifdef __PRIVATE__
+                                InitLinkSource,
+                                InitLinkSourceFromStorage,
+                          #ifdef _PLATFORM_MACINTOSH_
+                                UseLinkEdition,
+                                ReadLinkEdition,
+                          #endif //# MAC
+                          #if defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_)
+                                reservedA,
+                                reservedB,
+                                SetLinkSourceDirty,
+                          #endif //# WIN32 or OS2
+                          #ifdef _PLATFORM_WIN32_
+                                SetLocked,
+                                GetLocked,
+                                GetCurrentKey,
+                                SetCurrentKey,
+                                UseMoniker,
+                                ReadMoniker,
+                                StoreMoniker,
+                                RestoreMoniker,
+                                OnClose,
+                                OnDataChange,
+                                OnRename,
+                          #endif //# WIN32
+                          #ifdef _PLATFORM_OS2_
+                                GetLinkConnectionData,
+                                GetLinkConnections,
+                                InitCallBackMode,
+                                BreakLinkConnection,
+                                GetConnectionData,
+                                GetDescription,
+                                SetDescription,
+                                reservedJ,
+                                reservedK,
+                                reservedL,
+                                reservedM,
+                                SetStatus,
+                                GetStatus,
+                                reservedN,
+                          #endif //# OS2
+                          #ifdef _PLATFORM_MACINTOSH_
+                                reservedC,
+                                reservedD,
+                                reservedE,
+                                reservedF,
+                                reservedG,
+                                reservedH,
+                                reservedI,
+                                reservedJ,
+                                reservedK,
+                                reservedL,
+                                reservedM,
+                                SetStatus,
+                                GetStatus,
+                                SetLinkSourceDirty,
+                          #endif //# MAC or OS2
+                          #ifdef _PLATFORM_AIX_
+                                reservedA,
+                                reservedB,
+                                reservedC,
+                                reservedD,
+                                reservedE,
+                                reservedF,
+                                reservedG,
+                                reservedH,
+                                reservedI,
+                                reservedJ,
+                                reservedK,
+                                reservedL,
+                                reservedM,
+                                reservedN,
+                                reservedO,
+                                reservedP,
+                          #endif //# AIX
+                                CloneFromMemoryContainer;
+                        #else
+                                reserved1,
+                                reserved2,
+                                reserved3,
+                                reserved4,
+                                reserved5,
+                                reserved6,
+                                reserved7,
+                                reserved8,
+                                reserved9,
+                                reserved10,
+                                reserved11,
+                                reserved12,
+                                reserved13,
+                                reserved14,
+                                reserved15,
+                                reserved16,
+                                reserved17,
+                                reserved18,
+                                reserved19;
+                        #endif
+
+
+                #ifdef __PRIVATE__
+                        passthru C_xh = ""
+                                                        "#ifdef _PLATFORM_MACINTOSH_"
+                                                        "#ifndef __EDITIONS__"
+                                                        "#include <Editions.h>"
+                                                        "#endif"
+                                                        ""
+                                                        "#ifndef __FILES__"
+                                                        "#include <Files.h>"
+                                                        "#endif"
+                                                        "#endif"
+                                                        ""
+                                                        "#ifdef _PLATFORM_OS2_"
+                                                        "#ifndef _ODTYPESB_"
+                                                        "#include <odtypesb.xh>"
+                                                        "#endif"
+                                                        "#include <ioddefs.xh>"
+                                                        "#include <ICIDItr.xh>"
+                                                        "#endif // _PLATFORM_OS2_"
+                                                        ""
+                                                        "#ifdef _PLATFORM_WIN32_"
+                                                        "#define kODMoniker     \"Ole2Moniker\" "
+                                                        "#define kODLinkContent \"OpenDoc:LinkContent\" "
+                                                        "#ifndef __TIME_H__"
+                                                        "#include <time.h>"
+                                                        "#endif"
+                                                        "#ifndef _SOM_OLEPromiseKeeper_xh"
+                                                        "#include <oledpkpr.xh>"
+                                                        "#endif"
+                                                        "#endif"
+                                                        "";
+                        passthru C_h =
+                                                        ""
+                                                        "#ifdef _PLATFORM_WIN32_"
+                                                        "#define kODMoniker     \"Ole2Moniker\" "
+                                                        "#define kODLinkContent \"OpenDoc:LinkContent\" "
+                                                        "#ifndef __TIME_H__"
+                                                        "#include <time.h>"
+                                                        "#endif"
+                                                        "#ifndef _SOM_OLEPromiseKeeper_xh"
+                                                        "#include <oledpkpr.h>"
+                                                        "#endif"
+                                                        "#endif"
+                                                        "";
+                   #ifdef _PLATFORM_MACINTOSH_
+                        SectionHandle   fSection;
+                   #endif //# _PLATFORM_MACINTOSH_
+                        ODError                 fStatus;
+                        ODBoolean               fDirty;
+                   #ifdef _PLATFORM_WIN32_
+                        ODStorageUnit    fContentSU;     // storage unit containing link's content
+                        time_t           fChangeTime;    // date and time link was last updated
+                        ODBoolean        fAutoUpdate;    // true if link should be exported on save
+                        ODLink           fLink;          // associated link object
+                        ODStorageUnit    fSourcePartSU;  // storage unit of source part
+                        ODBoolean        fLocked;        // TRUE if we are locked
+                        ODLinkKey        fCurrentKey;    // The current link key
+                        LPVOID           fpmkFull;       // Full moniker of this link spec
+                        LPVOID           fpmkRelative;   // Relative moniker of the link spec
+                        LPVOID           fpDataObj;      // IDataObject for the link source
+                        LPVOID           fpAdviseSink;   // Advise sink
+                        DWORD            fdwConn;        // Advise holder connection id
+                        ODBoolean        fSourceNeedsClosing; // we opened the source document and need to close
+                        LPVOID           fSourceDocumentIPersistFile;   // interface pointer to source document
+                        OLEPromiseKeeper *fPromiseKeeper;// Promise keeper object
+                                ODSession        fSession;
+                        ODULong                  fChangeCount;   // Anti-recursion measures...
+                        ODULong                  fChangeLimit;
+                        ODBoolean                fContentChanged;
+                  #endif //# _PLATFORM_WIN32_
+                #endif //# __PRIVATE__
+        };
+  #endif //# _PLATFORM_MACINTOSH_ or WIN32 or OS2
+#endif //# __SOMIDL_
+};
+
+#endif // _LINKSRC_

@@ -1,0 +1,242 @@
+/* @(#)Z 1.13 com/src/storage/idl/LinkB.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:52 (96/10/28 13:40:44) */
+
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           LinkB.idl
+//#
+//#     Contains:       Base Link Interface
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (R) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <16>     8/15/95        CC              1275241: IDL review.
+//#             <15>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <14>     7/28/95        CC              1183569: Added SetBaseLinkDirty.
+//#             <13>     7/24/95        CC              1154714: Added fIterationInProgress and
+//#                                                                     fRestartIteration fields.
+//#                                                                     ODUpdateID parameter removed from private
+//#                                                                     method UpdateDependents.
+//#             <12>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <11>      3/9/95        CC              1221471: Added changesAllowed parameter to
+//#                                                                     ShowLinkDestinationInfo().
+//#             <10>     1/19/95        CC              1193551 Removed GetLinkStatus().
+//#                                                                     1183569 Added fDirty flag.
+//#              <9>    12/16/94        CC              1203516 Removed ODLinkSource parameter from
+//#                                                                     InitBaseLink(); added SetLinkSource().
+//#              <8>     10/7/94        CC              1187047 - GetLinkSource() made public for
+//#                                                                     container suites.
+//#              <7>     9/20/94        CC              1185166 - KeyValid() is private.
+//#              <6>     9/15/94        CC              1186669 - Remove CloneTo(); Override
+//#                                                                     CloneInto().
+//#              <5>      9/7/94        CC              #1185114 - KeyValid() returns void not
+//#                                                                     ODBoolean.
+//#              <4>     8/12/94        CC              1180598 - Added ODFacet parameter to
+//#                                                                     ShowLinkDestinationInfo().
+//#              <3>     8/10/94        CC              1179943 - Moved in platform-independent
+//#                                                                     implementation from Link.
+//#              <2>     6/24/94        CC              Added functionprefix.
+//#              <1>      6/8/94        CG              first checked in
+//#              <3>      6/7/94        RR              Privatise change log
+//#              <2>      5/4/94        CC              Adjustments to in/out/inout;
+//#                                                                     UpdateDependents() made private.
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (R) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINKB_
+#define _LINKB_
+
+#ifndef _PSTOBJ_
+#include "PstObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODBaseLink;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface       ODLinkSource;
+interface       ODStorageUnit;
+interface       ODPart;
+interface       ODDraft;
+interface       ODFacet;
+
+#ifdef __PRIVATE__
+
+//==============================================================================
+// Implementation types
+//==============================================================================
+
+interface       ODPartList;
+
+#endif //# __PRIVATE__
+
+//==============================================================================
+// ODLink
+//==============================================================================
+
+interface ODBaseLink :  ODPersistentObject
+{
+        ODBoolean Lock(in ODULong wait, out ODLinkKey key);
+
+        void Unlock(in ODLinkKey key);
+
+        ODStorageUnit GetContentStorageUnit(in ODLinkKey key);
+
+        void RegisterDependent(in ODPart clientPart, in ODUpdateID id);
+
+        void UnregisterDependent(in ODPart clientPart);
+
+        ODUpdateID GetUpdateID();
+
+        ODTime GetChangeTime();
+
+        void ShowSourceContent();
+
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_) || defined (_PLATFORM_OS2_)
+
+        ODBoolean ShowLinkDestinationInfo(
+                                        in ODFacet facet,
+                                        in ODLinkInfo info,
+                                        in ODBoolean changesAllowed,
+                                        out ODLinkInfoResult infoResult);
+
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_
+
+#ifdef _PLATFORM_OS2_
+	ODLinkSource GetLinkSource();
+#endif
+
+#ifdef __PRIVATE__
+
+        void InitBaseLink(in ODStorageUnit storageUnit);
+
+        void InitBaseLinkFromStorage(in ODStorageUnit storageUnit);
+
+        void SetLinkSource(in ODLinkSource linkSource);
+
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+        ODLinkSource GetLinkSource();
+#endif
+
+#ifdef _PLATFORM_OS2_
+        oneway void UpdateDependents(in ODUpdateID id);
+#else
+        void UpdateDependents();
+#endif
+
+
+
+        void KeyValid(in ODLinkKey key);
+
+        //# Private to implementation
+
+        void SetBaseLinkDirty();
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODBaseLink;
+
+                override:
+                        somUninit,
+                        Externalize,
+                        ReleaseAll,
+                        CloneInto;
+
+                releaseorder:
+                        Lock,
+                        Unlock,
+                        GetContentStorageUnit,
+                        RegisterDependent,
+                        UnregisterDependent,
+                        GetUpdateID,
+                        GetChangeTime,
+                        ShowSourceContent,
+                #ifdef _PLATFORM_OS2_
+                        GetLinkSource,
+                #endif
+                #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_) || defined (_PLATFORM_OS2_)
+                        ShowLinkDestinationInfo,
+                #endif
+                #ifdef __PRIVATE__
+                        InitBaseLink,
+                        InitBaseLinkFromStorage,
+                        SetLinkSource,
+                #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+                        GetLinkSource,
+                #endif
+                        UpdateDependents,
+                        KeyValid,
+                        SetBaseLinkDirty;
+                #else
+                        reserved1,
+                        reserved2,
+                        reserved3,
+                        reserved4,
+                        reserved5,
+                        reserved6,
+                        reserved7;
+                #endif
+
+                #ifdef __PRIVATE__
+                        ODPartList              fPartList;
+                        ODLinkSource    fLinkSource;
+                        ODBoolean               fDirty;
+                        ODBoolean               fIterationInProgress;
+                        ODBoolean               fRestartIteration;
+                #ifdef _PLATFORM_OS2_
+                        HWND                    fhwndClient;
+                #endif
+                #endif
+        };
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_
+#endif //# __SOMIDL__
+};
+
+#endif //# _LINKB_

@@ -1,0 +1,133 @@
+/* @(#)Z 1.4 com/src/core/idl/ObjectNS.idl, odcore, od96os2, odos29646d 96/11/15 15:25:00 (96/10/29 09:22:39) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		ObjectNS.idl
+//#
+//#	Contains:	Interface for ODNameSpace class
+//#
+//#	Owned by:	David McCusker
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <6>	 8/18/95	DM		#1275241: IDL Cleanup
+//#		 <5>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <4>	  5/2/95	DM		1237286: make Init methods private
+//#		 <3>	 9/21/94	CG		#1187648: Removed faulty #ifdef PRIVATE
+//#									clause.
+//#		 <2>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <1>	 7/29/94	CG		first checked in
+//#		 <4>	  7/1/94	CG		Removed ReadSize.
+//#		 <3>	 6/24/94	CG		Added functionprefix.
+//#		 <2>	 6/14/94	CG		Removed fHeap and GetHeap().
+//#		 <1>	  6/8/94	CG		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _OJBECTNS_
+#define _OJBECTNS_
+
+#ifndef _NAMSPAC_
+#include "NamSpac.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODObjectNameSpace;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface  ODObjectIterator;
+
+#ifdef __PRIVATE__
+interface  ODNameSpaceManager;
+#endif 
+
+//==============================================================================
+// ODObjectNameSpace
+//==============================================================================
+
+interface ODObjectNameSpace :  ODNameSpace
+{
+   void Register	(in ODISOStr key,
+   				 	 in ODObject object);
+
+   ODBoolean GetEntry(in ODISOStr key,
+   					  out  ODObject object);
+
+   ODObjectIterator CreateIterator();
+
+#ifdef __PRIVATE__
+  void InitObjectNameSpace(in ODNameSpaceManager mgr,
+  					 in ODNameSpace parent,
+					 in ODULong numExpectedEntries,
+					 in ODISOStr name);
+#endif 
+
+ 
+ 
+#ifdef __SOMIDL__
+	implementation
+  	{
+	majorversion = 1; minorversion = 0;
+	
+	functionprefix = ODObjectNameSpace;
+	
+	override:
+    	somUninit,
+        Purge;
+
+    releaseorder:
+		Register,
+		GetEntry,
+		CreateIterator,
+
+#ifdef __PRIVATE__
+		InitObjectNameSpace;
+#else
+		reserved1;
+#endif //# __PRIVATE__
+
+  };
+#endif //# __SOMIDL__
+};
+
+#endif //# _OJBECTNS_

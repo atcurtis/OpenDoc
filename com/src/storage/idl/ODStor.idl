@@ -1,0 +1,190 @@
+/* @(#)Z 1.5 com/src/storage/idl/ODStor.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:56 (96/10/29 09:32:47) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#	File:		Storage.idl
+//#
+//#	Contains:	Definition of ODStorageSystem.
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<10>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		 <9>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <8>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		 <7>	 5/17/95	VL		1249181: Made Init method private.
+//#		 <6>	 9/23/94	VL		1184272: ContainerID is now a sequence of
+//#									octets. Also, got rid of unnecessary
+//#									dependency.
+//#		 <5>	  9/6/94	CC		Remove erroneous override of reserved1 and
+//#									reserved2.
+//#		 <4>	 8/11/94	VL		1180299: Added CreateTypeList and
+//#									CreatePlatformTypeList.
+//#		 <3>	  8/5/94	VL		Changed ODBaseSession to ODSession.
+//#		 <2>	  8/5/94	VL		1171603: Removed Get/SetCMSession.
+//#		 <1>	  8/3/94	VL		first checked in
+//#		 <6>	 6/28/94	VL		Used ODMemoryHeapID.
+//#		 <5>	 6/23/94	VL		Added StorageB.idl.
+//#		 <4>	 6/21/94	VL		Added functionprefix.
+//#		 <3>	 6/20/94	jpa		Fixed syntax error in passthru.
+//#		 <2>	 6/14/94	CC		Changed ODHeap to ODMemoryHeap.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODSTOR_
+#define _ODSTOR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface   ODStorageSystem;
+
+//==============================================================================
+// Classes used in this interface
+//==============================================================================
+
+interface   ODSession;
+interface   ODContainer;
+interface   ODTypeList;
+interface   ODPlatformTypeList;
+
+#ifdef __PRIVATE__
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+//#ifdef _PLATFORM_MACINTOSH_
+
+typedef somToken ContainerList;
+typedef somToken ODMemoryHeapID;
+
+//#endif //# _PLATFORM_MACINTOSH_
+#endif //# _PRIVATE_
+
+
+//==============================================================================
+// ODStorageSystem
+//==============================================================================
+
+interface ODStorageSystem : ODObject   
+{
+	ODSession GetSession();
+	
+	ODContainer AcquireContainer(in ODContainerType containerType,
+								in ODContainerID id);
+	
+	ODContainer CreateContainer(in ODContainerType containerType,
+									in ODContainerID id);
+					  
+	void NeedSpace(in ODSize memSize,
+					in ODBoolean doPurge);
+					
+	ODTypeList	CreateTypeList(in ODTypeList typeList);
+	
+	ODPlatformTypeList	CreatePlatformTypeList(in ODPlatformTypeList typeList);
+
+#ifdef __PRIVATE__
+
+	void InitStorageSystem(in ODSession session);
+
+	ODStorageSystem  ReleaseContainer(in ODContainer container);
+
+//#ifdef _PLATFORM_MACINTOSH_
+	
+	void GrowHeap(in ODSize memSize);
+
+	ODMemoryHeapID GetHeap();
+
+//#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_
+	
+#endif
+	
+#ifdef __SOMIDL__
+//#ifdef _PLATFORM_MACINTOSH_
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+	
+	  	functionprefix = ODStorageSystem;
+		
+		override:
+			somUninit,
+			Purge;
+		
+		releaseorder:
+			GetSession,
+			AcquireContainer,
+			CreateContainer,
+			NeedSpace,
+			CreateTypeList,
+			CreatePlatformTypeList,
+		#ifdef __PRIVATE__
+			InitStorageSystem,
+			ReleaseContainer,
+			GrowHeap,
+			GetHeap;
+		#else
+			reserved1, 
+			reserved2, 
+			reserved3, 
+			reserved4;		
+		#endif
+		
+		#ifdef __PRIVATE__
+			passthru C_xh = ""
+							"#include <ODMemory.h>"
+							"";
+			passthru C_xih = ""
+							"class ContainerList;"
+							"";
+			ODSession		fSession;
+			ODMemoryHeapID	fHeap;
+			ContainerList*	fContainers;
+    	#endif //# __PRIVATE__
+    
+  };
+//#endif //# _PLATFORM_MACINTOSH_ 
+#endif //# __SOMIDL__
+};
+
+#endif  // _ODSTOR_

@@ -1,0 +1,148 @@
+/* @(#)Z 1.3 com/src/registry/localidl/PartInfo.idl, odconfig, od96os2, odos29646d 96/11/15 15:49:08 (96/10/29 09:30:01) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odconfig
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+//# IBM Change History (most recent first):                         */
+//# <OS2>   8/27/94 MAP  Port A8C3                                  */
+//#******************************************************************/
+#ifdef __PRIVATE__
+//#
+//#     File:           PartInfo.idl
+//#     
+//#     Contains:       Interface for ODPartHandlerInfo class
+//#     
+//#     Written by:     Kirk Searls           
+//#     
+//#     Copyright:      @1994 by International Business Machines, Inc., 
+//#                              all rights reserved.
+//#     
+//#     Change History (most recent first):
+//#     
+//#     <1>    6/8/94        KLS  first checked in
+//#     
+//#     To Do:
+//#
+#else
+//#  Copyright:  1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _PARTINFO_
+#define _PARTINFO_
+
+#include <somobj.idl>
+
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+  This file defines class ODPartHandlerInfo.  This class contains information 
+  about a part handler class.  This information is kept by the OpenDoc part 
+  registry and is used by the OpenDoc shell and some OpenDoc utilities.
+*/
+
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODPartHandlerInfo;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+
+//==============================================================================
+// ODPartHandlerInfo
+//==============================================================================
+
+interface ODPartHandlerInfo  : SOMObject
+{
+  string                 GetPartHandlerClassName();
+  ISOString              GetPartHandlerName();
+  string                 GetPartHandlerDisplayName();
+  sequence<PartKindInfo> GetPartKindInfo( in string category);
+  OperatingSystem        GetOperatingSystem();
+  void                   SetOperatingSystem( in OperatingSystem os);
+  string                 GetOLE2ClassId();
+  string                 GetWindowsIconFileName();
+  string                 GetDLLName();
+
+#ifdef __SOMIDL__
+
+  implementation
+  {
+    passthru C_xh =
+    ""
+    "#include <ODTypes.h>"
+    "";
+    passthru C_hh =
+    ""
+    "#include <ODTypes.h>"
+    "";
+
+    functionprefix = ODPartHandlerInfo;
+
+    releaseorder: GetPartHandlerClassName
+                , GetPartHandlerName
+                , GetPartHandlerDisplayName
+                , GetPartKindInfo
+                , GetOperatingSystem
+                , SetOperatingSystem
+                , GetOLE2ClassId
+                , GetWindowsIconFileName
+                , GetDLLName
+                ;
+  
+  };
+  
+#endif
+
+};
+
+#endif // _PARTINFO_
+
+

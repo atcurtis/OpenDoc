@@ -1,0 +1,158 @@
+/* @(#)Z 1.3 com/src/ui/idl/FocusSet.idl, odui, od96os2, odos29646d 96/11/15 15:28:37 (96/07/15 18:28:47) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#     File:           FocusSet.idl
+//#
+//#     Contains:       Class definition for ODFocusSet
+//#
+//#     Owned by:       Richard Rodseth
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#              <6>     8/15/95        RR              #1275241 IDL Review
+//#              <5>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#              <4>     2/22/95        RR              #1209427 Changed private api between
+//#                                                                     iterator and iteratee
+//#              <3>     1/23/95        RR              # 1203066 Make Init methid private
+//#              <2>     6/16/94        RR              Added function prefix
+//#              <1>      6/8/94        RR              first checked in
+//#              <4>      6/7/94        RR              Privatise change log
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _FOCUSSET_
+#define _FOCUSSET_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODFocusSet;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODFocusSetIterator;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken LinkedList;
+#endif
+
+//=====================================================================================
+// ODFocusSet
+//=====================================================================================
+
+interface ODFocusSet : ODObject
+{
+
+	void Add(in ODTypeToken focus);
+
+	void Remove(in ODTypeToken focus);
+
+	ODBoolean Contains(in ODTypeToken focus);
+
+	ODFocusSetIterator  CreateIterator();
+
+#ifdef __PRIVATE__
+
+	void InitFocusSet();
+
+	ODULong AddIterator(in ODFocusSetIterator iterator);
+
+	ODTypeToken First(in ODULong iteratorID);
+
+	ODTypeToken Next(in ODULong iteratorID);
+
+	ODBoolean IsNotComplete(in ODULong iteratorID);
+	
+	void RemoveIterator(in ODULong iteratorID);
+
+#endif
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODFocusSet;
+
+		override:
+			somUninit;
+			
+		releaseorder:
+			Add,
+			Remove,
+			Contains,
+			CreateIterator,
+		#ifdef __PRIVATE__
+			InitFocusSet,
+			AddIterator,
+			First,
+			Next,
+			IsNotComplete,
+			RemoveIterator;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6;
+		#endif //# __PRIVATE__
+		
+		#ifdef __PRIVATE__
+		passthru C_xih = 
+		""
+		"class LinkedList;"
+		"";
+		  LinkedList*  fImplementation;
+		#endif //# __PRIVATE__
+
+  };
+#endif //# __SOMIDL__
+};
+
+#endif //# _FOCUSSET_

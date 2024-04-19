@@ -1,0 +1,128 @@
+/* @(#)Z 1.5 com/src/layout/idl/FrFaItr.idl, odlayout, od96os2, odos29646d 96/11/15 15:25:32 (96/07/15 18:32:43) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odlayout
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#    File:       FrFaItr.idl
+//#
+//#    Contains:   SOM class definition for ODFrameFacetIterator
+//#
+//#    Owned by:   Joshua Susser
+//#
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#    Change History (most recent first):
+//#
+//#         <5>     8/18/95    JBS     1275241 IDL Review
+//#         <4>      8/3/95    RR      #1257260: Collapse B classes. Remove
+//#                                    somInit methods. Don't call IsInitialized
+//#                                    or SubclassResponsibility
+//#         <3>     6/22/94    JBS     add functionprefix
+//#         <2>     6/22/94    eeh     fixed passthru
+//#         <3>      6/7/94    RR      Privatise change log
+//#
+#else
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _FRFAITR_
+#define _FRFAITR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Class defined by this interface
+//==============================================================================
+
+interface ODFrameFacetIterator;
+
+//==============================================================================
+// Class used by this interface
+//==============================================================================
+
+interface ODFrame;
+interface ODFacet;
+
+#ifdef __PRIVATE__
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken OrderedCollectionIterator;
+#endif
+
+//==============================================================================
+// ODFrameFacetIterator
+//==============================================================================
+
+interface ODFrameFacetIterator : ODObject
+{
+   ODFacet  First();
+
+   ODFacet  Next();
+
+   ODBoolean IsNotComplete();
+
+//# Private to implementation
+
+#ifdef __PRIVATE__
+   void InitFrameFacetIterator(in ODFrame frame);
+#endif
+
+#ifdef __SOMIDL__
+   implementation
+   {
+       majorversion = 1; minorversion = 0;
+
+       functionprefix = ODFrameFacetIterator;
+
+       override:
+           somUninit;
+
+       releaseorder:
+           First,
+           Next,
+           IsNotComplete,
+       #ifdef __PRIVATE__
+           InitFrameFacetIterator;
+       #else
+           reserved1;
+       #endif
+
+       #ifdef __PRIVATE__
+           passthru C_xih = "class OrderedCollectionIterator;";
+
+           ODFrame fFrame;
+           OrderedCollectionIterator* fIter;
+       #endif
+   };
+#endif
+};
+
+#endif //# _FRFAITR_

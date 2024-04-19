@@ -1,0 +1,128 @@
+/* @(#)Z 1.4 com/src/storage/idl/TypLsItr.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:28:00 (96/10/29 09:33:25) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		TypLsItr.idl
+//#
+//#	Contains:	Definition of ODTypeListIterator.
+//#
+//#	Owned by:	Craig Carper
+//#
+//#	Copyright:	(r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <6>	 8/15/95	CC		1275241: IDL review.
+//#		 <5>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <4>	 6/21/95	CC		1254450: Added fFirstCalled field.
+//#		 <3>	11/30/94	RR		Made change history __PRIVATE__
+//#		 <2>	 6/23/94	CC		Added functionprefix.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _TYPLSITR_
+#define _TYPLSITR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  ODTypeListIterator;
+
+#ifdef __PRIVATE__
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+interface  ODTypeList;
+
+//=====================================================================================
+// Implementation types
+//=====================================================================================
+
+typedef somToken OrderedCollectionIterator;
+
+#endif //# __PRIVATE__
+
+//=====================================================================================
+// Class ODTypeListIterator
+//=====================================================================================
+
+interface ODTypeListIterator : ODObject
+{
+	ODBoolean IsNotComplete();
+	ODType First();
+	ODType Next();
+    
+#ifdef __PRIVATE__
+	void InitODTypeListIterator(in ODTypeList typeList);    
+#endif
+	
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODTypeListIterator;
+
+		override:
+			somUninit;
+
+		releaseorder:
+			IsNotComplete,
+			First,
+			Next,
+		#ifdef __PRIVATE__
+			InitODTypeListIterator;
+		#else
+			reserved1;
+		#endif
+
+		#ifdef __PRIVATE__
+			passthru C_xih = "class OrderedCollectionIterator;";
+
+			ODTypeList					fTypeList;
+			OrderedCollectionIterator*	fIterator;
+			ODBoolean					fFirstCalled;
+		#endif //# __PRIVATE__
+	};
+#endif //# __SOMIDL__
+};
+
+#endif  // _TYPLSITR_

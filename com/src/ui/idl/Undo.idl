@@ -1,0 +1,183 @@
+/* @(#)Z 1.4 com/src/ui/idl/Undo.idl, odui, od96os2, odos29646d 96/11/15 15:28:38 (96/07/15 18:29:02) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#     IBM Change History (most recent first):
+//#         143654 11/13/95 ced  Apple DR4 IDL changes; added
+//#                              AbortCurrentTransaction() method.
+//#         120349  5/15/95 map  Fix up IDL copyright
+//#
+//#**************************************************************************/
+//#
+//#     File:           Undo.idl
+//#
+//#     Contains:       Class definition for ODUndo
+//#
+//#     Owned by:       Nick Pilch
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#       20109  2/28/96  brr   Added _PLATFORM_WIN32_ everywhere there was a _PLATFORM_OS2_
+//#
+//#
+//#              <9>     8/25/95        NP              1279537: Add AbortCurrentTransaction to
+//#                                                                     releaseOrder.
+//#              <8>     8/23/95        NP              1275237, 1267015: Support for aborting
+//#                                                                     transactions.
+//#              <7>     8/16/95        NP              1275241: IDL Review. Remove unnecessary
+//#                                                                     overrides. Add version.
+//#              <6>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#              <5>     1/27/95        NP              1213354: Touch this file to make rebuilds
+//#                                                                     go smoother.
+//#              <4>     8/19/94        NP              1181622: Ownership fix.
+//#              <3>     7/27/94        NP              Changed all parameters to Peek  methods to
+//#                                                                     out.
+//#              <2>     6/16/94        RR              Added function prefix
+//#              <1>      6/8/94        RR              first checked in
+//#              <1>      6/8/94        RR              first checked in
+//#              <5>      6/7/94        RR              Privatise change log
+//#              <1>      5/9/94        VL              first checked in
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _UNDO_
+#define _UNDO_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODUndo;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface  ODPart;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken SystemUndo;
+#endif
+
+//==============================================================================
+// ODUndo
+//==============================================================================
+
+interface ODUndo :  ODObject
+{
+
+#ifdef __PRIVATE__
+                //# Private to implementation
+
+   void InitUndo();
+
+#endif
+
+   void AddActionToHistory      (in  ODPart whichPart,
+                                 in  ODActionData actionData,
+                                 in  ODActionType actionType,
+                                 in  ODName undoActionLabel,
+                                 in  ODName redoActionLabel);
+
+   void Undo                    ();
+
+   void Redo                    ();
+
+   void MarkActionHistory       ();
+
+   void ClearActionHistory      (in  ODRespectMarksChoices respectMarks);
+
+   void ClearRedoHistory        ();
+
+   ODBoolean PeekUndoHistory    (out ODPart part,
+                                 out ODActionData actionData,
+                                 out ODActionType actionType,
+                                 out ODName actionLabel);
+
+   ODBoolean PeekRedoHistory    (out ODPart part,
+                                 out ODActionData actionData,
+                                 out ODActionType actionType,
+                                 out ODName actionLabel);
+
+   void AbortCurrentTransaction ();
+
+#ifdef __SOMIDL__
+        implementation
+        {
+                majorversion = 1; minorversion = 0;  // BRR 2/20/96 - New for DR4
+
+                functionprefix = ODUndo;
+
+                override:
+                        Purge,
+                        somUninit;
+
+                releaseorder:
+                        InitUndo,
+                        AddActionToHistory,
+                        Undo,
+                        Redo,
+                        MarkActionHistory,
+                        ClearActionHistory,
+                        ClearRedoHistory,
+                        PeekUndoHistory,
+                        PeekRedoHistory,
+                        AbortCurrentTransaction ;
+
+                #ifdef __PRIVATE__
+                passthru C_xih =
+                ""
+                "class SystemUndo;"
+                "";
+
+                SystemUndo*     fSystemUndo;
+
+                #endif
+        };
+#endif
+};
+
+#endif // _UNDO_
+
+

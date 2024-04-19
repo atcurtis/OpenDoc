@@ -1,0 +1,190 @@
+/* @(#)Z 1.12 com/src/storage/idl/Translt.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:59 (96/10/29 09:33:20) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27,94
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#	File:		Translt.idl
+//#
+//#	Contains:	Definition of ODTranslation.
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <9>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		 <8>	 8/15/95	CC		1275241: IDL review.
+//#									1276520: ShowTranslateDialog: Changed
+//#									"inout" parameter to one "in" and one
+//#									"out".
+//#		 <7>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <6>	  6/2/95	CC		1236618: Added private fSession field.
+//#		 <5>	 3/30/95	CC		Override InitTranslation only for private
+//#									interfaces.
+//#		 <4>	 3/28/95	CC		1233117: Removed unused ODStorageUnit
+//#									parameter from  ShowPartTranslateDialog.
+//#		 <3>	 3/27/95	CC		1229640: Renamed ShowTranslateDialog() to
+//#									ShowPartTranslateDialog().
+//#									Added ShowPartTranslateDialog().
+//#		 <2>	12/13/94	CG		#1187128: Moved Translation dialog code to
+//#									Storage subsystem.
+//#		 <1>	 6/28/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _TRANSLT_
+#define _TRANSLT_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  	ODTranslation;
+
+//=====================================================================================
+// Classes used in this interface
+//=====================================================================================
+
+interface ODTypeList;
+interface ODStorageUnitView;
+interface ODSession;
+#ifdef _PLATFORM_WIN32_
+typedef somToken ODOLEManager;
+#endif
+
+#ifdef __PRIVATE__
+interface	ODPartWrapper;
+interface	ODSession;
+#endif
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+interface	TranslationDialog;
+
+#endif
+
+//=====================================================================================
+// Class ODTranslation
+//=====================================================================================
+
+interface ODTranslation :  ODObject
+{
+	ODTranslateResult CanTranslate(in ODValueType fromType);
+	
+	ODTypeList GetTranslationOf(in ODValueType fromType);
+	
+	ODTranslateResult TranslateView(in ODStorageUnitView fromView,
+								in ODStorageUnitView toView);
+	
+	ODTranslateResult Translate(in ODValueType fromType,
+								in ODByteArray fromData,
+								in ODValueType  toType,
+								out ODByteArray toData);
+	
+	ODValueType GetISOTypeFromPlatformType(in ODPlatformType platformType,
+										in ODPlatformTypeSpace typeSpace);
+	
+	ODPlatformType GetPlatformTypeFromISOType(in ODValueType type);
+
+#ifdef __PRIVATE__
+
+	void InitTranslation(in ODSession session);
+	
+	ODBoolean ShowPartTranslateDialog(in ODPartWrapper partWrapper);
+
+	ODBoolean ShowTranslateDialog(
+					in ODTypeList translateToList,
+					in ODUShort initialKind,
+					out ODUShort selectedKind,
+					in ODEditor initialEditor,
+					in ODBoolean canChangeEditor,
+					out ODEditor selectedEditor);
+
+#endif
+	
+#ifdef __SOMIDL__
+#if defined(_PLATFORM_MACINTOSH_ ) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+  	functionprefix = ODTranslation;
+  	override:
+		somUninit,
+        Purge;
+		
+	releaseorder:
+        CanTranslate,
+        GetTranslationOf,
+        TranslateView,
+        Translate,
+        GetISOTypeFromPlatformType,
+        GetPlatformTypeFromISOType,
+	#ifdef __PRIVATE__
+        InitTranslation,
+		ShowPartTranslateDialog,
+		ShowTranslateDialog;
+	#else
+		reserved1,
+		reserved2,
+		reserved3;
+	#endif
+
+	#ifdef __PRIVATE__
+	        passthru C_xh = ""
+                                                "#ifdef _PLATFORM_WIN32_"
+				                "#ifndef _SOM_ODSession_xh"
+						"#include <ODSessn.xh>"
+						"#endif"
+						"#endif";       
+          #ifdef _PLATFORM_MACINTOSH_
+		ODBoolean			fMEOExists;
+		TranslationDialog		fTranslationDialog;
+          #endif // _PLATFORM_MACINTOSH_
+		ODSession			fSession;
+	  #ifdef _PLATFORM_WIN32_
+		ODOLEManager                   *fOleManager;
+	  #endif
+    #endif //# __PRIVATE__
+  };
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_ or _PLATFORM_OS2_
+#endif //# __SOMIDL__
+};
+
+#endif	// _TRANSLT_

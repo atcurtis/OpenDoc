@@ -1,0 +1,127 @@
+/* @(#)Z 1.4 com/src/storage/idl/PfTLItr.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:57 (96/10/29 09:32:51) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		PfTLItr.idl
+//#
+//#	Contains:	Definition of ODPlatformTypeList
+//#
+//#	Owned by:	Craig Carper
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <5>	 8/15/95	CC		1275241: IDL review.
+//#		 <4>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <3>	 7/20/95	CC		1254451: Added fFirstCalled field.
+//#		 <2>	 6/23/94	CC		Added functionprefix.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _PFTLITR_
+#define _PFTLITR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  ODPlatformTypeListIterator;
+
+#ifdef __PRIVATE__
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+interface  ODPlatformTypeList;
+
+//=====================================================================================
+// Implementation types
+//=====================================================================================
+
+typedef somToken OrderedCollectionIterator;
+
+#endif //# __PRIVATE__
+
+//=====================================================================================
+// Class ODPlatformTypeListIterator
+//=====================================================================================
+
+interface ODPlatformTypeListIterator : ODObject
+{
+   ODBoolean IsNotComplete();
+   ODPlatformType First();
+   ODPlatformType Next();
+    
+#ifdef __PRIVATE__
+   void InitPlatformTypeListIterator(in ODPlatformTypeList typeList);
+#endif
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODPlatformTypeListIterator;
+
+		override:
+			somUninit;
+
+		releaseorder:
+			IsNotComplete,
+			First,
+			Next,
+		#ifdef __PRIVATE__
+			InitPlatformTypeListIterator;
+		#else
+			reserved1;
+		#endif
+
+		#ifdef __PRIVATE__
+			passthru C_xih = "class OrderedCollectionIterator;";
+			
+			ODPlatformTypeList			fPlatformTypeList;
+			OrderedCollectionIterator*	fIterator;
+			ODBoolean					fFirstCalled;
+		#endif //# __PRIVATE__
+	};
+#endif //# __SOMIDL__
+};
+
+#endif  // _PFTLITR_

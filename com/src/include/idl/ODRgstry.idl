@@ -1,0 +1,109 @@
+/* @(#)Z 1.2 com/src/include/idl/ODRgstry.idl, odcore, od96os2, odos29646d 96/11/15 15:25:40 (96/07/15 18:15:08) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#	File:		ODRgstry.idl
+//#
+//#	Contains:	Semantic interface constants
+//#
+//#	Owned by:	Jon Pugh
+//#
+//#	Copyright:	(r) 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <3>	 8/25/95	JP		1263821: IDL Review & removed
+//#									enumStringAlias
+//#		 <2>	 4/25/95	JP		1237938: Added kODStandardPartTokenType
+//#		 <1>	 3/21/95	JP		first checked in
+//#
+//#	To Do:
+//#	In Progress:
+//#		
+#else
+//#	Copyright:	(r) 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODREGISTRY_
+#define _ODREGISTRY_
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+/* The C/C++ output for this file needs to be compiled by C/C++ and Rez
+ If the C++ emitter ever changes to generate constants, this will
+ no longer be true.
+*/
+
+module OpenDoc_ODRegistry
+{
+	const string OpenDoc_ODRegistry_Version = "1.0.";
+};
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes on
+#endif
+
+// Semantic Interface constants
+
+const ODDescType	kODStandardPartTokenType =	0x70617274; // 'part'
+
+const ODDescType	cPart =						0x70617274; // 'part'
+const ODDescType	cDraft =					0x64726674; // 'drft'
+const ODDescType	kAEOpenDocSuite =	   		0x4F447374;	// 'odst' 
+const ODDescType	pBundled =					0x626E646C;	// 'bndl' 
+const ODDescType	pShowLinks =				0x736C6E6B;	// 'slnk' 
+const ODDescType	pViewType =					0x76777479;	// 'vwty' 
+const ODDescType	enumViewType =				0x76777479;	// 'vwty' 
+const ODDescType	kAEODFrame =				0x6672616D;	// 'fram' 
+const ODDescType	kAEODLargeIcon =			0x6C69636E;	// 'licn' 
+const ODDescType	kAEODSmallIcon =			0x7369636E;	// 'sicn' 
+const ODDescType	kAEODThumbnail =			0x7468756D;	// 'thum' 
+const ODDescType	pKind =						0x6B696E64;	// 'kind' 
+const ODDescType	pEditor =					0x65647472;	// 'edtr' 
+const ODDescType	pComment =					0x636F6D74;	// 'comt' 
+const ODDescType	pStationery =				0x73746174;	// 'stat' 
+const ODDescType	pCategory =					0x70636174;	// 'pcat' 
+const ODDescType	pSize =						0x73697A65;	// 'size' 
+const ODDescType	pASCreationDate =			0x61736364;	// 'ascd' 
+const ODDescType	pASModificationDate =		0x61736D6F;	// 'asmo' 
+const ODDescType	pAuthor =					0x61757468;	// 'auth' 
+const ODDescType	pIcon =						0x69696D67;	// 'iimg' 
+const ODDescType	cIconFamily =				0x6966616D;	// 'ifam' 
+const ODDescType	pEditorName =				0x656E616D;	// 'enam' 
+const ODDescType	pUniqueID =					0x49442020;	// 'ID  ' 
+const ODDescType	pContainer =				0x63746E72;	// 'ctnr' 
+
+const ODDescType	typeUserToken = 0x746F6B6E; // 'tokn'
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes off
+#endif
+
+#endif  //# _ODREGISTRY_

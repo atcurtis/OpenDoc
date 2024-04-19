@@ -1,0 +1,202 @@
+/* @(#)Z 1.7 com/src/core/idl/NmSpcMg.idl, odcore, od96os2, odos29646d 96/11/15 15:24:58 (96/10/29 09:22:17) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		NmSpcMg.idl
+//#
+//#	Contains:	Interface for ODNameSpaceManager class
+//#
+//#	Owned by:	David McCusker
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<12>	 8/29/95	DM		1280646: reserved6 for GetAETEs in private
+//#									release order
+//#		<11>	 8/25/95	JP		1272288:Added GetAETEs
+//#		<10>	 8/18/95	DM		#1275241: IDL Cleanup
+//#		 <9>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <8>	 5/25/95	jpa		SynchNSTable returns ODBoolean (the return
+//#									of revision 6). [1240150]
+//#		 <7>	 5/17/95	TJ		Backed out changes from previous checkin.
+//#		 <5>	  5/2/95	DM		1237286: make Init methods private
+//#		 <4>	 1/23/95	CG		#1195019: Added private field and
+//#									set/getter for fMaxISOStrLength.
+//#		 <3>	11/11/94	CG		#1194203: Made the private method
+//#									UpdatePrefernces public.
+//#		 <2>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <1>	 7/29/94	CG		first checked in
+//#		 <5>	 6/24/94	CG		Functionprefix added.
+//#		 <4>	 6/14/94	CG		Removed fHeap and GetHeap().
+//#		 <3>	 6/13/94	CG		Added fPreferences and related methods.
+//#		 <2>	  6/8/94	CG		Reverted to earlier version.
+//#		 <1>	  6/8/94	CG		first checked in
+//#
+//#	To Do:
+//# In Progress:
+//#		
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _NMSPCMG_
+#define _NMSPCMG_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODNameSpaceManager;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface  ODNameSpace;
+
+#ifdef __PRIVATE__
+interface  ODObjectNameSpace;
+interface  ODSession;
+#endif //# __PRIVATE__
+
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken Preferences;
+#ifdef _PLATFORM_MACINTOSH_
+typedef somToken AEDescList;
+#endif //# _PLATFORM_MACINTOSH_
+
+#endif //# __PRIVATE__
+
+//==============================================================================
+// ODNameSpaceManager
+//==============================================================================
+
+interface ODNameSpaceManager :  ODObject
+{
+	ODNameSpace CreateNameSpace(in ODISOStr spaceName,
+				 in ODNameSpace inheritsFrom,
+				 in ODULong numExpectedEntries,
+				 in ODNSTypeSpec	type);
+	
+	void DeleteNameSpace(in ODNameSpace theNameSpace);
+	
+	ODNameSpace HasNameSpace(in ODISOStr spaceName);
+
+#ifdef _PLATFORM_MACINTOSH_
+
+	void UpdatePreferences();
+	
+#endif //# _PLATFORM_MACINTOSH_
+
+#ifdef __PRIVATE__
+
+
+    void InitNameSpaceManager(in ODSession session );
+
+	ODBoolean		SynchNSTable();
+
+	Preferences*	GetPreferences();
+	
+	ODULong			GetMaxISOStrLength();
+
+	void			SetMaxISOStrLength(in ODULong newMax);
+
+#ifdef _PLATFORM_MACINTOSH_
+	void			GetAETEs(in ODSLong languageCode, in AEDescList* aeteList);
+#endif //# _PLATFORM_MACINTOSH_
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+	
+		functionprefix = ODNameSpaceManager;
+		
+		override:
+			somUninit,
+			Purge;
+					
+		releaseorder:
+			CreateNameSpace,
+			DeleteNameSpace,
+			HasNameSpace,
+
+		#ifdef _PLATFORM_MACINTOSH_		// 22470
+			UpdatePreferences,		// 22470
+		#endif //# _PLATFORM_MACINTOSH_		// 22470
+	
+		#ifdef __PRIVATE__
+			InitNameSpaceManager,
+			SynchNSTable,
+			GetPreferences,
+			GetMaxISOStrLength,
+			SetMaxISOStrLength,
+			GetAETEs;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6;
+		#endif
+	
+		#ifdef __PRIVATE__
+		  ODObjectNameSpace	  	fNameSpaceTable;
+		  ODSession  	    	fSession;
+		  Preferences*			fPreferences;
+		  ODULong				fMaxISOStrLength;
+	
+		  passthru C_xh = 
+			""
+			"class Preferences;"
+			"";
+		#endif //# __PRIVATE__
+  	};
+
+#endif //# __SOMIDL__
+};
+
+#endif //# _NMSPCMG_

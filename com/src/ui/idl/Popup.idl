@@ -1,0 +1,221 @@
+/* @(#)Z 1.17 com/src/ui/idl/Popup.idl, odui, od96os2, odos29646d 96/11/15 15:48:05 (96/10/15 18:14:20) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#  File:    Popup.idl
+//#
+//#  Contains:  Class definition for ODMenuBar
+//#
+//#
+//#  Copyright:  (c) 1994 by IBM Corp., all rights reserved.
+//#
+//#  Change History (most recent first):
+//#
+//#     21758 05/08/96 brr  Delete the following API's because not used:
+//#                          SetNothingAvaulable
+//#                          SetShowFrameOutline
+//#                          CheckMenuBarID
+//#                          AppendOLEMenuToODMenuBar
+//#                          InitSelectedMenuBar
+//#                          CopySelectedMenu
+//#                          AddSelectedMenu
+//#                          RestoreSelectedMenu
+//#                          AddSelectedToAccelTable
+//#                          AddSelAccels
+//#  03/15/96 BRR    20452 Added support for WIN32
+//#
+//#     <6>    9/13/95 BLG   135340 added variable to store pointer to link list start
+//#     <5>    7/07/95 st    128688 overrides for methods in menubar
+//#     <4>    6/13/95 st    122278 implement more menu function
+//#     <3>    5/26/95 ST    122540 move RemovMenuItem to menubar class
+//#     <2>    3/30/95 ST    re-coded under new design
+//#  To Do:
+//#
+#endif
+
+#ifndef _POPUP_
+#define _POPUP_
+
+#ifndef _MENUBAR_
+#include "MenuBar.idl"
+#endif
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+//======================================================================
+// Classes defined in this interface
+//======================================================================
+
+interface  ODPopup;
+
+//======================================================================
+// Classes used by this interface
+//======================================================================
+
+interface  ODSession;
+interface  ODPart;
+interface  ODFrame;
+interface  ODMenuBar;
+
+//======================================================================
+// Class ODPopupMenu
+//======================================================================
+
+interface ODPopup :  ODMenuBar
+{
+
+    ODBoolean AddDefaultMenuItemBefore	(in ODMenuItemID menuItemID,
+					 in ODMenuItemID beforeID);
+
+    ODBoolean AddDefaultMenuItemLast	(in ODMenuItemID menuItemID);
+
+#ifdef __PRIVATE__
+
+    ODULong RetrieveMenuStringID	(in ODMenuItemID menuItemID);
+
+    void InitPopup			(in ODSession session,
+					 in ODPlatformMenuBar popup);
+
+  #ifdef _PLATFORM_WIN32_
+    void InitPopupEx			(in ODSession session,
+					 in ODPlatformMenuBar popup,
+					 in ODUShort      subMenuIDcount,
+					 in ODMenuIDInfo *subMenuIDinfo);
+  #endif // PLATFORM_WIN32
+
+#endif // __PRIVATE__
+
+#ifdef __SOMIDL__
+    implementation
+    {
+	majorversion = 1;
+	minorversion = 0;
+
+	functionprefix = ODPopup;
+
+	override:
+		somInit,
+		somUninit,
+		Display,
+		Copy,
+		AddMenuLast,
+		AddMenuBefore,
+		RemoveMenu,
+		GetMenu,
+		IsValid,
+		GetMenuText,
+		SetMenuText,
+		GetMenuItemText,
+		SetMenuItemText,
+		SetHideMenuItem,
+		SetShowMenuItem,
+		CheckMenuItem,
+		EnableMenu,
+		EnableMenuItem,
+		AddMenuItemBefore,
+		AddMenuItemLast,
+		InsertSubmenu,
+		AddSubMenuBefore,
+		AddSubMenuLast,
+		MenuExists,
+		IsMenuEnabled,
+		MenuItemExists,
+		Exists,
+		IsItemEnabled,
+		IsItemChecked,
+		IsItemHidden,
+		RemoveMenuItem,
+
+	#ifdef _PLATFORM_WIN32_
+		AddMenuLastEx,
+		AddMenuBeforeEx,
+		AddSubMenuBeforeEx,
+		AddSubMenuLastEx,
+	#endif // PLATFORM_WIN32
+
+        #ifdef _PLATFORM_AIX_
+                CreateX11PlatformMenu,
+                DestroyX11PlatformMenu,
+        #endif // PLATFORM_AIX
+
+		GetMenuItem;
+
+	releaseorder:
+		AddDefaultMenuItemBefore,
+		AddDefaultMenuItemLast,
+
+	#ifdef _PLATFORM_WIN32_
+	    #ifdef __PRIVATE__
+		InitPopupEx,
+	    #else
+		reserved1,
+	    #endif // __PRIVATE__
+	#endif // PLATFORM_WIN32
+
+	#ifdef __PRIVATE__
+		RetrieveMenuStringID,
+		InitPopup;
+	#else
+		reserved2,
+		reserved3;
+	#endif
+
+
+	#ifdef __PRIVATE__
+		ODSession		fSession;
+
+	    #if defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_)
+		void*			fHMOD;
+		ODPlatformMenu		fPlatPopup;
+	    #endif // PLATFORM_WIN32, PLATFORM_OS2
+
+		ODPlatformMenuBar	fBasePopup;
+
+	    #ifdef _PLATFORM_OS2_
+		ODOS2MenuAdapter	fMenu;
+	    #endif // PLATFORM_OS2
+
+	    #ifdef _PLATFORM_WIN32_
+		ODWinMenuAdapter	fMenu;
+	    #endif // PLATFORM_WIN32
+
+	    #ifdef _PLATFORM_AIX_
+		ODX11MenuAdapter	fMenu;
+	    #endif // PLATFORM_AIX
+
+	#endif // __PRIVATE__
+
+    };
+#endif // __SOMIDL__
+
+};
+
+#endif // _POPUP_
+

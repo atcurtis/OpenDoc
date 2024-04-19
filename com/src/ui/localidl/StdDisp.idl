@@ -1,0 +1,156 @@
+/* @(#)Z 1.5 com/src/ui/localidl/StdDisp.idl, odui, od96os2, odos29646d 96/11/15 15:28:40 (96/07/15 18:29:26) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+// IBM Change History (most recent first):                         */
+// <OS2>   8/23/95 jso  Port dr3  133968                           */
+// <OS2>   8/27/94 MAP  Port A8C3                                  */
+//******************************************************************/
+//
+//	File:		StdDisp.idl
+//
+//	Contains:	Class definition for ODStandardDispatchModule
+//
+//	Owned by:	Richard Rodseth
+//
+//	Copyright:	(C) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//
+//	Change History (most recent first):
+//
+//		 <4>	 8/15/95	RR		#1275241 IDL Review
+//		 <3>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//									somInit methods. Don't call IsInitialized
+//									or SubclassResponsibility
+//		 <2>	 6/24/94	RR		Added function prefix
+//		 <1>	  6/8/94	RR		first checked in
+//		 <1>	  6/8/94	RR		first checked in
+//
+//	To Do:
+//
+#else
+//	Copyright:	(C) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _STDDISP_
+#define _STDDISP_
+
+#ifndef _DISPMOD_
+#include "DispMod.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODStandardDispatchModule;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODSession;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+#ifdef _PLATFORM_MACINTOSH_
+typedef somToken MacDispatchModule;
+#endif // _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_OS2_
+typedef somToken OS2DispatchModule;
+#endif // _PLATFORM_OS2_
+
+#endif
+
+//=====================================================================================
+// ODStandardDispatchModule
+//=====================================================================================
+
+interface ODStandardDispatchModule : ODDispatchModule
+{
+	void InitStandardDispatchModule(in ODSession session);
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODStandardDispatchModule;
+	
+		override:
+			somUninit,
+			Dispatch;
+	
+		releaseorder:
+			InitStandardDispatchModule;
+		
+	#ifdef __PRIVATE__
+			passthru C_xih =
+			""
+	    #ifdef _PLATFORM_MACINTOSH_
+			"class MacDispatchModule;"
+	    #endif // _PLATFORM_MACINTOSH_
+			""
+	    #ifdef _PLATFORM_OS2_
+			"class OS2DispatchModule;"
+	    #endif // _PLATFORM_OS2_
+			"";
+
+	    #ifdef _PLATFORM_MACINTOSH_
+		  MacDispatchModule* fMacImplementation;
+	    #endif // _PLATFORM_MACINTOSH_
+
+	    #ifdef _PLATFORM_OS2_
+		  OS2DispatchModule* fOS2Implementation;
+	    #endif // _PLATFORM_OS2_
+
+		  char fUnused; // force GetData macro to be defined
+				// even if no other instance data.
+
+	#endif // __PRIVATE__
+	
+	};
+#endif // __SOMIDL__
+};
+
+#endif // _STDDISP_

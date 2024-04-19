@@ -1,0 +1,426 @@
+/* @(#)Z 1.4 com/src/layout/idl/Frame.idl, odlayout, od96os2, odos29646d 96/11/15 15:25:32 (96/07/15 18:32:47) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odlayout
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#    File:       Frame.idl
+//#
+//#    Contains:   SOM class definition for ODFrame
+//#
+//#    Owned by:   Joshua Susser
+//#
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#    Change History (most recent first):
+//#
+//#        <19>     9/13/95    DM      1277216 GM:API return no ODPoints nor
+//#                                    ODPolygons
+//#        <18>     8/25/95    JBS     1263078 FB: fix part editor swapping;
+//#                                    1278052 FB: add InLimbo flag
+//#        <17>     8/18/95    JBS     1275241 IDL Review
+//#        <16>      8/3/95    RR      #1257260: Collapse B classes. Remove
+//#                                    somInit methods. Don't call IsInitialized
+//#                                    or SubclassResponsibility
+//#        <15>     6/23/95    JBS     1261323 InitFrame: add isSubframe, remove
+//#                                    isRoot
+//#        <14>     5/25/95    VL      1251403: Multithreading naming support.
+//#        <13>      5/4/95    JBS     1243651 added fValidState
+//#        <12>     3/28/95    JBS     1229656 add EditInLink()
+//#        <11>     2/15/95    JBS     1198600 added private SetDirty
+//#        <10>     9/26/94    JBS     1186332, 1188981 - nonpersistence; 1183568
+//#                                    - keep fIsDirty flag
+//#         <9>      9/6/94    CC      1153777: Added fLinkStatus field.
+//#         <8>     8/26/94    VL      1183174: Removed CloneTo.
+//#         <7>     8/15/94    JBS     1180387: added Imaging factory methods
+//#         <6>     8/10/94    JBS     1179919: coordinate system bias changes;
+//#                                    1179920: Frame::GetWindow()
+//#         <5>      7/7/94    JBS     added ReleaseAll override
+//#         <4>     6/29/94    JBS     #1155479: frameGroup & sequenceNumber
+//#         <3>     6/22/94    JBS     add functionprefix
+//#         <2>      6/8/94    NP      Restore lost changes.
+//#         <6>      6/7/94    RR      Privatise change log
+//#
+#else
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _FRAME_
+#define _FRAME_
+
+#ifndef _PSTOBJ_
+#include "PstObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODFrame;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface  ODFrameFacetIterator;
+
+interface  ODCanvas;
+interface  ODFacet;
+interface  ODPart;
+interface  ODShape;
+interface  ODTransform;
+interface  ODWindow;
+
+#ifdef __PRIVATE__
+interface  ODDraft;
+interface  ODStorageUnit;
+#endif
+
+#ifdef __PRIVATE__
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken OrderedCollection;
+#endif
+
+//==============================================================================
+// ODFrame
+//==============================================================================
+
+interface ODFrame :  ODPersistentObject
+{
+   //# containing frame
+
+   ODFrame     AcquireContainingFrame();
+
+   void        SetContainingFrame(in ODFrame frame);
+
+   //# window
+
+   ODWindow    AcquireWindow();
+
+   void        SetWindow(in ODWindow window);
+
+   //# getters/setters:
+
+   ODULong     GetFrameGroup();
+
+   void        SetFrameGroup(in ODULong groupID);
+
+   ODULong     GetSequenceNumber();
+
+   void        ChangeSequenceNumber(in ODULong sequenceNumber);
+
+   ODBoolean   IsRoot();
+
+   ODBoolean   IsSubframe();
+
+   void        SetSubframe(in ODBoolean isSubframe);
+
+   ODBoolean   IsOverlaid();
+
+   ODBoolean   IsFrozen();
+
+   void        SetFrozen(in ODBoolean isFrozen);
+
+   ODBoolean   DoesPropagateEvents();
+
+   void        SetPropagateEvents(in ODBoolean doesPropagateEvents);
+
+   ODBoolean   IsInLimbo();
+
+   void        SetInLimbo(in ODBoolean isInLimbo);
+
+   //# part
+
+   ODPart      AcquirePart();
+
+   void        ChangePart(in ODPart part);
+
+   ODInfoType  GetPartInfo();
+
+   void        SetPartInfo(in ODInfoType partInfo);
+
+   ODTypeToken GetViewType();
+
+   void        SetViewType(in ODTypeToken viewType);
+
+   void        ChangeViewType(in ODTypeToken viewType);
+
+   ODTypeToken GetPresentation();
+
+   void        SetPresentation(in ODTypeToken presentation);
+
+   void        ChangePresentation(in ODTypeToken presentation);
+
+   //# facets
+
+   void        FacetAdded(in ODFacet facet);
+
+   void        FacetRemoved(in ODFacet facet);
+
+   ODFrameFacetIterator    CreateFacetIterator();
+
+   //# shapes:
+
+   ODShape     CreateShape();
+
+   //# frame shape
+
+   ODShape     AcquireFrameShape(in ODCanvas biasCanvas);
+
+   void        ChangeFrameShape(in ODShape shape, in ODCanvas biasCanvas);
+
+   ODShape     RequestFrameShape(in ODShape shape, in ODCanvas biasCanvas);
+
+   //# used shape
+
+   ODShape     AcquireUsedShape(in ODCanvas biasCanvas);
+
+   void        ChangeUsedShape(in ODShape shape, in ODCanvas biasCanvas);
+
+   //# transformations:
+
+   ODTransform CreateTransform();
+
+   ODTransform AcquireInternalTransform(in ODCanvas biasCanvas);
+
+   void        ChangeInternalTransform(in ODTransform transform, in ODCanvas biasCanvas);
+
+   //# content extent:
+
+   void        GetContentExtent(out ODPoint contentExtent);
+
+   void        ChangeContentExtent(in ODPoint contentExtent);
+
+   //# drag&drop:
+
+   ODBoolean   IsDroppable();
+
+   void        SetDroppable(in ODBoolean isDroppable);
+
+   ODBoolean   IsDragging();
+
+   void        SetDragging(in ODBoolean isDragging);
+
+   //# linking:
+
+   void        ContentUpdated(in ODUpdateID change);
+
+   void        ChangeLinkStatus(in ODLinkStatus status);
+
+   ODLinkStatus GetLinkStatus();
+
+   ODBoolean   EditInLink();
+
+   //# invalidation/draw:
+
+   void        Invalidate(in ODShape invalidShape, in ODCanvas biasCanvas);
+
+   void        Validate(in ODShape validShape, in ODCanvas biasCanvas);
+
+   void        InvalidateActiveBorder();
+
+   void        DrawActiveBorder();
+
+   //# ref counting
+
+   void        Close();
+
+   void        Remove();
+
+//# Private to implementation
+
+#ifdef __PRIVATE__
+
+   OrderedCollection* GetFacets();
+
+   void PrepareToSwap(in ODPart part);
+
+   void SetDirty(in ODULong dirtyProperty);
+
+   void CommonInitFrame();
+
+   void InitFrame(in ODStorageUnit storageUnit,
+                  in ODFrame containingFrame,
+                  in ODShape frameShape,
+                  in ODCanvas biasCanvas,
+                  in ODPart part,
+                  in ODTypeToken viewType,
+                  in ODTypeToken presentation,
+                  in ODBoolean isSubframe,
+                  in ODBoolean isOverlaid);
+
+   void InitFrameFromStorage(in ODStorageUnit  storageUnit);
+
+   void InitFrameNonPersistent(in ODDraft draft,
+                               in ODID id,
+                               in ODFrame containingFrame,
+                               in ODShape frameShape,
+                               in ODCanvas biasCanvas,
+                               in ODPart part,
+                               in ODTypeToken viewType,
+                               in ODTypeToken presentation,
+                               in ODBoolean isSubframe,
+                               in ODBoolean isOverlaid);
+#endif
+
+#ifdef __SOMIDL__
+   implementation
+   {
+       majorversion = 1; minorversion = 0;
+
+       functionprefix = ODFrame;
+
+       override:
+           somUninit,
+           Purge,
+           Release,
+           ReleaseAll,
+           Externalize,
+           GetID,
+           CloneInto;
+
+       releaseorder:
+           AcquireContainingFrame,
+           SetContainingFrame,
+           AcquireWindow,
+           SetWindow,
+           GetFrameGroup,
+           SetFrameGroup,
+           GetSequenceNumber,
+           ChangeSequenceNumber,
+           IsRoot,
+           IsSubframe,
+           SetSubframe,
+           IsOverlaid,
+           IsFrozen,
+           SetFrozen,
+           DoesPropagateEvents,
+           SetPropagateEvents,
+           IsInLimbo,
+           SetInLimbo,
+           AcquirePart,
+           ChangePart,
+           GetPartInfo,
+           SetPartInfo,
+           GetViewType,
+           SetViewType,
+           ChangeViewType,
+           GetPresentation,
+           SetPresentation,
+           ChangePresentation,
+           FacetAdded,
+           FacetRemoved,
+           CreateFacetIterator,
+           CreateShape,
+           AcquireFrameShape,
+           ChangeFrameShape,
+           RequestFrameShape,
+           AcquireUsedShape,
+           ChangeUsedShape,
+           CreateTransform,
+           AcquireInternalTransform,
+           ChangeInternalTransform,
+           GetContentExtent,
+           ChangeContentExtent,
+           IsDroppable,
+           SetDroppable,
+           IsDragging,
+           SetDragging,
+           ContentUpdated,
+           ChangeLinkStatus,
+           GetLinkStatus,
+           EditInLink,
+           Invalidate,
+           Validate,
+           InvalidateActiveBorder,
+           DrawActiveBorder,
+           Close,
+           Remove,
+       #ifdef __PRIVATE__
+           GetFacets,
+           SetDirty,
+           CommonInitFrame,
+           InitFrame,
+           InitFrameFromStorage,
+           InitFrameNonPersistent,
+           PrepareToSwap;
+       #else
+           reserved1,
+           reserved2,
+           reserved3,
+           reserved4,
+           reserved5,
+           reserved6,
+           reserved7;
+       #endif
+
+   #ifdef __PRIVATE__
+       passthru C_xh = 
+       ""
+       "class OrderedCollection;"
+       "";
+
+       ODDraft             fDraft;
+       ODID                fNPID;
+       ODULong             fDirty;
+
+       ODFrame             fContainingFrame;
+       OrderedCollection*  fFacets;
+       ODWindow            fWindow;
+
+       ODShape             fFrameShape;
+       ODShape             fUsedShape;
+       ODTransform         fInternalTransform;
+       ODPoint             fContentExtent;
+
+       ODPart              fPart;
+       ODInfoType          fPartInfo;
+       ODTypeToken         fViewType;
+       ODTypeToken         fPresentation;
+
+       ODULong             fFrameGroup;
+       ODULong             fSequenceNumber;
+
+       ODLinkStatus        fLinkStatus;
+       ODBoolean           fIsRoot;
+       ODBoolean           fIsSubframe;
+       ODBoolean           fIsOverlaid;
+       ODBoolean           fIsFrozen;
+       ODBoolean           fIsDroppable;
+       ODBoolean           fIsDragging;
+       ODBoolean           fDoesPropagateEvents;
+       ODBoolean           fIsInLimbo;
+
+       ODUShort            fValidState;
+   #endif
+   };
+#endif
+};
+
+#endif //# _FRAME_

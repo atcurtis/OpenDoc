@@ -1,0 +1,124 @@
+/* @(#)Z 1.2 com/src/ui/localidl/ExcFocus.idl, odui, od96os2, odos29646d 96/11/15 15:28:40 (96/07/15 18:29:21) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#	File:		ExcFocus.idl
+//#
+//#	Contains:	Class definition for ODExclusiveFocusModule
+//#
+//#	Owned by:	Richard Rodseth
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <8>	 8/15/95	RR		#1275241 IDL Review
+//#		 <7>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <6>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		 <5>	  3/7/95	RR		# 1220929 Added fSelectionFocus
+//#		 <4>	10/18/94	RR		Added fSession. Override BRF, CRF, ARF.
+//#		 <3>	  9/2/94	RR		Override TransferFocusOwnership #1184275
+//#									Pass transferringFrame and newOwner to
+//#									focusModule::TransferFocus
+//#		 <2>	 6/23/94	RR		Added function prefix
+//#		 <1>	  6/8/94	RR		first checked in
+//#		 <2>	  6/7/94	RR		Privatise change log
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _EXCFOCUS_
+#define _EXCFOCUS_
+
+#ifndef _FOCUSMOD_
+#include "FocusMod.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODExclusiveFocusModule;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface ODSession;
+
+#ifdef __PRIVATE__
+interface ODFrame;
+#endif
+
+//=====================================================================================
+// Class ODExclusiveFocusModule
+//=====================================================================================
+
+interface ODExclusiveFocusModule : ODFocusModule
+{
+	void InitExclusiveFocusModule(in ODSession session);
+
+#ifdef __SOMIDL__
+	implementation
+  	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODExclusiveFocusModule;
+	
+		override:
+			somUninit,
+			IsFocusExclusive,
+			SetFocusOwnership,
+			UnsetFocusOwnership,
+			TransferFocusOwnership,
+			AcquireFocusOwner,
+			BeginRelinquishFocus,
+			CommitRelinquishFocus,
+			AbortRelinquishFocus;
+			
+		releaseorder:
+			InitExclusiveFocusModule;
+		
+		#ifdef __PRIVATE__
+			ODFrame  fFrame;
+			ODSession  fSession;
+			ODTypeToken fSelectionFocus;
+			ODTypeToken fKeyFocus;
+		#endif
+
+  	};
+#endif //# __SOMIDL__
+};
+
+#endif //# _EXCFOCUS_
+

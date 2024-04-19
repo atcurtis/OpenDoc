@@ -1,0 +1,220 @@
+/* @(#)Z 1.7 com/src/imaging/idl/Canvas.idl, odimaging, od96os2, odos29646d 96/11/15 15:25:05 (96/10/29 09:25:44) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//#         4/02/96 jab  Added additional parameters to             */
+//#                      CreatePlatformCanvas.			    */
+//#         3/13/96 jab  Removed override of Invalidate and         */
+//#                      Validate until it is needed on non-Mac     */
+//#                      platforms.                                 */
+//#                      Removed double underscores from function   */
+//#                      prefix.                                    */
+//#         2/22/96 jab  Merge with DR4 and OS/2 Feb. 13 drop.      */
+//#                      Changes for platform independent code.     */
+//# 122394  6/01/95 map  Fix again problem with //# comments        */
+//# 120349  5/15/95 map  Fix problem with //# comment on #endifs    */
+//# 120349  5/15/95 map  Fix up IDL copyright                       */
+//#******************************************************************/
+//#
+//#	File:		Canvas.idl
+//#
+//#	Contains:	ODCanvas, a Macintosh drawing environment
+//#
+//#	Owned by:	Jens Alfke
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <8>	  9/8/95	jpa		IDL cleanup [1281687]
+//#		 <7>	  8/7/95	JBS		1275083 added overrides Invalidate &
+//#									Validate
+//#		 <6>	  6/1/95	jpa		Made InitCanvas private [1249200]
+//#		 <5>	 5/25/95	jpa		Use new GX headers [1241078, 1253324]
+//#		 <4>	 12/5/94	jpa		Code review fixes. [1203923]
+//#		 <3>	 8/17/94	jpa		Added "functionprefix" directive. [1181512]
+//#		 <2>	  8/8/94	jpa		API changes for multiformat canvases & bias
+//#									transforms [1179683, 1178688]
+//#		<10>	  6/7/94	RR		Privatize change history
+//#		 <9>	 5/26/94	jpa		Moved methods to CanvasB.idl.
+//#		 <8>	  5/4/94	RR		Comment out union for now
+//#
+//#	To Do:
+//# In Progress:
+//#		
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CANVAS_
+#define _CANVAS_
+
+#ifndef _CANVASB_
+#include "CanvasB.idl"      // base class
+#endif
+
+#if defined( _PLATFORM_OS2_ ) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+#ifndef _PLATCANV_
+#include "PlatCanv.idl"
+#endif
+#endif // IBM Platforms
+
+//==============================================================================
+// Mac OS types used in this interface
+//==============================================================================
+
+/*
+#pragma somemittypes off
+*/
+
+typedef unsigned long GrafPtr;		//# C definition is in <QuickDraw.h>
+
+/*
+#pragma somemittypes on
+*/
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODCanvas;
+
+//==============================================================================
+// ODCanvas
+//==============================================================================
+
+interface ODCanvas :  ODBaseCanvas
+{
+    //*********************
+    // MACINTOSH SPECIFIC
+    //*********************
+
+#ifdef _PLATFORM_MACINTOSH_
+  GrafPtr  GetQDPort( );
+  
+  ODPlatformCanvas  GetGXViewport( );  // Really a gxViewport; see <graphics types.h>
+#endif // _PLATFORM_MACINTOSH_
+
+#ifdef __PRIVATE__
+  void InitCanvas(in ODGraphicsSystem graphicsSystem,
+		  in ODPlatformCanvas	platformCanvas,
+		  in ODBoolean isDynamic,
+		  in ODBoolean isOffscreen);
+#endif  // __PRIVATE__
+
+    //*********************
+    // IBM CROSS PLATFORM SOLUTION
+    //*********************
+#if defined( _PLATFORM_OS2_ ) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+
+  ODPlatformCanvas CreatePlatformCanvas( in ODGraphicsSystem aSystemType,
+					 in ODBoolean isDynamic,
+					 in ODBoolean isOffScreen );
+
+#endif  // IBM Platforms
+
+
+#ifdef __SOMIDL__
+  implementation
+  {
+    majorversion = 1; minorversion = 0;
+		
+    releaseorder:
+#ifdef _PLATFORM_MACINTOSH_
+        GetQDPort,
+        GetGXViewport,
+
+#ifdef __PRIVATE__
+        InitCanvas;
+#else
+        reserved1;
+#endif  // __PRIVATE__
+
+    override:
+	HasPlatformCanvas,
+	GetPlatformCanvas,
+	SetPlatformCanvas,
+	Invalidate,
+	Validate;
+
+#endif  // _PLATFORM_MACINTOSH_
+
+
+#if defined( _PLATFORM_OS2_ ) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+
+#ifdef __PRIVATE__
+        InitCanvas,
+#else
+        reserved1,
+#endif  // __PRIVATE__
+
+        CreatePlatformCanvas;
+
+    override:
+	HasPlatformCanvas,
+	GetPlatformCanvas,
+	SetPlatformCanvas;
+
+#endif // IBM Platforms
+	
+    functionprefix = ODCanvas;
+    
+#ifdef __PRIVATE__
+
+#if defined( _PLATFORM_OS2_ ) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+        ODPlatformCanvas  fPlatformCanvas;
+#endif  // IBM Platforms
+
+#ifdef _PLATFORM_MACINTOSH_
+        ODPlatformCanvas  fQDCanvas;
+        ODPlatformCanvas  fGXCanvas;
+#endif  // _PLATFORM_MACINTOSH_
+
+#endif  // __PRIVATE__ 
+  };
+#endif
+};
+
+#endif // _CANVAS_
+
+
+

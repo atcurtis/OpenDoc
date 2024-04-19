@@ -1,0 +1,656 @@
+/* @(#)Z 1.41 com/src/include/idl/ODTypesM.idl, odcore, od96os2, odos29646d 96/11/15 15:25:41 (96/10/29 09:27:56) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           ODTypesM.idl
+//#
+//#     Contains:       Macintosh-specific types and constants
+//#
+//#     Owned by:       Richard Rodseth
+//#
+//#     Copyright:      (r) 1993-95 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#       Defect  Date   Body  Reason
+//#       ------ ------- ----  -------------------------------------------------------
+//#        23129 6/13/96  BRR  Add _PLATFORM_AIX definition for HWND
+//#        22750 6/10/96  BRR  Add _PLATFORM_AIX flags
+//#        21053 4/16/96  LAW  Remove #define of _PLATFORM_ at top of file
+//#        21053 4/12/96  jab  Added defines for HWND and HPS for OS/2.
+//#        21029 4/11/96  LAW  Added PLATFORM_OS2 and PLATFORM_AIX flags
+//#        20780 3/28/96  BRR  Added definition for ODPlatformAccelTable
+//#        20444 3/16/96  BRR  Added definition for ODACCELTABLE
+//#        20259 3/08/96  BRR  Added MenuBar stuff in that was added to ODTypesM.idl
+//#
+//#             <59>    10/16/95        CG              1292402 GM: ODEditor now typedef-ed as
+//#                                                                     ODISOStr.
+//#             <58>      9/8/95        VL              1275241, 1283463: Added
+//#                                                                     ODPlatformDragReference.
+//#             <57>      9/6/95        RR              #1231656 Moved constants to StdDef.idl
+//#             <56>     8/29/95        DM              1221778, 1276165: [ShowLinkUpdateAlert]
+//#                                                                     link update types
+//#             <55>     6/28/95        VL              1190962, 1252228: Added kODHFSPromise.
+//#             <54>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <53>     3/29/95        DM              Added _PLATFORM_BIG_ENDIAN_
+//#             <52>     3/22/95        jpa             Added ODPlatformPrintJob. [1230236]
+//#             <51>     3/22/95        CC              1230392: Removed size field from
+//#                                                                     ODLinkInfo. (approved in bug 1223607).
+//#                                                                     1230322: Added ODPasteAsMergeSetting type
+//#                                                                     and constants.
+//#             <50>     3/21/95        JP              1192027: Moved aete constants to
+//#                                                                     ODRgstry.idl
+//#             <49>      3/1/95        RR              #1164863 Removed constants for Apple, Doc
+//#                                                                     and Edit menu ids.
+//#             <48>     2/24/95        jpa             Added kODEvtBGMouseDown and
+//#                                                                     kODEvtBGMouseDownEmbedded [1220704]
+//#             <47>     1/27/95        NP              Remove forward decls for ODesc types.
+//#             <46>     1/27/95        NP              1213948: Remove old type defs. Add forward
+//#                                                                     decls.
+//#             <45>     1/25/95        jpa             New ODIText format [1212619]
+//#             <44>     1/25/95        CC              1213954 Added ODEditor field to
+//#                                                                     ODPasteAsResult.
+//#                                                                     1214418 Added kODNoEditor constant.
+//#             <43>     1/22/95        NP              Clean up AE types, fix ODHandle and tweak
+//#                                                                     ODEventData type.
+//#             <42>     1/13/95        RR              Added ODEventInfo, and events for
+//#                                                                     MouseEnter, MouseWithin and MouseLeave
+//#             <41>     1/13/95        Te              #1183567 BB: Standard Type IO Routines need
+//#                                                                     to be implemented: added ODIconFamily.
+//#             <40>      1/9/95        VL              1195012: Added new constant for Drag Image.
+//#             <39>    11/30/94        RR              #1188078 Removed unused and inappropriate
+//#                                                                     types
+//#             <38>    11/15/94        NP              1199847-added typeUserToken
+//#             <37>    10/11/94        eeh             #1186849: change kODFileMenuID to
+//#                                                                     kODDocumentMenuID
+//#             <36>     9/23/94        VL              1184166: ContainerName and DocumentName are
+//#                                                                     ODName (i.e., ODIText).
+//#             <35>     8/28/94        VL              #1182975: Added ODDragResult for DragEnter
+//#                                                                     & DragWithin.
+//#             <34>     8/19/94        Te              #1159233 Remove references to j3di
+//#             <33>     8/18/94        Te              #1181622 Set Owned by: field to Richard
+//#             <32>     8/15/94        DO              Changes for OSA support.
+//#             <31>     7/26/94        eeh             ODQDPoint->Point; add Rect
+//#             <30>     7/21/94        eeh             added kODOCEMailerMenuID
+//#             <29>     7/15/94        jpa             Stop lying to SOM: Define ODQDPoint as a
+//#                                                                     struct.
+//#             <28>     6/29/94        NP              Added semantic event OSA constants.
+//#             <27>     6/24/94        NP              Added AppleEvent types.
+//#             <26>     6/20/94        Te              moved over lots of constants from the Jdi:
+//#                                                                     PlfmType.h
+//#             <25>     6/15/94        jpa             Made ODQDPoint an 'unsigned long' so it can
+//#                                                                     be defined specially in ODTypesF.h.
+//#             <24>     6/14/94        RR              Removed ODHeap
+//#             <23>     6/10/94        CG              Added ODContainerSuite.
+//#             <21>      6/2/94        CC              Added declaration of kODUnknownChange.
+//#             <18>     5/26/94        jpa             Moved imaging stuff to ODTypesB.idl. Added graphics
+//#                                                                             system constants.
+//#             <17>     5/23/94        RCR             Removed Point and Rect. Made some 4-byte foreign types
+//#                                                                     into unsigned longs
+//#                                                                     define and use ODTime2.
+//#             <17>     5/12/94        CC              Temporary workaround for foreign type ODTime:
+//#                                                                     define and use ODTime2.
+//#             <16>     5/12/94        CC              Added ODLinkInfo, ODPasteAsResult,
+//#                                                                     ODLinkInfoAction, and ODLinkInfoResult.
+//#
+//#     To Do:
+//#     In Progress:
+//#
+#else
+//#     Copyright:      (r) 1993-1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ODTYPESM_
+#define _ODTYPESM_
+
+
+#if defined(_PLATFORM_NT_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_)
+#ifndef _PLATFORM_LITTLE_ENDIAN_
+#define _PLATFORM_LITTLE_ENDIAN_
+#endif
+#endif
+
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_AIX_)
+#ifndef _PLATFORM_BIG_ENDIAN_
+#define _PLATFORM_BIG_ENDIAN_
+#endif
+#endif
+
+// Platform-specific types. Four byte types are defined as unsigned long,
+// rather than
+// foreign, so that they can be marshalled. They are not emitted however,
+// so that the actual type definitions in ODTypesF.h are used, so that type
+// casting is not necessary where these types are used.
+
+#ifdef _PLATFORM_MACINTOSH_
+typedef unsigned long ODPlatformCanvas;
+#endif  // _PLATFORM_MACINTOSH_
+
+typedef unsigned long ODPlatformPrintJob;
+typedef unsigned long ODPlatformShape;            // Graphics-system-dependent shape data
+typedef unsigned long ODPlatformTransform;  // Graphics-system-dependent transform data
+typedef unsigned long ODRgnHandle;
+typedef unsigned long ODgxShape;
+typedef unsigned long ODPlatformWindow;
+
+#ifdef _PLATFORM_UNIX_
+typedef void * ODPlatformMenu;
+#else
+typedef unsigned long ODPlatformMenu;
+#endif // PLATFORM_UNIX
+
+typedef unsigned long ODPlatformMenuBar;
+typedef unsigned long ODOSType;
+typedef unsigned long ODPlatformType;           // Host platform file & data type
+typedef unsigned long ODHandle;
+typedef unsigned long ODPlatformDragReference;
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+typedef unsigned long HACCEL;
+typedef HACCEL  ODPlatformAccelTable;
+
+struct ACCEL{
+   unsigned short fs;
+   unsigned short key;
+   unsigned short cmd;
+};
+
+#define ACCELMAX 20
+struct ODACCEL{
+   ACCEL aAccel[ACCELMAX];
+};
+
+struct ODACCELTABLE{
+   unsigned short cAccel;
+   unsigned short codepage;
+   ACCEL    aaccel[1];
+};
+
+#endif // PLATFORM_OS2 || PLATFORM_WIN32 || PLATFORM_AIX
+
+
+#ifdef _PLATFORM_MACINTOSH_
+struct Point {          // This is a QuickDraw "Point" structure.
+        short v;                        // It's 32 bits, but still a struct, and for things to work
+        short h;                        // at runtime, SOM has to _know_ that it's really a struct.
+};                                              // ("Don't fool SOM!" --Erik Eidt)               --jpa
+
+struct Rect {           // This is a QuickDraw "Rect" structure.
+        short top;
+        short left;
+        short bottom;
+        short right;
+};
+#endif  // _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_UNIX_
+
+typedef struct tagPOINT { // Taken from Xlib.h, more or less -CHB
+    short x, y;
+} Point;
+
+typedef struct tagRECT { // Taken from Xlib.h, more or less -CHB
+    short x, y;
+    unsigned short width, height;
+} Rect;
+
+#endif // _PLATFORM_UNIX_
+
+#if defined(_PLATFORM_NT_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+typedef void* HWND;
+#endif
+
+#if defined(_PLATFORM_NT_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_)
+//
+// Defines needed for idl files in imaging.
+//
+typedef struct tagPOINT {
+        long x;
+        long y;
+} Point;
+
+typedef struct tagRECT {
+        long left;
+        long top;
+        long right;
+        long bottom;
+} Rect;
+
+#if defined(_PLATFORM_NT_) || defined(_PLATFORM_WIN32_)
+typedef void* HDC;
+
+typedef struct tagSIZE {
+    long cx;
+    long cy;
+} SIZE;
+
+#endif
+
+#ifdef _PLATFORM_OS2_
+typedef unsigned long HWND;
+typedef unsigned long HPS;
+typedef unsigned long MRESULT;
+typedef unsigned long MPARAM;
+typedef unsigned long ULONG;
+#endif
+
+#endif  // _PLATFORM_NT_ || _PLATFORM_WIN32_ || _PLATFORM_OS2_
+
+
+//#struct AEDesc {                      // This is the Apple events structure of the same name.
+//#     unsigned long   descriptorType;
+//#     unsigned long   dataHandle;
+//#};
+
+
+typedef unsigned long   DescType;
+typedef unsigned long   AEEventClass;
+typedef unsigned long   AEEventID;
+typedef long                    AESendMode;
+typedef short                   AESendPriority;
+
+#ifdef  _PLATFORM_MACINTOSH_
+struct EventRecord {
+        short                                           what;
+        long                                            message;
+        long                                            when;
+        Point                                           where;
+        short                                           modifiers;
+};
+#endif //  _PLATFORM_MACINTOSH_
+
+// End of platform types
+
+#ifndef _ODTYPESB_
+#include "ODTypesB.idl"
+#endif
+
+#ifndef _GEOTYPES_
+#include "GeoTypes.idl"
+#endif
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_TYPES)
+#pragma somemittypes on
+#endif
+
+//#ifdef _PLATFORM_MACINTOSH_
+#if defined(_PLATFORM_NT_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_UNIX_)
+
+//#=============================================================================
+//# Emitted Types, Consts, Enums, etc.
+//#=============================================================================
+
+//# // Semantic Interface
+
+#ifdef _PLATFORM_MACINTOSH_
+typedef DescType        ODDescType;
+
+//#typedef AEDesc               ODDesc;
+
+typedef AESendMode              ODSendMode;
+typedef AESendPriority  ODSendPriority;
+
+typedef AEEventClass    ODEventClass;
+typedef AEEventID               ODEventID;
+
+// Types added for OSAObject support
+
+typedef ODULong  ODScriptingSubType;
+typedef ODULong  ODScriptingConnection;
+typedef ODULong  ODOSAID;
+#endif
+
+
+// OS specific types
+//
+//  The following typedefs are OS specific. They are put together in this file for the
+//  time being. However, they can be put into separate files if desired. For example,
+//  all the primitive types will be put in ODPlatformMisc.h;
+//  all graphics system types will be put in ODPlatformGraphics.h;
+//  all File system types will be put in ODPlatformFiles.h; and so on.
+//  The advantage of splitting them in separate files is the changing one type will not
+//  require recompiling all the files which includea ODTypes.h. Also, there may be a lot
+//  of OS-specific types. If that's the case, we don't want them all in one file.
+//
+
+// Text
+
+typedef long ODITextFormat;
+
+
+struct ODIText {
+        ODITextFormat   format;
+        ODByteArray             text;
+};
+
+typedef ODIText ODName;
+typedef ODName  ODContainerName;
+typedef ODName  ODDocumentName;
+
+// Imaging
+
+typedef ODHandle        ODIconFamily;
+
+// Events
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+typedef ODULong      ODEventType;
+#endif // OS2, WIN32
+#ifdef _PLATFORM_MACINTOSH_
+typedef ODUShort     ODEventType;
+#endif // Mac
+#ifdef _PLATFORM_UNIX_
+typedef ODSLong      ODEventType;
+#endif // Unix
+
+#if defined(_PLATFORM_NT_) || defined(_PLATFORM_WIN32_)
+typedef struct tagEVENTRECORD {
+         void*         hwnd;
+         unsigned long message;
+         unsigned long wParam;
+         unsigned long lParam;
+         unsigned long time;
+         Point         pt;
+} EventRecord;
+#endif // _PLATFORM_NT_, _PLATFORM_WIN32_
+
+#ifdef _PLATFORM_OS2_
+typedef struct tagEVENTRECORD {
+  HWND            hwnd;
+  ULONG           msg;
+  MPARAM          mp1;
+  MPARAM          mp2;
+  MRESULT         result;
+} EventRecord;
+#endif // _PLATFORM_OS2_
+
+#ifdef _PLATFORM_UNIX_
+
+typedef struct tagEVENTRECORD {
+    ODEventType      type;
+    unsigned long    serial;
+    boolean          send_event;
+    void*            display;
+    ODPlatformWindow window;
+} EventRecord;
+
+#endif // _PLATFORM_UNIX_
+
+typedef EventRecord     ODEventData;
+
+interface ODFrame;
+interface ODFacet;
+
+#if (defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_) || defined(_PLATFORM_NT_))
+
+interface ODPlatformCanvas;
+
+#endif  // IBM Platforms
+
+
+struct ODEventInfo
+{
+        ODFrame embeddedFrame;
+        ODFacet embeddedFacet;
+        ODPoint where;
+#ifdef _PLATFORM_OS2_
+        ODULong flags;
+#else
+        ODBoolean propagated;
+#endif
+	ODEventType originalType;
+};
+
+#ifdef _PLATFORM_OS2_
+// opendoc messages
+const ODULong OD_PRINT =  0x00000491;
+const ODULong OD_HELP =   0x00000492;
+
+// Event info flags
+
+const ODULong kODPropagated = 1;
+const ODULong kODInBorder   = 2;
+const ODULong kODInEmbedded = 3;
+#endif // _PLATFORM_OS2_
+
+
+typedef ODULong                 ODIdleFrequency;
+
+#ifdef _PLATFORM_MACINTOSH_
+typedef ODULong                 ODTime;
+#endif
+#if defined(_PLATFORM_NT_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_UNIX_)
+typedef ODSLong                 ODTime;
+
+// opendoc document shell menu.
+const ODSLong HLPM_ODMENU   = 1;
+const ODSLong HLPM_ODWINDOW = 2;
+#endif
+
+// Menus
+
+typedef ODSShort    ODMenuID;
+typedef ODSShort    ODMenuItemID;
+typedef ODSLong    ODCommandID;
+
+#ifdef _PLATFORM_WIN32_
+
+// structure used to associate ODMenuIDs with menus on Windows NT
+typedef void* HMENU;
+
+struct ODMenuIDInfo {
+    HMENU    hMenu;
+    ODMenuID id;
+};
+
+#endif // PLATFORM_WIN32
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+struct ODPlatformMenuItem {
+   short  iPosition;
+   unsigned short  afStyle;
+   unsigned short  afAttribute;
+   unsigned short  id;
+   unsigned long  hwndSubMenu;
+   unsigned long  hItem;
+};
+//typedef struct ODPlatformMenuItem ODPlatformMenuItem ;
+#endif
+
+#ifdef _PLATFORM_UNIX_
+struct ODPlatformMenuItem {
+   ODMenuItemID id;
+   string       text;
+};
+
+const string ODX11MenuAtomString = "OpenDoc:X11:Menu:Atom:String";
+
+struct ODMenuEventData {
+        ODEventType      type;
+        unsigned long    serial;
+        boolean          send_event;
+        void*            display;
+        ODPlatformWindow window;
+        ODMenuID         menu;
+        ODMenuItemID     item;
+        boolean          toggle_state;
+};
+#endif // PLATFORM_UNIX
+
+// @SESH [142206]     // BRR 2/28/96
+//==============================================================================
+// Structures defined for OLE menu manipulation
+//==============================================================================
+struct NewSubMenu{
+   ODUShort  Position;
+   ODUShort  MenuId;
+   char      SubMenuString[40];
+   char      hasSubMenu; // A flag used to find if this sub menu has a cascade menu
+};
+
+struct NewMenu{
+   ODUShort  Position;
+   ODUShort  MenuId;
+   char      MenuString[40];
+   short     nSubMenuCount;    // no. of items for this menu item on the menu bar
+   NewSubMenu newsubmenu[20];  // structure contains position and sub menu string
+};
+
+// Name Binding
+
+typedef ODISOStr ODEditor;              // An opaque type identifying a specific part editor
+typedef ODISOStr ODContainerSuite;  // An opaque type identifying a specific container suite
+
+typedef ODULong ODUpdateID;                     // Content update IDs
+
+typedef ODULong ODDraftKey;
+
+// Drag and Drop
+
+typedef ODBoolean ODDragResult;
+
+// Link Protocol
+
+#ifdef _PLATFORM_OS2_
+typedef ODIText ODLinkDescription;
+
+struct ODLinkConnectionData {
+        ODLinkDescription LinkDesc;
+        ODIText DocumentName;
+        ODIText HostName;
+};
+
+// Link Service Dialogs
+struct ODMoveCopyResult
+{
+  char*          fOldDocPathName;
+  char*          fNewDocPathName;
+  ODBoolean      FileMoved;
+  ODBoolean      FileCopied;
+};
+
+#endif // _PLATFORM_OS2_
+
+typedef ODULong ODLinkUpdateResult;
+
+
+typedef ODULong ODPasteAsMergeSetting;
+
+
+struct ODLinkInfo
+{
+        ODType                  kind;
+        ODTime                  creationTime;
+        ODTime                  changeTime;
+        ODUpdateID              change;
+        ODBoolean               autoUpdate;
+};
+
+
+// Link Dialogs
+
+struct ODPasteAsResult
+{
+        ODBoolean               pasteLinkSetting;
+        ODBoolean               autoUpdateSetting;
+        ODBoolean               mergeSetting;
+        ODTypeToken             selectedView;
+        ODType                  selectedKind;
+        ODType                  translateKind;
+        ODEditor                editor;
+};
+
+enum ODLinkInfoAction
+{
+        kODLinkInfoCancel,      /* = 0 */
+        kODLinkInfoOk,
+        kODLinkInfoBreakLink,
+        kODLinkInfoUpdateNow,
+        kODLinkInfoFindSource
+};
+
+struct ODLinkInfoResult
+{
+        ODLinkInfoAction        action;
+        ODBoolean                       autoUpdate;
+};
+
+#if defined (_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+const   ODUpdateID      kODUnknownChange = 0;
+#endif // _PLATFORM_WIN32_, _PLATFORM_UNIX_
+
+//==============================================================================
+// Constants
+//==============================================================================
+
+//==========================================
+// Registration types
+//==========================================
+
+enum OperatingSystem
+{
+  OS2,
+  AIX,
+  MAC,
+  WINDOWS
+};
+
+typedef char * ISOString;
+
+struct PartKindInfo
+{
+  ISOString partKindName;
+  string    partKindDisplayName;
+  string    filenameFilters;
+  string    filenameTypes;
+  string    categories;
+  string    categoryDisplayName;
+  string    objectID;
+};
+//========================================
+// Registration types - END
+//========================================
+
+
+
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_TYPES)
+#pragma somemittypes off
+#endif
+
+
+#endif // _PLATFORM_NT_ || _PLATFORM_WIN32_
+
+module OpenDoc_Global_Types
+{
+        const string OpenDoc_Types_Version = "1.0.";
+};
+
+#endif  // _ODTYPESM
+

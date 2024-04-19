@@ -1,0 +1,97 @@
+/* @(#)Z 1.4 com/src/include/idl/GeoTypes.idl, odcore, od96os2, odos29646d 96/11/15 15:25:40 (96/07/15 18:15:03) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#	File:		GeoTypes.idl
+//#
+//#	Contains:	xxx put contents here xxx
+//#
+//#	Written by:	xxx put writers here xxx
+//#
+//#	Copyright:	(r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <3>	 1/13/95	RR		Added ODCoordinate, instead of including
+//#									ODTypesM.idl
+//#		 <2>	  6/7/94	RR		Privatise change log
+//#		 <1>	 5/23/94	RR		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+//# For AltPoint problem
+
+#ifndef _GEOTYPES_
+#define _GEOTYPES_
+
+#if defined(__SOMIDL__) && defined(EMIT_GEOTYPES)
+#pragma somemittypes on
+#endif
+
+typedef long ODCoordinate;	// Graphics coordinates; 16.16 fixed by default
+
+
+struct ODPoint {                  
+  ODCoordinate x, y;                // Identical to "gxPoint" in QD GX.
+};
+
+// ODRect struct. We conditionalize this with a symbol, like the header files, to allow
+// alternate definitions to be included first; they can then #define _RECT_ to keep this one
+// from being defined here.
+
+// Identical to "gxRect" in QD GX.
+struct ODRect {
+  ODCoordinate left;
+  ODCoordinate top;
+  ODCoordinate right;
+  ODCoordinate bottom;
+};
+
+struct ODToolSpaceRect {
+  ODCoordinate left;
+  ODCoordinate top;
+  ODCoordinate right;
+  ODCoordinate bottom;
+  ODRect       floatRect;
+};
+
+#if defined(__SOMIDL__) && defined(EMIT_GEOTYPES)
+#pragma somemittypes off
+#endif
+
+module OpenDoc_GeoTypes 
+{
+	const string OpenDoc_GeoTypes_Version = "1.0.";
+};
+
+#endif //# _GEOTYPES_
+

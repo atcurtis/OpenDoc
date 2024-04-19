@@ -1,0 +1,199 @@
+/* @(#)Z 1.6 com/src/imaging/idl/CanvasB.idl, odimaging, od96os2, odos29646d 96/11/15 15:25:06 (96/10/29 09:25:48) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//#          3/13/96 jab  Eliminated double underscores from        */
+//#                       function prefix.                          */
+//#          2/22/96 jab  Merge DR4 and OS/2 Feb. 13 drop.          */
+//#  122943  5/21/95 map  Method name changes for multi-threading   */
+//#  120349  5/15/95 map  Fix problem with //# comment on #endifs   */
+//#  120349  5/15/95 map  Fix up IDL copyright                      */
+//#******************************************************************/
+//#
+//#	File:		CanvasB.idl
+//#
+//#	Contains:	ODBaseCanvas, an abstract drawing environment
+//#
+//#	Owned by:	Jens Alfke
+//#
+//#	Copyright:	(r) 1994-95 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <9>	  9/8/95	jpa		IDL cleanup [1281687]
+//#		 <8>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <7>	  6/1/95	jpa		Removed CheckUpdateShape [1232306]
+//#		 <6>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		 <5>	 3/22/95	jpa		Use new ODPlatformPrintJob type. [1230236]
+//#		 <4>	 12/5/94	jpa		Code review fixes. [1203923]
+//#		 <3>	 8/17/94	jpa		Added "functionprefix" directive. [1181512]
+//#		 <2>	  8/8/94	jpa		API changes for multiformat canvases & bias
+//#									transforms [1179683, 1178688]
+//#		 <1>	  6/8/94	jpa		first checked in
+//#		 <3>	  6/7/94	RR		Privatize change history
+//#		 <2>	 5/26/94	jpa		Tweaked IDL.
+//#
+//#	To Do:
+//# In Progress:
+//#		
+//#
+#else
+//#	Copyright:	(r) 1993-1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CANVASB_
+#define _CANVASB_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"      
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODBaseCanvas;
+
+//==============================================================================
+// Classes used in this interface
+//==============================================================================
+
+interface  ODPart;
+interface  ODFacet;
+interface  ODShape;
+interface  ODTransform;
+
+//==============================================================================
+// ODCanvas
+//==============================================================================
+
+interface ODBaseCanvas :  ODObject
+{
+	ODBoolean			HasPlatformCanvas( in ODGraphicsSystem g );
+	ODPlatformCanvas	GetPlatformCanvas( in ODGraphicsSystem g );
+	void				SetPlatformCanvas( in ODGraphicsSystem g, in ODPlatformCanvas c );
+	
+	ODBoolean			HasPlatformPrintJob( in ODGraphicsSystem g );
+	ODPlatformPrintJob	GetPlatformPrintJob( in ODGraphicsSystem g );
+	void				SetPlatformPrintJob( in ODGraphicsSystem g, in ODPlatformPrintJob j );
+	
+	ODPart				AcquireOwner( );
+	void				SetOwner( in ODPart owner);
+	
+	ODFacet				GetFacet( );
+	void				SetFacet( in ODFacet facet);
+	
+	ODTransform			AcquireBiasTransform( );
+	void				SetBiasTransform( in ODTransform x );
+	
+	ODBoolean			IsDynamic( );
+	ODBoolean			IsOffscreen( );
+	
+	ODShape				AcquireUpdateShape( );
+	void				ResetUpdateShape( );
+	
+	void				Invalidate( in ODShape shape);
+	void				Validate( in ODShape shape);
+
+#ifdef __PRIVATE__
+	//# Private to implementation
+	void				ComputeBiasTransform( );
+	void				InitBaseCanvas(in ODBoolean isDynamic, in ODBoolean isOffscreen);
+#endif
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		override:
+			somUninit;
+		
+		releaseorder:
+			HasPlatformCanvas,
+			GetPlatformCanvas,
+			SetPlatformCanvas,
+			HasPlatformPrintJob,
+			GetPlatformPrintJob,
+			SetPlatformPrintJob,
+			AcquireOwner,
+			SetOwner,
+			GetFacet,
+			SetFacet,
+			IsDynamic,
+			IsOffscreen,
+			AcquireUpdateShape,
+			ResetUpdateShape,
+			AcquireBiasTransform,
+			SetBiasTransform,
+			Invalidate,
+			Validate,
+		#ifdef __PRIVATE__
+			InitBaseCanvas,
+			ComputeBiasTransform;
+		#else
+			reserved1,
+			reserved2;
+		#endif
+		
+		majorversion = 1; minorversion = 0;
+		
+		functionprefix = ODBaseCanvas;
+		
+		#ifdef __PRIVATE__
+			ODPart				fOwner;
+			ODFacet				fFacet;
+			ODShape				fUpdateShape;
+			ODTransform			fBiasTransform;
+			ODBoolean			fIsDynamic; 	
+			ODBoolean			fIsOffscreen;
+			ODGraphicsSystem	fPrintJobGraphicsSystem;
+			ODPlatformPrintJob	fPlatformPrintJob;
+		#endif
+	};
+#endif
+};
+
+#endif //# _CANVASB_
+
+
+

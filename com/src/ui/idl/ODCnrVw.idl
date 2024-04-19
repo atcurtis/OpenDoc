@@ -1,0 +1,196 @@
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/* @(#) 1.4 com/src/ui/idl/ODCnrVw.idl, odui, od96os2, odos29646d 10/31/96 12:45:58 [11/15/96 15:29:40] */
+#ifdef __PRIVATE__
+//#
+//#     File:           ODCnrVw.idl
+//#
+//#     Contains:       IDL description of ODCnrVw
+//#
+//#     Written by:     Craig M Batch
+//#
+//#     Change History (most recent first):
+//#
+//#              <2>    06/03/95   st  124328  header/class def changes
+//#              <1>      5/95     st          first checked in by John Varga
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (c) 1993-1995 by IBM Corp., all rights reserved.
+#endif
+
+#ifndef _ODCNRVW_
+#define _ODCNRVW_
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+//#ifndef _EXTENSN_
+//#include "Extensn.idl"
+//#endif
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+#ifndef _PART_
+#include "part.idl"
+#endif
+
+#ifndef _ODVIEWEXT_
+#include "odviewex.idl"
+#endif
+
+#ifdef _PLATFORM_OS2_
+   typedef somToken ODINFO;
+   typedef ODINFO  *PODINFO;
+#endif
+
+#if defined(_PLATFORM_WIN32_) && defined(PORTING_HACK)
+   typedef somToken ODINFO;
+   typedef ODINFO  *PODINFO;
+   typedef somToken HWND;
+#endif //# _PLATFORM_WIN32_
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+*/
+
+//=====================================================================================
+// Constants
+//=====================================================================================
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+#ifdef __PRIVATE__
+interface  ODCnrView;
+
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+typedef unsigned long HMODULE;
+
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+interface ODViewExtension;
+
+//==============================================================================
+// ODCnrView
+// changed call CnrDisplayView to return a Boolean  defect 129740
+//==============================================================================
+
+interface ODCnrView : ODObject
+{
+   void        InitCnrView(             in ODViewExtension  ViewExtobject     );
+   ODBoolean   CnrDisplayView(          in ODPart           rootpart,
+                                        in ODULong          ulViewType,
+                                        in ODULong          ulNumberofColumns );
+   ODBoolean   InitContainerRecords(    in HWND             hwndCnr,
+                                        in PODINFO          pInfoRec,
+                                        in ODULong          ulNumberofColumns );
+   ODBoolean   CnrRetrievePartAttributes(  in ODPart           part,
+                                        in PODINFO          pPartInfo         );
+   ODBoolean   SaveWindowAttributes(    in ODPart           rootpart,
+                                        in HWND             hwndCnr,
+                                        in ODULong          ulViewType        );
+   ODBoolean   RestoreWindowAttributes( in ODPart           rootpart,
+                                        in HWND             hwndCnr,
+                                        in ODULong          ulViewType        );
+   void        CnrTerminateView(                                              );
+   void        Nullhwnd(                in HWND             hwnd              );
+   ODBoolean   ApplyWindowAttributes(    in void *pWindowAttrs,
+                                        in ODULong ulViewType, in ODBoolean bInvalidate);
+
+#ifdef __PRIVATE__
+
+   void        IterateAndLoadInfoTree(  in ODPart           CurrentPart,
+                                        in PODINFO          CurrentPartInfo);
+
+   void        LoadPMViewWithAddCols (in ODPart rootPart, out ODINFO pCurrentInfo,
+                 in ODULong ulNumberofColumns, in HWND hCnrWnd);
+
+   void        GetMoreDataFromPart (in ODViewExtension vx, in ODStorageUnit su,
+                 in ODULong numCols, out void * ppData,  out ODULong len);
+
+   void        FreeRecordContents();
+
+#endif // __PRIVATE
+
+   #ifdef __SOMIDL__
+     implementation
+     {
+         functionprefix = ODCnrView;
+
+         override:
+            somInit,
+            somUninit;
+
+         releaseorder:
+            InitCnrView,
+            CnrDisplayView,
+            InitContainerRecords,
+            CnrRetrievePartAttributes,
+            SaveWindowAttributes,
+            RestoreWindowAttributes,
+            CnrTerminateView,
+            Nullhwnd,
+            ApplyWindowAttributes,
+
+#ifdef __PRIVATE__
+            IterateAndLoadInfoTree,
+            LoadPMViewWithAddCols,
+            GetMoreDataFromPart,
+            FreeRecordContents;
+#else
+           reserved1,
+           reserved2,
+           reserved3,
+           reserved4;
+#endif // __PRIVATE
+
+            HWND                hFrameWnd;
+            HWND                hCnrWnd;
+            ODViewExtension     Parent;
+            void * ViewProps;
+            HMODULE hmod;
+            HWND                hPopupWnd;
+      };
+   #endif
+
+
+}; // End ODCnrView
+#endif // __PRIVATE__ ODCnrView Class
+#endif

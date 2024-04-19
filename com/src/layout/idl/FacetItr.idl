@@ -1,0 +1,138 @@
+/* @(#)Z 1.4 com/src/layout/idl/FacetItr.idl, odlayout, od96os2, odos29646d 96/11/15 15:25:31 (96/07/15 18:32:39) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odlayout
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#    File:       FacetItr.idl
+//#
+//#    Contains:   SOM class definition for ODFacetIterator
+//#
+//#    Owned by:   Joshua Susser
+//#
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#    Change History (most recent first):
+//#
+//#         <3>     8/18/95    JBS     1275241 IDL Review
+//#         <2>      8/3/95    RR      #1257260: Collapse B classes. Remove
+//#                                    somInit methods. Don't call IsInitialized
+//#                                    or SubclassResponsibility
+//#         <1>     6/22/94    JBS     first checked in
+//#         <0>      6/21/94   JBS     copy and change from FrFaItr.idl
+//#
+//#    To Do:
+//#
+#else
+//#    Copyright:  (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _FACETITR_
+#define _FACETITR_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//==============================================================================
+// Classes defined by this interface
+//==============================================================================
+
+interface ODFacetIterator;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODFacet;
+
+#ifdef __PRIVATE__
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken NodeTraverser;
+#endif
+
+//==============================================================================
+// ODFacetIterator
+//==============================================================================
+
+interface ODFacetIterator : ODObject
+{
+   ODFacet First();
+
+   ODFacet Next();
+
+   void SkipChildren();
+
+   ODBoolean IsNotComplete();
+
+//# Private to implementation
+
+#ifdef __PRIVATE__
+   void InitFacetIterator(in ODFacet facet,
+                              in ODTraversalType traversalType,
+                          in ODSiblingOrder siblingOrder);
+#endif
+
+#ifdef __SOMIDL__
+   implementation
+   {
+       majorversion = 1; minorversion = 0;
+
+       functionprefix = ODFacetIterator;
+
+       override:
+           somUninit;
+
+       releaseorder:
+           First,
+           Next,
+           SkipChildren,
+           IsNotComplete,
+       #ifdef __PRIVATE__
+           InitFacetIterator;
+       #else
+           reserved1;
+       #endif
+
+       #ifdef __PRIVATE__
+           passthru C_xih = 
+           ""
+           "class NodeTraverser;"
+           "";
+
+           ODFacet fFacet;
+           ODTraversalType fTraversalType;
+           ODSiblingOrder fSiblingOrder;
+           NodeTraverser* fNodeTraverser;
+       #endif
+   };
+#endif
+};
+
+#endif //# _FACETITR_

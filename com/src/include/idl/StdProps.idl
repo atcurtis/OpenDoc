@@ -1,0 +1,282 @@
+/* @(#)Z 1.11 com/src/include/idl/StdProps.idl, odcore, od96os2, odos29646d 96/11/15 15:25:48 (96/10/29 09:28:11) */
+
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#     File:           StdProps.idl
+//#
+//#     Contains:       Standard properties for OpenDoc meta-data
+//#
+//#     Owned by:       Tantek eelik
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <35>    10/17/95        jpa             1293659: Added page-setup property.
+//#             <34>     10/5/95        CC              1288919: Added kODPropCloneKindUsed.
+//#             <33>     9/14/95        EL              1238410: OpenDoc should use CILabs ISO
+//#                                                                     String Prefix
+//#             <32>     8/24/95        EL              1276818: Move private Bento container suite
+//#                                                                      property to BentoDef.h
+//#             <31>     8/13/95        Te              Entered bug # for 5-$ comments.
+//#             <30>     6/12/95        CC              1255414: Added kODPropContentKindsUsed.
+//#             <29>     6/10/95        VL              1255300: kODPropSuggestedFrameShape
+//#                                                                     (previously kODPropFrameShape) is added for
+//#                                                                     data-interchange.
+//#             <28>      6/7/95        CC              1242442: Removed kODPropExportedLinks and
+//#                                                                     kODPropImportedLinkSources.
+//#             <27>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <26>     5/10/95        eeh             1215536: add kODPropDraftSavedDate
+//#             <25>      5/3/95        Te              1246188 BB: Need Standard Annotation
+//#                                                                     Property Prefix, 1246187 BB: Need Standard
+//#                                                                     OD Metadata Property Prefix, 1246190 BB:
+//#                                                                     Standard props incorrectly still has
+//#                                                                     PartsBin and EmbeddedFrames properties
+//#             <24>      5/2/95        VL              1230577:
+//#             <23>     3/22/95        RR              #1227993 AddedODPropWindowProperties
+//#                                                                     WindowList became kODPropRootFrameList
+//#             <22>     2/20/95        Te              #1221861 BB: Incomplete AOCE support needs
+//#                                                                     to be removed from OpenDoc
+//#             <21>     2/16/95        Te              #1210979 5-$ Bugs need to be evaluated.
+//#                                                                     Moved a couple of standard properties to
+//#                                                                     the correct locations.
+//#                                                                     Noted a few obsolete properties.
+//#             <20>     1/25/95        CC              1206295 Removed kODPropUsedShape.
+//#                                                                     1213925 Added kODPropPreferredKind.
+//#             <19>     1/18/95        VL              1193559: Added kODPropObjectType.
+//#             <18>    12/22/94        CC              1153780 StdProps.idl - Added
+//#                                                                     kODPropReservedSectionIDs.
+//#             <17>    11/30/94        RR              Made change history __PRIVATE__
+//#             <16>     11/1/94        CC              1190911 - Removed kODPropContentIsFrame;
+//#                                                                     added kODPropContentFrame.
+//#             <15>     10/7/94        CC              1160232 - Added kODPropChangeLimit.
+//#             <14>     10/4/94        CC              1190068 - Added kODPropExportedLinks and
+//#                                                                     kODPropImportedLinkSources.
+//#             <13>     9/29/94        JBS             1188214: added kODPropBiasTransform
+//#             <12>     9/22/94        eeh             #1154961: add kODPropWindowMailerIsExpanded
+//#             <11>      9/6/94        CC              1153777 - Added kODPropLinkStatus property.
+//#             <10>     8/18/94        Te              #1181622 Set Owned By: field
+//#              <9>     8/12/94        CC              1180600 - Added kODPropContentIsFrame.
+//#              <8>     8/10/94        CC              1179944 - Added kODPropProxyContent,
+//#                                                                     removed kODPropStandInFrame.
+//#              <7>      7/5/94        JBS             finished updating Frame props
+//#              <6>     6/30/94        jpa             Updated Frame properties for the
+//#                                                                     vacationing Joshua.
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _STDPROPS_
+#define _STDPROPS_
+
+#ifndef _ODTYPESB_
+#include "ODTypesB.idl"
+#endif
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+  This file is used to store all the standard properties.
+*/
+
+//==============================================================================
+// Constants
+//==============================================================================
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes on
+#endif
+
+//# Prefixes
+
+const  ODPropertyName kODPropPreODMetaData      = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:";
+const  ODPropertyName kODPropPreAnnotation      = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Annotation:";
+
+//# Persistent Object
+
+const  ODPropertyName kODPropName               = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Name";
+const  ODPropertyName kODPropComments       = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Comments";
+const  ODPropertyName kODPropCreateDate     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:CreationDate";
+const  ODPropertyName kODPropModDate        = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ModifiedDate";
+const  ODPropertyName kODPropModUser        = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ModifiedUser";
+const  ODPropertyName kODPropObjectType         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ObjectType";
+
+const  ODPropertyName kODPropStorageUnitType= "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:StorageUnitType";
+
+//# Part
+
+const  ODPropertyName kODPropContents                   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:Contents";
+const  ODPropertyName kODPropIsStationery               = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:IsStationery";
+const  ODPropertyName kODPropPreferredEditor    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:PreferredEditor";
+const  ODPropertyName kODPropPreferredKind              = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:PreferredKind";
+const  ODPropertyName kODPropDisplayFrames      = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Annotation:DisplayFrames";
+const  ODPropertyName kODPropCustomIcon                 = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:CustomIcon";
+const  ODPropertyName kODPropEmbeddedFrames = "OpenDoc:Property:EmbeddedFrames";
+
+
+//# Frame
+
+const  ODPropertyName kODPropContainingFrame            = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ContainingFrame";
+const  ODPropertyName kODPropGraphicsSystem                     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:GraphicsSystem";
+const  ODPropertyName kODPropFrameShape                         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:FrameShape";
+const  ODPropertyName kODPropInternalTransform          = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:InternalTransform";
+const  ODPropertyName kODPropBiasTransform                      = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:BiasTransform";
+const  ODPropertyName kODPropPart                                       = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Part";
+const  ODPropertyName kODPropPartInfo                           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:PartInfo";
+const  ODPropertyName kODPropViewType                           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ViewType";
+const  ODPropertyName kODPropPresentation                       = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Presentation";
+const  ODPropertyName kODPropFrameGroup                         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:FrameGroup";
+const  ODPropertyName kODPropSequenceNumber                     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:SequenceNumber";
+const  ODPropertyName kODPropIsRoot                                     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:IsRoot";
+const  ODPropertyName kODPropIsSubframe                         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:IsSubFrame";
+const  ODPropertyName kODPropIsOverlaid                         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:IsOverlaid";
+const  ODPropertyName kODPropIsFrozen                           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:IsFrozen";
+const  ODPropertyName kODPropDoesPropagateEvents        = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:DoesPropagateEvents";
+const  ODPropertyName kODPropLinkStatus                         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:LinkStatus";
+
+const  ODPropertyName kODPropWindowProperties           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowProperties";
+
+
+//# Link
+
+const  ODPropertyName kODPropLink                               = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Link";
+const  ODPropertyName kODPropLinkSource                 = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:LinkSource";
+const  ODPropertyName kODPropLinkSpec                   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:LinkSpec";
+const  ODPropertyName kODPropEmbedAsLink                = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:EmbedAsLink";
+const  ODPropertyName kODPropSourcePart                 = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:SourcePart";
+const  ODPropertyName kODPropEditionAlias               = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:EditionAlias";
+const  ODPropertyName kODPropLinkSection                = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:LinkSection";
+const  ODPropertyName kODPropLinkContentSU              = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:LinkContentSU";
+const  ODPropertyName kODPropAutoUpdate                 = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:AutoUpdate";
+const  ODPropertyName kODPropUpdateID                   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:UpdateID";
+const  ODPropertyName kODPropChangeLimit                = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ChangeLimit";
+const  ODPropertyName kODPropChangeTime                 = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ChangeTime";
+const  ODPropertyName kODPropContentKindsUsed   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ContentKindsUsed";
+const  ODPropertyName kODPropOriginalID                 = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:OriginalID";
+const  ODPropertyName kODPropOriginalDraft              = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:OriginalDraft";
+const  ODPropertyName kODPropOriginalCloneKind  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:OriginalCloneKind";
+const  ODPropertyName kODPropReservedSectionIDs = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ReservedSectionIDs";
+
+
+//# Window
+
+const  ODPropertyName kODPropWindow             = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Window";
+const  ODPropertyName kODPropWindowRect         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowRect";
+const  ODPropertyName kODPropWindowTitle        = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowTitle";
+const  ODPropertyName kODPropWindowProcID       = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowProcID";
+const  ODPropertyName kODPropWindowIsVisible    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowVisible";
+const  ODPropertyName kODPropWindowHasCloseBox  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowHasCloseBox";
+const  ODPropertyName kODPropWindowHasZoomBox   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowHasZoomBox";
+const  ODPropertyName kODPropWindowIsResizable  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowIsResizable";
+const  ODPropertyName kODPropWindowIsRootWindow = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowIsRootWindow";
+const  ODPropertyName kODPropWindowIsFloating   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowIsFloating";
+const  ODPropertyName kODPropWindowRefCon       = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:WindowRefCon";
+const  ODPropertyName kODPropRootFrame          = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:RootFrame";
+const  ODPropertyName kODPropSourceFrame        = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:SourceFrame";
+const  ODPropertyName kODPropShouldShowLinks    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:ShouldShowLinks";
+#ifdef _PLATFORM_WIN32_
+const  ODPropertyName kODPropWindowCreateFlags  = "+//ISO 9070/ANSI::113722::US::CI LABS::WIN32:Property:WindowCreateFlags";
+const  ODPropertyName kODPropWindowSwpFlags     = "+//ISO 9070/ANSI::113722::US::CI LABS::WIN32:Property:WindowSwpFlags";
+#endif
+#ifdef _PLATFORM_OS2_
+const  ODPropertyName kODPropWindowCreateFlags  = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Property:WindowCreateFlags";
+const  ODPropertyName kODPropWindowSwpFlags     = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Property:WindowSwpFlags";
+const  ODPropertyName kODPropIconFamily      = "+//ISO 9070/ANSI::113722::US::CI LABS::OS2:Property:IconFamily";
+#endif
+
+
+//# Draft
+const  ODPropertyName kODPropRootPartSU         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:Draft:RootPartStorageUnit";
+        //# Draft History
+const ODPropertyName  kODPropDraftNumber        = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Draft:Number";
+const ODPropertyName  kODPropDraftComment       = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Draft:Comment";
+        //# Link Manager
+const  ODPropertyName kODPropEditionID          = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Draft:EditionID";
+const  ODPropertyName kODPropSectionID          = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:Draft:SectionID";
+        //# WindowState
+const  ODPropertyName kODPropRootFrameList      = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:RootFrameList";
+const  ODPropertyName kODPropDraftSavedDate     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Metadata:DraftSavedDate";
+
+
+//# Data Interchange
+
+const ODPropertyName  kODPropProxyContents              = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:ProxyContents";
+const ODPropertyName  kODPropContentFrame               = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:ContentFrame";
+const ODPropertyName  kODPropSuggestedFrameShape = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:SuggestedFrameShape";
+const ODPropertyName  kODPropCloneKindUsed              = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:CloneKindUsed";
+
+//#  property in Storage Unit that contains Attached Script information
+const ODPropertyName  kODPropAttachedScriptType = "+//ISO 9070/ANSI::113722::US::IBM::OpenDoc:Property:AttachedScript";
+
+#ifdef _PLATFORM_WIN32_
+
+const  ODPropertyName kODPropLinkItem                   = "OpenDoc:Property:LinkItem";                  //OLE2
+const  ODPropertyName kODPropMonikerFull            = "OpenDoc:Property:FullMoniker";           //OLE2
+const  ODPropertyName kODPropMonikerRelative    = "OpenDoc:Property:RelativeMoniker";   //OLE2
+
+#endif
+
+
+//# Ole Control Ambient Properties
+
+#ifdef _PLATFORM_WIN32_
+
+const  ODPropertyName kODDefPropBgndColor     = "OpenDoc:Property:Default:BgndColor";   //OLE2
+const  ODPropertyName kODDefPropFgndColor     = "OpenDoc:Property:Default:FgndColor";   //OLE2
+const  ODPropertyName kODDefPropErrorCaption  = "OpenDoc:Property:Default:ErrorCaption";//OLE2
+const  ODPropertyName kODDefPropFont              = "OpenDoc:Property:Default:Font";            //OLE2
+const  ODPropertyName kODDefPropDesignMode        = "OpenDoc:Property:Default:DesignMode";      //OLE2
+
+#endif
+
+
+//# Drag&Drop
+
+const ODPropertyName  kODPropMouseDownOffset    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:MouseDownOffset";
+
+
+//# Printing
+const ODPropertyName  kODPropPageSetup                  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Property:PageSetup";
+
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes off
+#endif
+
+module OpenDoc_StdProps
+{
+        const string OpenDoc_StdProps_Version = "1.0.";
+};
+
+#endif  // _STDPROPS_

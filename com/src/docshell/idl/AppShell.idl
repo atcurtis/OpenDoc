@@ -1,0 +1,151 @@
+/* @(#)Z 1.23 com/src/docshell/idl/AppShell.idl, odshell, od96os2, odos29646d 96/11/15 15:49:30 (96/10/29 09:24:27) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odshell
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+
+#ifndef _APPSHELLSHELL_
+#define _APPSHELLSHELL_
+
+#include <somobj.idl>
+#include "ODShell.idl"
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface   ApplicationShell;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface   DocumentManager;
+
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+
+//==============================================================================
+// ApplicationShell
+//==============================================================================
+
+interface ApplicationShell :  OpenDocShell
+{
+    ODSLong 	Go(in long argc, in char **argv);
+    void 	ProcessArgs(in long argc, in char **argv, in char *fileName,
+                            in char *partKind, out ODUShort actionFlag);
+    ODBoolean 	OpenDocument(in DocumentManager docMgr, in char *fileName, 
+		             in char *partKind, in ODUShort actionFlag);
+    void 	CreateMenuBar();
+    void 	InitWindowSystem();
+    void 	Exec(in char *str);
+    ODSLong 	MainLoop();
+    void 	DocumentNew();
+    void 	DocumentOpen();
+    void 	DocumentSave();
+    void 	DocumentSaveAs();
+    void 	DocumentRevert();
+    void 	DocumentDraftCreate();
+    void 	DocumentDraftHistory();
+    void 	DocumentInfo();
+    void 	DocumentPageSetup(in ODEventData* event);
+    void 	DocumentPrint(in ODEventData* event);
+    void 	DocumentClose();
+    void 	DocumentAbout();
+    void 	UpdateUndoMenus();
+    void 	SendEventToRootPart(in ODEventData* event);
+    void 	CloseCleanup();
+    void 	SetExecString(in char *execString);
+    char* 	GetExecString();
+    ODBoolean   IsValidFileName(in char *docName);
+    ODBoolean	HandleMenuEvent(in ODEventData *event);
+    ODBoolean	HandleCloseEvent(in ODEventData *event);
+    ODBoolean	HandleHelpEvent(in ODEventData *event);
+    void	AdjustMenu();
+    ODULong	GetEventType(in ODEventData *event);
+    ODULong	GetEventSubType(in ODEventData *event);
+    ODPlatformWindow GetEventWindow(in ODEventData *event);
+
+
+#ifdef __SOMIDL__
+    implementation
+    {
+        majorversion = 1; minorversion = 0;
+
+        functionprefix = ApplicationShell;
+
+	override:
+	    DispatchEvent;
+	    
+        releaseorder:
+            Go,
+            ProcessArgs,
+            OpenDocument,
+            CreateMenuBar,
+            InitWindowSystem,
+	    Exec,
+            MainLoop,
+            DocumentNew,
+            DocumentOpen,
+            DocumentSave,
+            DocumentSaveAs,
+            DocumentRevert,
+            DocumentDraftCreate,
+            DocumentDraftHistory,
+            DocumentInfo,
+            DocumentPageSetup,
+            DocumentPrint,
+            DocumentClose,
+            DocumentAbout,
+    	    UpdateUndoMenus,
+            SendEventToRootPart,
+            CloseCleanup,
+            SetExecString,
+            GetExecString,
+            IsValidFileName,
+            HandleMenuEvent,
+            HandleCloseEvent,
+            HandleHelpEvent,
+            AdjustMenu,
+            GetEventType,
+            GetEventSubType,
+            GetEventWindow;
+
+        #ifdef __PRIVATE__
+	    char	fExecString[256];
+        #endif
+  };
+#endif
+};
+
+
+#endif // _APPSHELLSHELL_

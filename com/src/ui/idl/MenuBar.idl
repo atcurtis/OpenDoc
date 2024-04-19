@@ -1,0 +1,643 @@
+/* @(#)Z 1.19 com/src/ui/idl/MenuBar.idl, odui, od96os2, odos29646d 96/11/15 15:28:37 (96/09/24 17:13:00) */
+//====START_GENERATED_PROLOG======================================
+//
+//
+//   COMPONENT_NAME: odui
+//
+//   CLASSES: none
+//
+//   ORIGINS: 82,27
+//
+//
+//   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//   All Rights Reserved
+//   Licensed Materials - Property of IBM
+//   US Government Users Restricted Rights - Use, duplication or
+//   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//   	
+//   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//   OR PERFORMANCE OF THIS SOFTWARE.
+//
+//====END_GENERATED_PROLOG========================================
+//
+#ifdef __PRIVATE__
+//
+//     File:           MenuBar.idl
+//
+//     Contains:       Class definition for ODMenuBar
+//
+//     Owned by:       Richard Rodseth
+//
+//     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//
+//  IBM Change History (most recent first):
+//
+//     23056 06/14/96 brr  Added SetupCopy/CountSubMenus private methods for OS/2 and WIN
+//     22475 06/05/96 brr  Basically for now, make all the AIX API's the same
+//                          as those for OS/2 and NT --> this may change.
+//     22380 06/04/96 brr  Define ODSessn for AIX
+//           05/21/96 brr  Merge in AIX support
+//     21758 05/08/96 brr  Delete the following API's because not used:
+//                          SetNothingAvaulable
+//                          SetShowFrameOutline
+//                          CheckMenuBarID
+//                          AppendOLEMenuToODMenuBar
+//                          InitSelectedMenuBar
+//                          CopySelectedMenu
+//                          AddSelectedMenu
+//                          RestoreSelectedMenu
+//                          AddSelectedToAccelTable
+//                          AddSelAccels
+//            5/07/96 brr  Add AddMenuBeforeEx and AddMenuLastEx and InsertSubmenuEx
+//            4/25/96 brr  Change id's to be ODMenuItemID instead of ODULong
+//     21316  4/22/96 brr  Changed new param to InitMenuBar to be an
+//                          address to an array of submenu ID's rather
+//                          than the menuID we had tried to do with
+//                          defect #21263
+//     21263  4/19/96 brr  Added SetAccelTable function and modified InitMenuBar
+//            4/16/96 brr  Adding support for menuIDmap
+//            3/28/96 brr  Added ODMenuBarGetSystemMenus and
+//                               ODMenuBarGetAccelTable in private section
+//                         Changed HACCEL types to ODPlatformAccelTable types
+//     20109  2/28/96 brr  Added _PLATFORM_WIN32_ to everything that was _OS2_ specific
+//
+//    146581 12/10/95 map  IDL validation
+//    <11>   10/31/95 sesh  142206 Added a private method for OLE Interoperability
+//    <10>    8/28/95 pfe   133968 port of DR3 Apple code
+//     <9>    8/13/95 SESH  132522 changed passthru C_xh to passthru C_xh_after to avoid compile
+//                                 errors when making OPENDOC Stub DLL for OLE Interoperability.
+//     <8>    7/19/95 BLG   130083 added pass-thru struct for linked list of statusline text
+//                                 and ptr Head for start of linked list.
+//     <7>    7/08/95 st    128688 added 2 methods for status line text
+//     <6>    6/14/95 st    122278 implement more menu function
+//     <5>    6/10/95 st    124594 remove SetNothingSelected
+//     <4>    6/03/95 st    124074 return string length for GetMenuItemText
+//     <3>    5/26/95 ST           move RemoveMenuItem to menubar class
+//     <2>    3/25/95 ST           re-coded under new design
+//    <OS2>   8/27/94 MAP          Port A8C3
+//     <1>    ?/?/94  JLC          first checked in
+//
+//     Change History (most recent first):
+//
+//             <10>     8/15/95        RR              #1275241 IDL Review
+//              <9>      8/3/95        RR              #1257260: Collapse B classes.
+//                                                                     Remove somInit methods.
+//                                                                     Don't call IsInitialized
+//                                                                     or SubclassResponsibility
+//              <8>      6/8/95        RR              #1257260 Collapse base classes. #1214898
+//                                                                     StdTypes.r -> ODTypes.r
+//              <7>     5/10/95        RR              #1246623 GetMenuAndItem parameters are out,
+//                                                                     not inout
+//              <6>     1/23/95        RR              # 1212896 Added EnableAll and DisableAll
+//              <5>     8/25/94        RR              Added fGeneration. Override IsValid
+//              <4>     8/15/94        CG              #1181023:  Add IsValid to the API.
+//              <3>     6/23/94        RR              Added private SetCommandTable
+//              <2>     6/14/94        RR              Added functionprefix
+//              <1>      6/8/94        RR              first checked in
+//              <5>      6/7/94        RR              Privatise change log
+//              <1>      5/9/94        VL              first checked in
+//
+//     To Do:
+//
+#else
+//     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif // __PRIVATE__
+
+#ifndef _MENUBAR_
+#define _MENUBAR_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"
+#endif
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+
+#ifndef _ODTYPESM_
+#include "odtypesm.idl"
+#endif
+
+#endif // PLATFORM_OS2, PLATFORM_WIN32, PLATFORM_AIX
+
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODMenuBar;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODPart;
+
+#ifdef __PRIVATE__
+interface  ODSession;
+#endif // __PRIVATE__
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+#ifdef _PLATFORM_MACINTOSH_
+typedef somToken OrderedCollection;
+typedef somToken CommandTable;
+#endif // _PLATFORM_MACINTOSH_
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+typedef unsigned long HMODULE;
+#endif // PLATFORM_OS2, PLATFORM_WIN32
+
+#if defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+typedef somToken OrderedCollection;
+#endif // PLATFORM_WIN32, PLATFORM_OS2, PLATFORM_AIX
+
+#ifdef _PLATFORM_OS2_
+interface ODOS2MenuAdapter;
+#endif
+
+#ifdef _PLATFORM_WIN32_
+interface ODWinMenuAdapter;
+#endif
+
+#ifdef _PLATFORM_AIX_
+interface ODX11MenuAdapter;
+#endif
+
+#endif // __PRIVATE__
+
+//=====================================================================================
+// Class ODMenuBar
+//=====================================================================================
+
+interface ODMenuBar :  ODRefCntObject
+{
+	//-----------------------------------------------------------------------------
+	// Public methods for all platforms
+	//-----------------------------------------------------------------------------
+
+	void Display			();
+
+	ODMenuBar Copy			();
+
+	void AddMenuLast		(in ODMenuID menuID,
+					 in ODPlatformMenu menu,
+					 in ODPart part);
+
+	void AddMenuBefore		(in ODMenuID menuID,
+					 in ODPlatformMenu menu,
+					 in ODPart part,
+					 in ODMenuID beforeID);
+
+	void RemoveMenu			(in ODMenuID menu);
+
+	ODPlatformMenu GetMenu		(in ODMenuID menu);
+
+	ODBoolean IsValid		();
+
+#ifdef _PLATFORM_MACINTOSH_
+	//-----------------------------------------------------------------------------
+	// Public methods for Macintosh only
+	//-----------------------------------------------------------------------------
+
+	void AddSubMenu			(in ODMenuID menuID,
+					 in ODPlatformMenu menu,
+					 in ODPart part);
+
+	void RegisterCommand		(in ODCommandID command,
+					 in ODMenuID menu,
+					 in ODMenuItemID menuItem);
+
+	void UnregisterCommand		(in ODCommandID command);
+
+	void UnregisterAll		();
+
+	ODBoolean IsCommandRegistered	(in ODCommandID command);
+
+	ODBoolean IsCommandSynthetic	(in ODCommandID command);
+
+	ODCommandID GetCommand		(in ODMenuID menu,
+					 in ODMenuItemID menuItem);
+
+	void GetMenuAndItem		(in ODCommandID command,
+					 out ODMenuID menu,
+					 out ODMenuItemID menuItem);
+
+	void EnableCommand		(in ODCommandID cmdNumber,
+					 in ODBoolean enable);
+
+	void CheckCommand		(in ODCommandID cmdNumber,
+					 in ODBoolean check);
+
+	void EnableAndCheckCommand	(in ODCommandID cmdNumber,
+					 in ODBoolean enable,
+					 in ODBoolean check) ;
+
+	void SetItemString		(in ODCommandID cmdNumber,
+					 in ODIText itemString);
+
+	void GetItemString		(in ODCommandID cmdNumber,
+					 out ODIText itemString);
+
+	void DisableAll			();
+
+	void EnableAll			();
+
+
+    #ifdef __PRIVATE__
+	//-----------------------------------------------------------------------------
+	// Private methods for Macintosh only
+	//-----------------------------------------------------------------------------
+
+	void SetCommandTable		(in CommandTable* table);
+
+    #endif // __PRIVATE__
+
+#endif // _PLATFORM_MACINTOSH_
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+	//-----------------------------------------------------------------------------
+	// Public methods for OS/2, Windows, and AIX only
+	//-----------------------------------------------------------------------------
+
+	ODUShort  GetMenuText		(in ODMenuID menuID,
+					 out string menuString);
+
+	ODBoolean SetMenuText		(in ODMenuID menuID,
+					 in string menuString);
+
+	ODUShort  GetMenuItemText	(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID,
+					 out string menuItemString);
+
+	ODBoolean SetMenuItemText	(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID,
+					 in string menuItemString);
+
+	ODBoolean SetHideMenuItem	(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	ODBoolean SetShowMenuItem	(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	ODBoolean CheckMenuItem		(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID,
+					 in ODBoolean check);
+
+	ODBoolean EnableMenu		(in ODMenuID menuID,
+					 in ODBoolean enable);
+
+	ODBoolean EnableMenuItem	(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID,
+					 in ODBoolean enable);
+
+	ODBoolean AddMenuItemBefore	(in ODMenuID menuID,
+					 in ODMenuItemID itemID,
+					 in ODPlatformMenuItem menuItem,
+					 in ODMenuItemID beforeID);
+
+	ODBoolean AddMenuItemLast	(in ODMenuID menuID,
+					 in ODMenuItemID itemID,
+					 in ODPlatformMenuItem menuItem);
+
+	ODBoolean AddSubMenuBefore	(in ODMenuID menuID,
+					 in ODMenuItemID subMenuItemID,
+					 in ODPlatformMenu newSubMenu,
+					 in ODMenuItemID beforeID);
+
+	ODBoolean AddSubMenuLast	(in ODMenuID menuID,
+					 in ODMenuItemID subMenuItemID,
+					 in ODPlatformMenu newSubMenu);
+
+	// obsolete; remove this before GA
+	ODBoolean InsertSubmenu		(in ODMenuID menuID,
+					 in ODMenuItemID subMenuID,
+					 in ODPlatformMenu newSubmenu);
+
+	ODBoolean MenuExists		(in ODMenuID menuID);
+
+	ODBoolean IsMenuEnabled		(in ODMenuID menuID);
+
+	ODBoolean MenuItemExists	(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	// obsolete; remove this before GA
+	ODBoolean Exists		(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	ODBoolean IsItemEnabled		(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	ODBoolean IsItemChecked		(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	ODBoolean IsItemHidden		(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	ODBoolean RemoveMenuItem	(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID);
+
+	ODBoolean GetMenuItem		(in ODMenuID menuID,
+					 in ODMenuItemID menuItemID,
+					 out ODPlatformMenuItem menuItem);
+
+	ODBoolean AddToAccelTable	(in ODULong ulNumberofAccels,
+					 in ODACCEL NewAccels);
+
+	void RestoreAccelTable		();
+
+
+    #ifdef __PRIVATE__
+	//-----------------------------------------------------------------------------
+	// Private methods for OS/2, Windows, and AIX only
+	//-----------------------------------------------------------------------------
+
+	void ChangeAccelTable		();
+
+	void SetAccelTableToWindow	();
+
+      ODPlatformAccelTable GetAccelTable();
+
+	void SetAccelTable		(in ODPlatformAccelTable accelTable);
+
+	ODPlatformMenuBar GetSystemMenus();
+
+    #endif // __PRIVATE__
+
+#endif // _PLATFORM_OS2_ || _PLATFORM_WIN32_ || _PLATFORM_AIX_
+
+#ifdef _PLATFORM_WIN32_
+	//-----------------------------------------------------------------------------
+	// Public methods for Windows only
+	//-----------------------------------------------------------------------------
+	void AddMenuLastEx		(in ODMenuID menuID,
+					 in ODPlatformMenu menu,
+					 in ODPart part,
+					 in ODUShort      subMenuIDcount,
+					 in ODMenuIDInfo *subMenuIDinfo);
+
+	void AddMenuBeforeEx		(in ODMenuID menuID,
+					 in ODPlatformMenu menu,
+					 in ODPart part,
+					 in ODMenuID beforeID,
+					 in ODUShort      subMenuIDcount,
+					 in ODMenuIDInfo *subMenuIDinfo);
+
+	ODBoolean AddSubMenuBeforeEx	(in ODMenuID menuID,
+					 in ODMenuItemID subMenuItemID,
+					 in ODPlatformMenu newSubMenu,
+					 in ODMenuID beforeID,
+					 in ODUShort      subMenuIDcount,
+					 in ODMenuIDInfo *subMenuIDinfo);
+
+	ODBoolean AddSubMenuLastEx	(in ODMenuID menuID,
+					 in ODMenuItemID subMenuItemID,
+					 in ODPlatformMenu newSubMenu,
+					 in ODUShort      subMenuIDcount,
+					 in ODMenuIDInfo *subMenuIDinfo);
+
+    #ifdef __PRIVATE__
+	//-----------------------------------------------------------------------------
+	// Private methods for Windows only
+	//-----------------------------------------------------------------------------
+
+	void InitMenuBarEx		(in ODSession session,
+					 in ODPlatformMenuBar menuBar,
+					 in ODUShort      subMenuIDcount,
+					 in ODMenuIDInfo *subMenuIDinfo);
+    #endif // __PRIVATE__
+
+#endif // PLATFORM_WIN32
+
+#ifdef _PLATFORM_AIX_
+	//-----------------------------------------------------------------------------
+	// Public methods for AIX only
+	//-----------------------------------------------------------------------------
+	ODPlatformMenu CreateX11PlatformMenu	(in ODMenuID menuID);
+
+	void DestroyX11PlatformMenu		(in ODPlatformMenu menu);
+#endif // PLATFORM_AIX
+
+#ifdef __PRIVATE__
+	//-----------------------------------------------------------------------------
+	// Private methods for all platforms
+	//-----------------------------------------------------------------------------
+	void InitMenuBar		(in ODSession session,
+					 in ODPlatformMenuBar menuBar);
+
+	void SetGeneration		(in ODULong generation);
+
+	ODULong GetGeneration		();
+
+#endif // __PRIVATE__
+
+
+#ifdef __SOMIDL__
+
+	implementation
+	{
+
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODMenuBar;
+
+                override:
+
+	#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+			somInit,
+	#endif // _PLATFORM_OS2_ || _PLATFORM_WIN32_ || _PLATFORM_AIX_
+
+			somUninit,
+			Purge,
+			Release;
+
+		releaseorder:
+
+                        Display,
+                        Copy,
+                        AddMenuLast,
+                        AddMenuBefore,
+                        RemoveMenu,
+                        GetMenu,
+                        IsValid,
+
+	#ifdef _PLATFORM_MACINTOSH_
+                        AddSubMenu,
+                        RegisterCommand,
+                        UnregisterCommand,
+                        UnregisterAll,
+                        IsCommandRegistered,
+                        IsCommandSynthetic,
+                        GetCommand,
+                        GetMenuAndItem,
+                        EnableCommand,
+                        CheckCommand,
+                        EnableAndCheckCommand,
+                        SetItemString,
+                        GetItemString,
+                        DisableAll,
+                        EnableAll,
+                #ifdef __PRIVATE__
+                        SetCommandTable,
+                #else
+                        reserved1,
+                #endif // __PRIVATE__
+	#endif // _PLATFORM_MACINTOSH_
+
+    #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+			GetMenuText,
+			SetMenuText,
+			GetMenuItemText,
+			SetMenuItemText,
+			SetHideMenuItem,
+			SetShowMenuItem,
+			CheckMenuItem,
+			EnableMenu,
+			EnableMenuItem,
+			AddMenuItemBefore,
+			AddMenuItemLast,
+			InsertSubmenu,
+			AddSubMenuBefore,
+			AddSubMenuLast,
+			MenuExists,
+			IsMenuEnabled,
+			MenuItemExists,
+			Exists,
+			IsItemEnabled,
+			IsItemChecked,
+			IsItemHidden,
+			RemoveMenuItem,
+			GetMenuItem,
+			AddToAccelTable,
+			RestoreAccelTable,
+
+		#ifdef __PRIVATE__
+			ChangeAccelTable,
+			SetAccelTableToWindow,
+			GetAccelTable,
+			SetAccelTable,
+			GetSystemMenus,
+		#else
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6,
+		#endif // __PRIVATE__
+
+	#endif // _PLATFORM_OS2_ || _PLATFORM_WIN32_ || _PLATFORM_AIX
+
+	#ifdef _PLATFORM_WIN32_
+
+			AddMenuLastEx,
+			AddMenuBeforeEx,
+			AddSubMenuBeforeEx,
+			AddSubMenuLastEx,
+
+		#ifdef __PRIVATE__
+			InitMenuBarEx,
+		#else
+			reserved7,
+		#endif // __PRIVATE__
+
+	#endif // PLATFORM_WIN32
+
+	#ifdef _PLATFORM_AIX_
+			CreateX11PlatformMenu,
+			DestroyX11PlatformMenu,
+	#endif // PLATFORM_AIX
+
+	#ifdef __PRIVATE__
+			SetGeneration,
+			GetGeneration,
+			InitMenuBar;
+	#else
+			reserved8,
+			reserved9,
+			reserved10;
+	#endif // __PRIVATE__
+
+	#ifdef _PLATFORM_MACINTOSH_
+		#ifdef __PRIVATE__
+		//---------------------------------------------------------------------
+		// Macintosh private instance data
+		//---------------------------------------------------------------------
+			passthru C_xih =
+			""
+			"class OrderedCollection;"
+			"";
+
+			passthru C_xh =
+			""
+			"class CommandTable;"
+			"";
+
+			ODSession		fSession;
+			ODPlatformMenuBar	fSystemMenus;
+			OrderedCollection*	fOtherMenus;
+			CommandTable*		fCommandTable;
+			ODULong			fGeneration;
+		#endif // __PRIVATE__
+	#endif // _PLATFORM_MACINTOSH_
+
+	#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+		//---------------------------------------------------------------------
+		// OS/2, WIN32, and AIX private instance data
+		//---------------------------------------------------------------------
+		#ifdef __PRIVATE__
+			passthru C_xih =
+			""
+			"class OrderedCollection;"
+			"";
+
+			ODSession	     fSession;
+			ODULong		     fGeneration;
+			OrderedCollection*   fMenus;
+
+		    #ifdef _PLATFORM_AIX_
+			ODPlatformMenuBar    fBaseMenuBar;
+		    #else
+			ODPlatformMenuBar    fPlatMenuBar;
+		    #endif
+
+		    #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+			HMODULE              fHMOD;
+			ODBoolean            fAccelsToAdd;
+			ODACCEL              fNewAccels;
+			ODULong              fNumberofAccels;
+		    #endif // PLATFORM_OS2, PLATFORM_WIN32
+
+			ODPlatformAccelTable fDefaultAccelTable;
+			ODPlatformAccelTable fNewAccelTable;
+
+		    #ifdef _PLATFORM_OS2_
+			ODOS2MenuAdapter*    fPopupMenu;
+		    #endif
+
+		    #ifdef _PLATFORM_WIN32_
+			ODWinMenuAdapter*    fPopupMenu;
+		    #endif
+
+		    #ifdef _PLATFORM_AIX_
+			ODX11MenuAdapter*    fPopupMenu;
+		    #endif
+
+			ODBoolean	     fHelpMenuExists;
+
+		#endif // __PRIVATE__
+
+	#endif // PLATFORM_OS2, PLATFORM_WIN32, PLATFORM_AIX
+
+	};
+#endif // __SOMIDL__
+
+};
+
+#endif // _MENUBAR_
+

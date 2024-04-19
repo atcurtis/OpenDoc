@@ -1,0 +1,104 @@
+//====START_GENERATED_PROLOG======================================
+//
+//
+//   COMPONENT_NAME: odutils
+//
+//   CLASSES: none
+//
+//   ORIGINS: 82,27
+//
+//
+//   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//   All Rights Reserved
+//   Licensed Materials - Property of IBM
+//   US Government Users Restricted Rights - Use, duplication or
+//   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//   	
+//   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//   OR PERFORMANCE OF THIS SOFTWARE.
+//
+//====END_GENERATED_PROLOG========================================
+//
+// @(#) 1.4 com/src/utils/include/TempObj.th, odutils, od96os2, odos29646d 8/19/96 11:58:32 [ 11/15/96 15:29:03 ]
+/*
+#	File:		TempObj.th
+#
+#	Contains:	Internal header for use by TempObj.h
+#
+#	Owned by:	Jens Alfke
+#
+#	Copyright:	© 1995 by Apple Computer, Inc., all rights reserved.
+#
+#		
+*/
+
+// This header is a utility used by TempObj.h. Do not include it directly unless you
+// really know what you're doing -- see the Tech Note "Temporary Objects/References".
+
+#ifndef SOM_ODStorageUnitView_xh
+#include <SUView.xh>
+#endif
+
+#ifndef SOM_ODTypeList_xh
+#include <TypeList.xh>
+#endif
+
+#ifndef _T_
+#error _T_ must be defined before including a .th file
+#endif
+#ifndef _C_
+#error _C_ must be defined before including a .th file
+#endif
+
+//===========================================================================
+//	TempObj <T>
+//===========================================================================
+
+#ifdef __SC__
+// Some of the typecasts below offend certain compilers.
+#pragma options(!warn_cast_incomplete_type)
+#endif
+
+#ifdef _TMPL_IMPL_
+
+	// Implementation of the TempObj constructor:
+	WIN32_DLLEXPORT _C_::_C_( _T_ *obj )
+	{
+		fObj = (ODObject*) obj;
+	}
+	
+	WIN32_DLLEXPORT _C_::~_C_( )
+	{
+		// Prevent compiler from inlining synthesized destructor
+		// which causes code bloat.
+	}
+
+#else
+
+	// Declaration of the TempObj class
+	class _C_ :public BaseTempObj
+	{
+		public:
+		_DLLIMPORTEXPORT_ _C_( _T_* );
+		_DLLIMPORTEXPORT_ virtual ~_C_( );
+		_T_* operator-> ()			{return (_T_*)fObj;}
+		operator _T_* ()			{return (_T_*)fObj;}
+	
+		_T_* operator= (_T_* t)		{fObj=(ODObject*)t; return t;}
+		
+		_T_* DontDelete()			{_T_* temp=(_T_*)fObj; fObj=kODNULL; return temp;}
+	};
+
+#endif
+
+#ifdef __SC__
+#pragma options(warn_cast_incomplete_type)
+#endif
+
+#undef _T_
+#undef _C_

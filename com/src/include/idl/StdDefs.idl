@@ -1,0 +1,652 @@
+/* @(#)Z 1.40 com/src/include/idl/StdDefs.idl, odcore, od96os2, odos29646d 96/11/15 15:25:42 (96/10/29 09:28:01) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           StdDefs.idl
+//#
+//#     Contains:       standard defines for resources & code in OpenDoc
+//#
+//#     Owned by:       Tantek eelik
+//#
+//#     Copyright:      (r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <23>    10/22/95        Te              1291419 GM: File type set incorrectly for
+//#                                                                     Old Mac data dragged to Finder from
+//#                                                                     OpenDoc.
+//#             <22>    10/13/95        EL              1287340: Use standard ISO prefix
+//#             <21>     9/27/95        Te              1287399 GM: Cyberdog needs chance to
+//#                                                                     cleanup before ODSession dies
+//#             <20>      9/8/95        VL              1280965: kODEmbeddedContainer is made
+//#                                                                     private.
+//#             <19>      9/8/95        Te              1281096 FB2:Many constants in ODTypesB
+//#                                                                     without kOD prefix!
+//#             <18>      9/6/95        RR              #1231656 Moved constants to StdDef.idl
+//#             <17>     8/23/95        NP              1276287: Move constant kODAppShell.
+//#             <16>     8/22/95        eeh             1276821:
+//#                                                                     kOpenDocShellSignature->kODShellSignature
+//#             <15>     5/18/95        CG              #1241283: The constant kODNoPartID is
+//#                                                                     redundant.
+//#             <14>     5/10/95        CG              #1243599        Removed the constant kNMAPid .
+//#                                                                     #1243604        The constant kNameMappings renamed
+//#                                                                     to kODNameMappings.
+//#             <13>     4/28/95        CG              1242014:  Added kODSimpleViewer as defined
+//#                                                                     in Binding and 'nmap' Recipe.
+//#             <12>     3/29/95        NP              1232216: Add kODISO10646_1993BaseEncoding
+//#                                                                     constant.
+//#             <11>     3/21/95        Te              1229970 Categories List needs to be
+//#                                                                     updated. Video->Movie.  Sound ->
+//#                                                                     StructuredSound & SampledSound.
+//#             <10>     2/16/95        CG              #1210975 BB: $$$$$ fix moved noPart
+//#                                                                     constants here.
+//#              <9>     2/16/95        Te              #1220894 StdDefs needs Standard Categories
+//#                                                                     from HI Spec.  Added a whole bunch!
+//#              <8>     2/14/95        jpa             Added kODSysPrefContainerSuites. [1205141]
+//#              <7>     2/10/95        CG              #1177475: define kODPlatformFileType and
+//#                                                                     kODPlatformDataType.
+//#              <6>    12/25/94        Te              1191189 Eliminate duplicate Def.h, Def.xh
+//#                                                                     files.  Need to check this file in to force
+//#                                                                     reemission of .xh files.
+//#              <5>    11/30/94        RR              Made change history __PRIVATE__
+//#              <4>    10/19/94        CG              #1191532: Renamed 'NMAP' to 'nmap'.
+//#              <3>     8/19/94        Te              #1159233 Remove references to j3di
+//#              <2>     8/18/94        Te              #1181622 Set Owned by: field to myself
+//#              <1>      6/6/94        RR              first checked in
+//#
+//#     To Do:
+//# In Progress:
+//#
+//#
+#else
+//#     Copyright:      (r) 1993 -  by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _STDDEFS_
+#define _STDDEFS_
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+/*
+        The C/C++ and Rez emitters are applied to this file.
+*/
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes on
+#endif
+
+//#--------------------------------------------------------------------------------
+//# Prefixes
+//#--------------------------------------------------------------------------------
+
+const  ODISOStr kODISOPrefix    = "+//ISO 9070/ANSI::113722::US::CI LABS::";
+
+//#--------------------------------------------------------------------------------
+//# Miscellaneous
+//#--------------------------------------------------------------------------------
+
+const long kODNULL = 0;
+
+const ODBoolean  kODFalse = 0;
+const ODBoolean  kODTrue = 1;
+
+const ODULong kODNoWait = 0;  // For the wait parameter to Lock()
+
+//#--------------------------------------------------------------------------------
+//# Tokens
+//#--------------------------------------------------------------------------------
+
+const ODTypeToken kODNullTypeToken = 0;
+
+//#--------------------------------------------------------------------------------
+//# IDs
+//#--------------------------------------------------------------------------------
+
+const ODID kODNULLID    = 0;
+const ODID kODIDAll     = 0;
+const ODID kODIndexAll  = 0;
+const ODID kODIDWild    = 0;
+
+//#--------------------------------------------------------------------------------
+//# Object Types
+//#--------------------------------------------------------------------------------
+
+const ODObjectType kODPartObject = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ObjectType:Part";
+const ODObjectType kODFrameObject = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ObjectType:Frame";
+const ODObjectType kODNonPersistentFrameObject = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ObjectType:NonPersistentFrame";
+
+//#--------------------------------------------------------------------------------
+//# NameSpaces
+//#--------------------------------------------------------------------------------
+
+const ODISOStr          kODContainerSuite               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:ContainerSuite";
+const ODISOStr          kODKind                                 =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:KindCategories";
+const ODISOStr          kODEditorKinds                  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:EditorKinds";
+const ODISOStr          kODViewer                               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:Viewers";
+const ODISOStr          kODKindOldMacOSType             =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:KindOldMacOSType";
+const ODISOStr          kODEditorPlatformKind   =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:EditorPlatformKind";
+const ODISOStr          kODEditorHelpFile               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:EditorHelpFile";
+
+const ODISOStr          kODSysPrefContainerSuites=      "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:SysPrefContainerSuites";
+const ODISOStr          kODSysPrefEditorKinds   =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:SysPrefEditorKinds";
+const ODISOStr          kODSysPrefEditorCategories      = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:SysPrefEditorCategories";
+
+const ODISOStr          kODEditorUserString             =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:EditorUserString";
+const ODISOStr          kODKindUserString               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:KindUserString";
+const ODISOStr          kODCategoryUserString   =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:NameSpace:CategoryUserString";
+
+const ODOSType          kODNameMappings                 =       'nmap';
+const ODISOStr          kODSimpleViewer                 =       "";
+
+const ODUByte           kODPlatformKindFileChar1        =       '#';
+
+//#--------------------------------------------------------------------------------
+//# Editors
+//#--------------------------------------------------------------------------------
+
+const ODEditor  kODNoEditor = kODNULL;
+
+#ifdef _PLATFORM_MACINTOSH_
+const ODISOStr  kODBlackBoxHandlerOfLastResort = "Apple::NoPart";
+#else
+const ODISOStr  kODBlackBoxHandlerOfLastResort = "NoPart";
+#endif
+
+#ifdef _PLATFORM_OS2_
+const ODISOStr kODKindPlainText    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:PlainText";
+const ODISOStr kODKindTextRTF10    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:RTF10";
+const ODISOStr kODKindGraphicsCGM  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:CGM";
+const ODISOStr kODKindImageGIF     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:GIF";
+const ODISOStr kODKindImageJPEG    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:JPEG";
+const ODISOStr kODKindVideoMPEG    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:MPEG";
+const ODISOStr kODKindAudioAU      = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:AudioAU";
+const ODISOStr kODKindMusicMIDI    = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Kind:MIDI";
+
+// OS/2 Clipboard & Drag&Drop kinds:
+const ODISOStr kODKindOS2Bitmap        = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:BTMP";         // CF_BITMAP, <DRM_OS2FILE,DRF_BITMAP>
+const ODISOStr kODKindOS2DspBitmap     = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:BMPD";         // CF_DSPBITMAP, <DRM_OS2FILE,DRF_DSPBITMAP>
+const ODISOStr kODKindOS2Metafile      = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:METF";         // CF_METAFILE, <DRM_OS2FILE,DRF_METAFILE>
+const ODISOStr kODKindOS2DspMetafile   = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:METD";         // CF_DSPMETAFILE
+const ODISOStr kODKindOS2Text          = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:TEXT";         // CF_TEXT, <DRM_OS2FILE,DRF_TEXT>
+const ODISOStr kODKindOS2DspText       = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:TXTD";         // CF_DSPTEXT
+const ODISOStr kODKindOS2DIB           = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:DIB";          // <DRM_OS2FILE,DRF_DIB>
+const ODISOStr kODKindOS2DIF           = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:DIF";          // <DRM_OS2FILE,DRF_DIF>
+const ODISOStr kODKindOS2OEMText       = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:OEMTEXT";      // <DRM_OS2FILE,DRF_OEMTEXT>
+const ODISOStr kODKindOS2OwnerDisplay  = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:OWNERDISPLAY"; // <DRM_OS2FILE,DRF_OWNERDISPLAY>
+const ODISOStr kODKindOS2PtrPict       = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:PTRPICT";      // <DRM_OS2FILE,DRF_PTRPICT>
+const ODISOStr kODKindOS2RTF           = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:RTF";          // <DRM_OS2FILE,DRF_RTF>
+const ODISOStr kODKindOS2SYLK          = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:SYLK";         // <DRM_OS2FILE,DRF_SYLK>
+const ODISOStr kODKindOS2TIFF          = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:TIFF";         // <DRM_OS2FILE,DRF_TIFF>
+const ODISOStr kODKindOS2Palette       = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:PALT";         // CF_PALETTE
+const ODISOStr kODKindOS2Unknown       = "+//ISO 9070/ANSI::113722::US::CI LABS::MacOS:ScrapType:UNKNOWN";      // <DRM_OS2FILE,DRF_UNKNOWN>
+#endif
+
+//#--------------------------------------------------------------------------------
+//# Categories
+//#--------------------------------------------------------------------------------
+
+const ODISOStr kODCategoryPlainText             =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Text:Plain";
+const ODISOStr kODCategoryStyledText    =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Text:Styled";
+const ODISOStr kODCategoryDrawing               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Drawing";
+const ODISOStr kODCategory3DGraphic             =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:3DGraphic";
+const ODISOStr kODCategoryPainting              =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Painting";
+const ODISOStr kODCategoryMovie                 =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Movie";
+const ODISOStr kODCategorySampledSound  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:SampledSound";
+const ODISOStr kODCategoryStructuredSound       =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:StructuredSound";
+const ODISOStr kODCategoryChart                 =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Chart";
+const ODISOStr kODCategoryFormula               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Formula";
+const ODISOStr kODCategorySpreadsheet   =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Spreadsheet";
+const ODISOStr kODCategoryTable                 =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Table";
+const ODISOStr kODCategoryDatabase              =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Database";
+const ODISOStr kODCategoryQuery                 =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Query";
+const ODISOStr kODCategoryConnection    =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Connection";
+const ODISOStr kODCategoryScript                =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Script";
+const ODISOStr kODCategoryOutline               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Outline";
+const ODISOStr kODCategoryPageLayout    =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:PageLayout";
+const ODISOStr kODCategoryPresentation  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Presentation";
+const ODISOStr kODCategoryCalendar              =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Calendar";
+const ODISOStr kODCategoryForm                  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Form";
+const ODISOStr kODCategoryExecutable    =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Executable";
+const ODISOStr kODCategoryCompressed    =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Compressed";
+const ODISOStr kODCategoryControlPanel  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:ControlPanel";
+const ODISOStr kODCategoryControl               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Control";
+const ODISOStr kODCategoryPersonalInfo  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:PersonalInfo";
+const ODISOStr kODCategorySpace                 =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Space";
+const ODISOStr kODCategoryProject               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Project";
+const ODISOStr kODCategorySignature             =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Signature";
+const ODISOStr kODCategoryKey                   =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Key";
+const ODISOStr kODCategoryUtility               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Utility";
+const ODISOStr kODCategoryMailingLabel  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:MailingLabel";
+const ODISOStr kODCategoryLocator               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Locator";
+const ODISOStr kODCategoryPrinter               =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Printer";
+
+const ODISOStr kODCategoryTime                  =       "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Category:Time";
+
+//#--------------------------------------------------------------------------------
+//# Resource types
+//#--------------------------------------------------------------------------------
+
+const short kODIsMacOSTypeID                    =       1;                      /* Mac OSType */
+const short kODIsINTLTextID                             =       2;                      /* International text */
+const short kODIsAnISOStringID                  =       3;                      /* ISOString */
+const short kODIsAnISOStringListID              =       4;                      /* ISOString List*/
+const short kODIsPltfmTypeSpacID                =       5;                      /* PlatformTypeSpace */
+const short kODIsHelpFileNameID                 =       6;                      /* AppleGuide file on the Mac */
+
+const short kODPaletteWDEFID                    =       128;            /* Windoid WDEF */
+
+//#--------------------------------------------------------------------------------
+//# PlatformTypeSpace
+//#--------------------------------------------------------------------------------
+
+const   ODULong kODPlatformFileType                     = 1;
+const   ODULong kODPlatformDataType                     = 2;
+
+//#--------------------------------------------------------------------------------
+//# International text format constants
+//#--------------------------------------------------------------------------------
+
+const   short kODISO10646_1993BaseEncoding      =       0;              // UCS
+
+#if defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+const ODITextFormat kODIBMCodePageText = 1;
+#endif
+const ODITextFormat kODTraditionalMacText = 0;
+
+//#--------------------------------------------------------------------------------
+//# Semantic events
+//#--------------------------------------------------------------------------------
+
+interface ODPart;
+
+const ODPart    kODAppShell             =       0;
+
+//#--------------------------------------------------------------------------------
+//# View Type Sizes
+//#--------------------------------------------------------------------------------
+
+const   short   kODTinyIconSize         =       12;     // 12x12 pixels
+const   short   kODSmallIconSize        =       16;     // 16x16 pixels
+const   short   kODLargeIconSize        =       32;     // 32x32 pixels
+const   short   kODThumbnailSize        =       64;     // 64x64 pixels
+
+//#--------------------------------------------------------------------------------
+//# Imaging
+//#--------------------------------------------------------------------------------
+
+        /* Graphics systems are of course platform dependent, but their numeric IDs
+           should be globally registered to avoid overlaps; otherwise confusion may
+           occur when documents are moved between platforms, or objects on different
+           platforms attempt to communicate via DSOM. */
+
+const ODGraphicsSystem kODNoGraphicsSystem = 0;
+
+        // Apple Graphics Platforms
+
+const ODGraphicsSystem  kODQuickDraw    = 1; // Macintosh QuickDraw graphics system
+const ODGraphicsSystem kODQuickDrawGX   = 2; // Macintosh QuickDraw GX graphics system
+
+        // IBM Graphics Platforms
+
+const ODGraphicsSystem  kODWin32        = 20;   // Used for Standard Windows 32 (NT+95) imaging
+const ODGraphicsSystem  kODWin95        = 21;   // Used for implementations that only support Win95 and not Win32
+const ODGraphicsSystem  kODWinNT        = 22;   // Used for implementations that only support WinNT and not Win32
+
+const ODGraphicsSystem  kODPM           = 30;   // Used for Standard OS/2 PM imaging
+
+const ODGraphicsSystem  kODAIX          = 40;   // Used for Standard OS/2 AIX X11R5+Motif1.2 imaging
+
+const ODGraphicsSystem  kODOpenClass    = 50;   // Used for Standard Portable OS2,Win,AIX OpenClass imaging
+
+
+const ODTransformType kODIdentityXform           = 0;   // Identity (no-op) transform
+const ODTransformType kODTranslateXform          = 1;   // Pure translation/offset
+const ODTransformType kODScaleXform                      = 2;   // Pure scale, no offset
+const ODTransformType kODScaleTranslateXform = 3;       // Scale and offset
+const ODTransformType kODLinearXform             = 4;   // Scale/rotate/skew, but no offset
+const ODTransformType kODLinearTranslateXform= 5;       // Linear as above, but with offset
+const ODTransformType kODPerspectiveXform        = 6;   // Perspective: m[0][2]!=0 or m[1][2]!=0
+
+const ODTransformType kODUnknownXform            =-1;   // Type not known yet [internal use only]
+const ODTransformType kODInvalidXform            = 7;   // Bad matrix [internal use only]
+
+//#--------------------------------------------------------------------------------
+//# ViewTypes and Presentations
+//#--------------------------------------------------------------------------------
+
+const ODType kODViewAsSmallIcon         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ViewType:SmallIcon";
+const ODType kODViewAsLargeIcon         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ViewType:LargeIcon";
+const ODType kODViewAsThumbnail         = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ViewType:Thumbnail";
+const ODType kODViewAsFrame                     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ViewType:Frame";
+
+const ODType kODPresDefault                     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Presentation:Default";
+
+//#--------------------------------------------------------------------------------
+//# Drag And Drop
+//#--------------------------------------------------------------------------------
+
+const ODULong kODDragIsInSourceFrame    = 0x00000001;
+const ODULong kODDragIsInSourcePart     = 0x00000002;
+#ifdef _PLATFORM_WIN32_
+const ODULong kODDragHasLeftSourceFrame = 0x00000004;
+#endif  //# _PLATFORM_WIN32_
+
+const ODULong kODDropIsInSourceFrame    = kODDragIsInSourceFrame;
+const ODULong kODDropIsInSourcePart     = kODDragIsInSourcePart;
+const ODULong kODDropIsMove             = 0x00000004;
+const ODULong kODDropIsCopy             = 0x00000008;
+const ODULong kODDropIsPasteAs          = 0x00000010;
+const ODULong kODDropIsLink             = 0x00000020;
+
+//#--------------------------------------------------------------------------------
+//# Interchange
+//#--------------------------------------------------------------------------------
+
+const ODType kODDragImageRegionHandle                   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc::DragImage:RegionHandle";
+const ODValueType                       kODHFSPromise           = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc::Type:HFSPromise";
+const ODValueType                       kODTypeAll                      = kODNULL;
+
+const ODUpdateID                        kODUnknownUpdate        = 0;
+
+const ODLinkUpdateResult        kODLinkUpdateSuspend= 0;
+const ODLinkUpdateResult        kODLinkUpdateStop       = 1;
+const ODLinkUpdateResult        kODLinkUpdateContinue = 2;
+
+const ODPasteAsMergeSetting     kODPasteAsMerge         = 1;
+const ODPasteAsMergeSetting kODPasteAsEmbed     = 3;
+const ODPasteAsMergeSetting kODPasteAsMergeOnly = 0;
+const ODPasteAsMergeSetting kODPasteAsEmbedOnly = 2;
+
+//#--------------------------------------------------------------------------------
+//# For ODStorageUnit
+//#--------------------------------------------------------------------------------
+
+const ODStorageUnitKey  kODNULLKey = 0;
+
+const ODULong kODPosUndefined = 0xFFFFFFFF;
+const ODULong kODPosSame = 0x00;
+const ODULong kODPosAll = 1;
+const ODULong kODPosFirstSib = 2;
+const ODULong kODPosLastSib = 3;
+const ODULong kODPosNextSib = 4;
+const ODULong kODPosPrevSib = 5;
+const ODULong kODPosFirstBelow = 6;
+const ODULong kODPosLastBelow = 7;
+const ODULong kODPosFirstAbove = 8;
+const ODULong kODPosLastAbove = 9;
+const ODULong kODPosReserved11 = 10;
+const ODULong kODPosReserved12 = 11;
+const ODULong kODPosReserved13 = 12;
+const ODULong kODPosReserved14 = 13;
+const ODULong kODPosReserved15 = 14;
+const ODULong kODPosMWrap = 0x10;
+const ODULong kODPosTop = 0x20;
+
+//#--------------------------------------------------------------------------------
+//# For ODDocument
+//#--------------------------------------------------------------------------------
+
+const ODDocumentID  kODDefaultDocument = 1;
+
+const ODContainerType kODDefaultFileContainer   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ContainerType:File";
+const ODContainerType kODDefaultMemoryContainer = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:ContainerType:Memory";
+
+const ODContainerType kODBentoFileContainer     = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Bento Container Suite:ContainerType:File";
+const ODContainerType kODBentoMemoryContainer   = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Bento Container Suite:ContainerType:Memory";
+const ODContainerType kODBentoIStreamContainer  = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Bento Container Suite:ContainerType:IStream";
+#ifdef __PRIVATE__
+const ODContainerType kODBentoEmbeddedContainer = "+//ISO 9070/ANSI::113722::US::CI LABS::OpenDoc:Bento Container Suite:ContainerType:Embedded";
+#endif
+
+
+//#--------------------------------------------------------------------------------
+//# Events
+//#--------------------------------------------------------------------------------
+#ifdef _PLATFORM_MACINTOSH_
+const  ODSShort kODEvtNull                      = 0; // 0-15 copied from Macintosh: <Events.h>
+const  ODSShort kODEvtMouseDown         = 1;
+const  ODSShort kODEvtMouseUp           = 2;
+const  ODSShort kODEvtKeyDown           = 3;
+const  ODSShort kODEvtKeyUp                     = 4;
+const  ODSShort kODEvtAutoKey           = 5;
+const  ODSShort kODEvtUpdate            = 6;
+const  ODSShort kODEvtDisk                      = 7;
+const  ODSShort kODEvtActivate          = 8;
+const  ODSShort kODEvtOS                        = 15;
+const  ODSShort kODEvtBGMouseDown       = 16; // Mouse-down while in background [special]
+#endif // _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_WIN32_
+const  ODSShort kODEvtNull              = 0x0000; // WM_NULL
+const  ODSShort kODEvtMouseDown         = 0x0201; // WM_LBUTTONDOWN
+const  ODSShort kODEvtMouseUp           = 0x0202; // WM_LBUTTONUP
+const  ODSShort kODEvtKeyDown           = 0x0100; // WM_KEYDOWN
+const  ODSShort kODEvtKeyUp             = 0x0101; // WM_KEYUP
+const  ODSShort kODEvtActivate          = 0x0006; // WM_ACTIVATE
+const  ODSShort kODEvtUpdate            = 0x000f; // WM_PAINT
+
+// const  ODSShort      kODEvtAutoKey   = 5; Don't know the equivalent in WIN32
+// const  ODSShort      kODEvtDisk      = 7; for these keys
+// const  ODSShort      kODEvtOS        = 15;
+
+const  ODSShort kODEvtLButtonDown       = 0x0201; // WM_LBUTTONDOWN
+const  ODSShort kODEvtRButtonDown       = 0x0204; // WM_RBUTTONDOWN
+const  ODSShort kODEvtMButtonDown       = 0x0207; // WM_MBUTTONDOWN
+const  ODSShort kODEvtInitMenu          = 0x0116; // WM_INITMENU
+const  ODSShort kODEvtMenu              = 0x0111; // WM_COMMAND
+const  ODSShort kODEvtCommand           = 0x0111; // WM_COMMAND
+const  ODSShort kODEvtHelp              = 0x0053; // WM_HELP
+const  ODSShort kODEvtClose             = 0x0010; // WM_CLOSE
+const  ODSShort kODEvtUser              = 0x0400; // WM_USER
+const  ODSShort kODEvtNCMouseMove       = 0x00a0; // WM_NCMOUSEMOVE
+const  ODSShort kODEvtSetFocus          = 0x0007; // WM_SETFOCUS
+const  ODSShort kODEvtSize              = 0x0005; // WM_SIZE
+const  ODSShort kODEvtEraseBkgnd        = 0x0014; // WM_ERASEBKGND
+const  ODSShort kODEvtNCCreate          = 0x0081; // WM_NCCREATE
+const  ODSShort kODEvtDestroy           = 0x0002; // WM_DESTROY
+const  ODSShort kODEvtInactive          = 0x0000; // WM_NULL
+const  ODSShort kODEvtExit              = 0x0012; // WM_QUIT
+
+// constants for embedded mouse events. These values may change ...
+
+const  ODSShort kODEvtMouseDownEmbedded = 0x0401; // WM_USER + 1
+const  ODSShort kODEvtMouseUpEmbedded   = 0x0402; // WM_USER + 2
+const  ODSShort kODEvtMouseDownBorder   = 0x0403; // WM_USER + 3
+const  ODSShort kODEvtMouseUpBorder     = 0x0404; // WM_USER + 4
+
+const  ODSShort OD_HELP                 = 0x0405; // WM_USER + 5
+
+#endif // _PLATFORM_WIN32_
+
+
+#ifdef _PLATFORM_UNIX_
+const  ODSShort kODEvtNull              = 0;
+const  ODSShort kODEvtMouseDown         = 4; // (X11 ButtonPress)
+const  ODSShort kODEvtMouseUp           = 5; // (X11 ButtonRelease)
+const  ODSShort kODEvtMouseMotion       = 6; // (X11 MotionNotify)
+const  ODSShort kODEvtKeyDown           = 2; // (X11 KeyPress)
+const  ODSShort kODEvtKeyUp             = 3; // (X11 KeyRelease)
+const  ODSShort kODEvtUpdate            = 12; // (X11 Expose)
+const  ODSShort kODEvtAutoKey           = 36; // (> X11 LASTEvent)
+const  ODSShort kODEvtDisk              = 37; // (> X11 LASTEvent)
+const  ODSShort kODEvtActivate          = 38; // (> X11 LASTEvent)
+const  ODSShort kODEvtOS                = 39; // (> X11 LASTEvent)
+
+// temporary until docshell is fixed
+const  ODSShort kODEvtInitMenu          = 40;
+const  ODSShort kODEvtCommand           = 42;
+const  ODSShort kODEvtInactive          = 41;
+const  ODSShort kODEvtClose             = 43;
+const  ODSShort kODEvtHelp              = 44;
+
+const  ODSShort kODEvtMenu              = kODEvtCommand;
+
+const  ODSShort OD_HELP                 = 80;
+
+const  ODSShort kODEvtMouseDownEmbedded = 99;
+// A mouse-down in an embedded frame, or the active border
+// Sent to the container
+
+const  ODSShort kODEvtMouseUpEmbedded = 100;
+// A mouse-up in an embedded frame, or the active border
+// Sent to the container
+
+const  ODSShort kODEvtMouseDownBorder = 101;
+// A mouse-down in an embedded frame, or the active border
+// Sent to the container
+
+const  ODSShort kODEvtMouseUpBorder     = 102;
+// A mouse-up in an embedded frame, or the active border
+// Sent to the container
+
+const  ODSShort kODEvtWindow            = 103;
+// Used to offer events in title bar to root part
+
+const  ODSShort kODEvtMouseEnter        = 104;
+const  ODSShort kODEvtMouseWithin       = 105;
+const  ODSShort kODEvtMouseLeave        = 106;
+
+const  ODSShort kODEvtBGMouseDownEmbedded = 107;
+// A mouse-down in an embedded frame, when process is inactive
+// Sent to the container
+
+const  ODSShort kODEvtExit                      = 108;
+// Dispatched immediately before session is destructed.
+
+#endif // _PLATFORM_UNIX_
+
+#ifdef _PLATFORM_OS2_
+
+// Choose a random offset for OpenDoc user events, to avoid
+// collisions with user events from other OS/2 applications.
+const  ODSShort kODUserEventBase        = 0x4c41;
+
+const  ODSShort kODEvtNull              = 0x0000; // WM_NULL
+const  ODSShort kODEvtMouseDown         = 0x0071; // WM_BUTTON1DOWN
+const  ODSShort kODEvtMouseUp           = 0x0072; // WM_BUTTON1UP
+const  ODSShort kODEvtKeyDown           = kODUserEventBase + 1;
+const  ODSShort kODEvtKeyUp             = kODUserEventBase + 2;
+const  ODSShort kODEvtActivate          = 0x000d; // WM_ACTIVATE
+const  ODSShort kODEvtUpdate            = 0x0023; // WM_PAINT
+
+// const  ODSShort      kODEvtAutoKey   = 5; Don't know the equivalent in WIN32
+// const  ODSShort      kODEvtDisk      = 7; for these keys
+// const  ODSShort      kODEvtOS        = 15;
+
+const  ODSShort kODEvtLButtonDown       = 0x0071; // WM_BUTTON1DOWN
+const  ODSShort kODEvtRButtonDown       = 0x0077; // WM_BUTTON3DOWN
+const  ODSShort kODEvtMButtonDown       = 0x0074; // WM_BUTTON2DOWN
+const  ODSShort kODEvtInitMenu          = 0x0033; // WM_INITMENU
+const  ODSShort kODEvtMenu              = 0x0020; // WM_COMMAND
+const  ODSShort kODEvtCommand           = 0x0020; // WM_COMMAND
+const  ODSShort kODEvtHelp              = 0x0022; // WM_HELP
+const  ODSShort kODEvtClose             = 0x0029; // WM_CLOSE
+const  ODSShort kODEvtUser              = kODUserEventBase;
+// const  ODSShort      kODEvtNCMouseMove       = 0x00a0; // ???
+const  ODSShort kODEvtSetFocus          = 0x000f; // WM_SETFOCUS
+const  ODSShort kODEvtSize              = 0x0007; // WM_SIZE
+const  ODSShort kODEvtEraseBkgnd        = 0x004f; // WM_ERASEBACKGROUND
+// const  ODSShort      kODEvtNCCreate          = 0x0081; // ???
+const  ODSShort kODEvtDestroy           = 0x0002; // WM_DESTROY
+const  ODSShort kODEvtInactive          = 0x0000; // WM_NULL
+const  ODSShort kODEvtExit              = 0x002a; // WM_QUIT
+
+// constants for embedded mouse events. These values may change ...
+
+const  ODSShort kODEvtMouseDownEmbedded = kODUserEventBase + 3;
+const  ODSShort kODEvtMouseUpEmbedded   = kODUserEventBase + 4;
+const  ODSShort kODEvtMouseDownBorder   = kODUserEventBase + 5;
+const  ODSShort kODEvtMouseUpBorder     = kODUserEventBase + 6;
+
+// constant for linking update event.
+
+const  ODSShort kODEvtLinkUpdate        = kODUserEventBase + 7;
+
+#endif // _PLATFORM_OS2_
+
+const  ODSShort kODMDInDesk                     = 0; // Te: 0-8 copied from Macintosh: <Windows.h>
+const  ODSShort kODMDInMenuBar          = 1;
+const  ODSShort kODMDInSysWindow        = 2;
+const  ODSShort kODMDInContent          = 3;
+const  ODSShort kODMDInDrag                     = 4;
+const  ODSShort kODMDInGrow                     = 5;
+const  ODSShort kODMDInGoAway           = 6;
+const  ODSShort kODMDInZoomIn           = 7;
+const  ODSShort kODMDInZoomOut          = 8;
+
+//#--------------------------------------------------------------------------------
+//# Shell
+//#--------------------------------------------------------------------------------
+
+// Defines used in the SelectPartKind dialog.
+const ODULong   kODKindName = 2;
+const ODULong   kODFileName = 3;
+const ODULong   kODNoRootPart = 4;
+
+const ODUShort  kODEditStationery = 1;
+const ODUShort  kODCreateStationery = 2;
+
+const ODOSType  kODShellSignature = 'odtm';
+
+//#--------------------------------------------------------------------------------
+//# Registry constants
+//#--------------------------------------------------------------------------------
+
+const ODISOStr ODRegistryFileName = "/PartReg.bto";
+const ODISOStr ODRegistryPathEnvVar = "ODCFG";
+
+// Te: Dependent files where you have to hand copy this constant:
+//
+// NOTE: This constant needs to be the same as the "Creator" in the
+// Also, make sure that the "SetFile -c " statements which are immediately
+// after the "MergeFragment" statments in OpenDocX.mak also have the same constant
+// e.g.
+//              SetFile -c odtm "{ODBinaryDir}OpenDocª"
+
+//#--------------------------------------------------------------------------------
+//# International text format constants
+//#--------------------------------------------------------------------------------
+
+#ifdef _PLATFORM_OS2_
+const ODITextFormat kODOS2PlainText = 0;
+#endif
+
+
+#if defined(__SOMIDL__) && defined(EMIT_GLOBAL_CONSTANTS)
+#pragma somemittypes off
+#endif
+
+module OpenDoc_StdDefs
+{
+        const string OpenDoc_StdDefs_Version = "1.0.";
+};
+
+#endif //# _STDDEFS_

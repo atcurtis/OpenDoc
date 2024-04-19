@@ -1,0 +1,106 @@
+/* @(#)Z 1.2 com/src/ui/idl/FocusOwn.idl, odui, od96os2, odos29646d 96/11/15 15:28:36 (96/07/15 18:28:42) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#	File:		FocusOwn.idl
+//#
+//#	Contains:	Class definition for ODFocusOwnerIterator
+//#
+//#	Owned by:	Richard Rodseth
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <4>	 8/15/95	RR		#1275241 IDL Review
+//#		 <3>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <2>	 6/16/94	RR		Added function prefix
+//#		 <1>	  6/8/94	RR		first checked in
+//#		 <5>	  6/7/94	RR		Privatise change log
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _FOCUSOWN_
+#define _FOCUSOWN_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODFocusOwnerIterator;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODFocusModule;
+interface  ODFrame;
+
+//=====================================================================================
+// Class ODFocusOwnerIterator
+//=====================================================================================
+
+interface ODFocusOwnerIterator : ODObject
+{
+	void InitFocusOwnerIterator(in ODTypeToken focus,
+								in ODFocusModule focusModule);
+
+	ODFrame First();
+
+	ODFrame Next();
+
+	ODBoolean IsNotComplete();
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+  		functionprefix = ODFocusOwnerIterator;
+		
+    	releaseorder:
+			InitFocusOwnerIterator,
+			First,
+			Next,
+			IsNotComplete;
+		
+  	};
+#endif //# __SOMIDL__
+};
+
+#endif //# _FOCUSOWN_

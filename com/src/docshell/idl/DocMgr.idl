@@ -1,0 +1,256 @@
+/* @(#)Z 1.37 com/src/docshell/idl/DocMgr.idl, odshell, od96os2, odos29646d 96/11/15 15:49:31 (96/10/29 09:24:31) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odshell
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifndef _DOCMGRSHELL_
+#define _DOCMGRSHELL_
+
+#include <somobj.idl>
+#include <mlink.idl>
+
+#ifndef _ODTYPESM_
+#include "ODTypesM.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface   DocumentManager;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface   ODSession;
+interface   ODContainer;
+interface   ODDocument;
+interface   ODDraft;
+interface   ODPart;
+interface   ODWindowState;
+interface   ODPlatformWindow;
+interface   ODStorageUnit;
+
+//==============================================================================
+// Implementation Types
+//==============================================================================
+
+typedef somToken PlatformFile;
+typedef somToken DraftInfoRec;
+#ifdef _PLATFORM_WIN32_
+    typedef somToken OleWrapper;
+    typedef somToken IStream;
+#endif
+
+//==============================================================================
+// DocumentManager
+//==============================================================================
+
+interface DocumentManager :  somf_MLinkable
+{
+    void		Initialize(in ODSession session);
+    char* 		OpenDocumentFromFile(in char *fileName, 
+					in ODUShort actionFlag);
+    char* 		OpenDocumentFromMemory(in ODHandle handle);
+    void		CreateDocumentInFile(in ODType kindName, 
+					in char* fileName);
+    void		CreateDocumentInMemory(in ODType kindName);
+    void		CreateDocumentAsStationery(in ODType kindName, 
+					in char* fileName);
+    ODDocument 		GetDocument();
+    void		SaveDocument();
+    void		CloseDocument(in ODULong saveOption);
+    ODBoolean		CloseWindow(in ODPlatformWindow pwindow, 
+					in ODBoolean confirm);
+    void 		CreateDraft(in ODULong draftNum, in ODIText modUser,
+					in ODIText comment);
+    ODBoolean 		OpenDraft(in ODDraft draft, in ODBoolean toBeRelease);
+    void 		CloseDraft(in ODDraft draft);
+    void 		SaveDraft();
+    ODBoolean 		DeleteDraft(in DraftInfoRec* draftInfoRec);
+    ODDraft		GetLatestCreatedDraft();
+    ODDraft 		GetDraft();
+    DraftInfoRec*	GetDraftList();
+    void		DeleteDraftList();
+    ODBoolean 		HasWriteAccess();
+    void		InternalizeHistory();
+    void 		Revert();
+    void		SaveACopyAs(in ODDraft draft, inout PlatformFile file); 
+    #ifdef _PLATFORM_WIN32_
+        void		SetOleWrapper(in OleWrapper *oleWrapper);
+        OleWrapper*	GetOleWrapper();
+    #endif
+    char*		GetFileName();
+    void		SetFileName(in char *fileName);
+    char*		GetPartKindName();
+    void		SetPartKindName(in char *kindName);
+
+#ifdef __PRIVATE__
+    PlatformFile*	NewFileContainer(inout ODContainer container,
+					in char* fileName);
+    void		NewMemoryContainer(inout ODContainer container);
+    void		CreateDocument(in ODContainer newContainer, 
+					in ODType partKind);
+    void		OpenFile(in PlatformFile* file, 
+					in ODUShort actionFlag);
+    void		OpenContainer(in ODContainer container);
+    char*		OpenRootPart();
+    PlatformFile*	CreateUntitledFile(in char* fileName);
+    void 		RemoveChanges(in ODDraft draft);
+    void		SetSession(in ODSession session);
+    void		SetWindowState(in ODWindowState windowState);
+    void		SetDraftList(in DraftInfoRec* draftList);
+    ODBoolean		IsStationery(in ODDraft draft);
+    void		SetStationery(in ODDraft draft);
+    void		UnsetStationery(in ODDraft draft);
+    void		CreateWorkingDraft();
+    void		ResetDateModByInfo(in ODStorageUnit su);
+    ODContainer		GetContainer();
+    void		ContainerSaveACopyAs(in ODDraft draft, 
+					in ODContainer newContainer);
+    PlatformFile*	CopyStationery();
+#endif
+
+#ifdef __SOMIDL__
+    implementation
+    {
+        majorversion = 1; minorversion = 0;
+
+        functionprefix = DocumentManager;
+
+        releaseorder:
+            Initialize,
+            OpenDocumentFromFile,
+            OpenDocumentFromMemory,
+            CreateDocumentInFile,
+            CreateDocumentInMemory,
+            CreateDocumentAsStationery,
+	    GetDocument,
+            SaveDocument,
+            CloseDocument,
+            CloseWindow,
+            CreateDraft,
+            OpenDraft,
+            CloseDraft,
+            SaveDraft,
+            DeleteDraft,
+            GetLatestCreatedDraft,
+            GetDraft,
+            GetDraftList,
+            DeleteDraftList,
+            HasWriteAccess,
+	    InternalizeHistory,
+            Revert,
+            SaveACopyAs,
+            #ifdef _PLATFORM_WIN32_
+                SetOleWrapper,
+                GetOleWrapper,
+            #endif
+            GetFileName,
+            SetFileName,
+            GetPartKindName,
+            SetPartKindName,
+            #ifdef __PRIVATE__
+                NewFileContainer,
+                NewMemoryContainer,
+                CreateDocument,
+                OpenFile,
+                OpenContainer,
+                OpenRootPart,
+                CreateUntitledFile,
+                RemoveChanges,
+                SetSession,
+                SetWindowState,
+                SetDraftList,
+                IsStationery,
+                SetStationery,
+                UnsetStationery,
+                CreateWorkingDraft,
+                ResetDateModByInfo,
+		ContainerSaveACopyAs,
+                GetContainer,
+                CopyStationery;
+            #else
+                reserved1,
+                reserved2,
+                reserved3,
+                reserved4,
+                reserved5,
+                reserved6,
+                reserved7,
+                reserved8,
+                reserved9,
+                reserved10,
+                reserved11,
+                reserved12,
+                reserved13,
+                reserved14,
+                reserved15,
+                reserved16,
+                reserved17,
+                reserved18,
+                reserved19;
+            #endif
+
+            passthru C_xh = "#include <PlfmFile.h>"
+			    "#ifndef _ODTYPES_"
+			    "#include \"ODTypes.h\""
+			    "#endif"
+			    "#ifndef _DRAFTREC_"
+			    "#include \"DraftRec.h\""
+			    "#endif"
+            #ifdef _PLATFORM_WIN32_
+			    "class OleWrapper;"
+            #endif
+			    "";
+
+            #ifdef _PLATFORM_WIN32_
+            passthru C_xih = "class OleWrapper;"
+			     "";
+            #endif
+
+        #ifdef __PRIVATE__
+            ODSession		fSession;
+            ODWindowState	fWindowState;
+            ODContainer		fContainer;
+            ODDocument		fDocument;
+            ODDraft		fDraft;
+            ODDraftPermissions	fDraftPermissions;
+	    DraftInfoRec        *fDraftList;
+            #ifdef _PLATFORM_WIN32_
+              OleWrapper	*fOleWrapper;
+            #endif
+            char		fFileName[256];
+            char		fPartKindName[256];
+            ODBoolean           fUnsavedDocument;
+        #endif
+  };
+#endif
+};
+
+
+#endif // _DOCMGRSHELL_

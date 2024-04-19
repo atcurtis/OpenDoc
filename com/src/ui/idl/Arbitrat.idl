@@ -1,0 +1,188 @@
+/* @(#)Z 1.2 com/src/ui/idl/Arbitrat.idl, odui, od96os2, odos29646d 96/11/15 15:28:34 (96/07/15 18:28:15) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+#ifdef __PRIVATE__
+//#
+//#	File:		Arbitrat.idl
+//#
+//#	Contains:	Class definition for ODArbitrator
+//#
+//#	Owned by:	Richard Rodseth
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <8>	 8/15/95	RR		#1275241 IDL Review
+//#		 <7>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <6>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		 <5>	10/18/94	RR		Removed unused private methods
+//#									BeginRequestFocus etc.
+//#		 <4>	  9/1/94	CC		RADAR #1181971 - missing factory methods
+//#									(for JBS)
+//#		 <3>	  8/4/94	eeh		bug 1177981: make GetFocusModule public
+//#		 <2>	 6/15/94	RR		Added function prefix
+//#		 <1>	  6/8/94	RR		first checked in
+//#		 <9>	  6/2/94	RR		Testing
+//#		 <7>	 5/12/94	RR	inout->in		
+//#		 <7>	 5/12/94	RR		
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _ARBITRAT_
+#define _ARBITRAT_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Class defined in this interface
+//=====================================================================================
+
+interface  ODArbitrator;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODFocusModule;
+interface  ODFocusSet;
+interface  ODFocusOwnerIterator;
+interface  ODFrame;
+
+#ifdef __PRIVATE__
+interface  ODSession;
+#endif
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken DictionaryList;
+#endif
+
+//=====================================================================================
+// Class ODArbitrator
+//=====================================================================================
+
+interface ODArbitrator :  ODObject
+{    
+   ODBoolean RequestFocusSet(in ODFocusSet focusSet,
+   							  in ODFrame requestingFrame);
+    
+   ODBoolean RequestFocus(in ODTypeToken focus,
+   						   in ODFrame requestingFrame);
+        
+   void RelinquishFocusSet(in ODFocusSet focusSet,
+   						   in ODFrame relinquishingFrame);
+        
+   void RelinquishFocus(in ODTypeToken focus,
+   						in ODFrame relinquishingFrame);
+  
+   void TransferFocus(in ODTypeToken focus,
+   					  in ODFrame transferringFrame,
+					  in ODFrame newOwner);
+                 
+   void TransferFocusSet(in ODFocusSet focusSet, 
+   						in ODFrame transferringFrame,
+						in ODFrame newOwner);
+                 
+   ODFrame AcquireFocusOwner(in ODTypeToken focus);
+    
+   ODFocusOwnerIterator CreateOwnerIterator(in ODTypeToken focus);
+          
+   void RegisterFocus(in ODTypeToken focus,
+   					  in ODFocusModule focusModule);
+      
+   void UnregisterFocus(in ODTypeToken focus);
+
+   ODBoolean IsFocusRegistered(in ODTypeToken focus);
+  
+   ODBoolean IsFocusExclusive(in ODTypeToken focus);
+  
+   ODFocusModule GetFocusModule(in ODTypeToken focus);
+   
+   ODFocusSet CreateFocusSet();
+
+#ifdef __PRIVATE__
+
+   void InitArbitrator(in ODSession session);
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+		
+		functionprefix = ODArbitrator;
+		
+		override:
+			somUninit,
+			Purge;
+		releaseorder:
+			RequestFocusSet,
+			RequestFocus,
+			RelinquishFocusSet,
+			RelinquishFocus,
+			TransferFocus,
+			TransferFocusSet,
+			AcquireFocusOwner,
+			CreateOwnerIterator,
+			RegisterFocus,
+			UnregisterFocus,
+			IsFocusRegistered,
+			IsFocusExclusive,
+			GetFocusModule,
+			CreateFocusSet,
+		#ifdef __PRIVATE__
+			InitArbitrator;
+		#else
+			reserved1;
+		#endif
+
+
+	#ifdef __PRIVATE__
+		passthru C_xih = "class DictionaryList;";
+		
+		ODSession		fSession;
+		DictionaryList*	fFocusModules;
+	#endif //# __PRIVATE__
+    
+  };
+#endif //# __SOMIDL__
+};
+
+#endif //# _ARBITRAT_

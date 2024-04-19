@@ -1,0 +1,329 @@
+/* @(#)Z 1.5 com/src/storage/idl/Draft.idl, odstorage, od96os2, odos29646d 96/11/15 15:27:51 (96/10/28 13:40:39) */
+
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odstorage
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		Draft.idl
+//#
+//#	Contains:	Class definition for ODDraft
+//#
+//#	Owned by:	Vincent Lo
+//#
+//#	Copyright:	(r) 1994 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<23>	 9/11/95	VL		1283326: CreateFrame now takes ODObjectType
+//#									instead of ODType.
+//#		<22>	 8/25/95	JBS		1263078 FB: fix part editor swapping
+//#		<21>	 8/16/95	VL		1275241: Cleaned up IDL file.
+//#		<20>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<19>	 6/23/95	JBS		1261323 CreateFrame: add isSubframe param,
+//#									remove isRoot
+//#		<18>	 6/19/95	VL		1170098: Added DeleteRealPart.
+//#		<17>	  6/1/95	JBS		make ReleasePart public
+//#	   <16+>	  6/1/95	JBS		make ReleasePart public
+//#		<16>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		<15>	 5/22/95	CC		1242879: Added IsValidID.
+//#		<14>	 5/18/95	CC		1238898: Added destFrame parameter to
+//#									BeginClone.
+//#		<13>	 5/17/95	VL		1249181: Made Init method private.
+//#		<12>	 1/18/95	VL		1193559: Two new methods
+//#									(GetPersistentObject and
+//#									GetPersistentObjectID).
+//#		<11>	12/15/94	CC		1193569 CreateLinkSpec() takes ODByteArray
+//#									parameter.
+//#		<10>	 10/4/94	CC		1190858 - Added ReleaseLinkSource().
+//#		 <9>	  9/6/94	VL		1184177: Removed GetName and SetName.
+//#		 <8>	 8/26/94	VL		1183174: Added destDraft to BeginClone and
+//#									added toID to Clone.
+//#		 <7>	 8/16/94	VL		1143605: Fixed parameters to CloneInto.
+//#		 <6>	 8/15/94	VL		#???: Added frameType parameter
+//#									to CreateFrame.
+//#		 <5>	 8/12/94	JBS		1179919: add biasCanvas param to
+//#									Draft::CreateFrame()
+//#		 <4>	 8/11/94	CC		Added CreateLinkIterator() and
+//#									CreateLinkSourceIterator() methods.
+//#		 <3>	  7/5/94	VL		Fixed parameters to CreateFrame.
+//#		 <2>	 6/21/94	VL		Added functionprefix.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _DRAFT_
+#define _DRAFT_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+interface  ODDraft;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+interface   ODCanvas;
+interface   ODDocument;
+interface   ODFrame;
+interface   ODLink;
+interface   ODLinkSource;
+interface   ODLinkIterator;
+interface   ODLinkSourceIterator;
+interface   ODLinkSpec;
+interface   ODPart;
+interface   ODShape;
+interface   ODStorageUnit;
+interface	ODPersistentObject;
+interface	ODPartWrapper;
+
+//==============================================================================
+// ODDraft
+//==============================================================================
+
+interface ODDraft :  ODRefCntObject
+{
+
+	ODDocument   GetDocument();
+	
+	ODDraftID    GetID();
+	
+	ODStorageUnit   AcquireDraftProperties();
+	
+	ODDraftPermissions  GetPermissions();
+	
+	ODStorageUnit   CreateStorageUnit();
+	
+	ODStorageUnit   AcquireStorageUnit(in ODStorageUnitID id);
+	
+	void      RemoveStorageUnit(in ODStorageUnit storageUnit);
+	
+	ODBoolean    IsValidID(in ODID id);
+	
+	ODDraftKey    BeginClone(in ODDraft destDraft, in ODFrame destFrame, in ODCloneKind kind);
+	
+	void      EndClone(in ODDraftKey key);
+	
+	void      AbortClone(in ODDraftKey key);
+
+	ODID Clone(in ODDraftKey key, in ODID fromObjectID, in ODID toObjectID, in ODID scope);
+	
+	ODID WeakClone(in ODDraftKey key, in ODID objectID, in ODID toObjectID, in ODID scope);
+
+	ODBoolean    ChangedFromPrev();
+	
+	void      SetChangedFromPrev();
+	
+	void      RemoveFromDocument();
+	
+	ODDraft     RemoveChanges();
+	
+	ODDraft     Externalize();
+	
+	ODDraft     SaveToAPrevious(in ODDraft to);
+	
+	ODFrame CreateFrame(
+			in ODObjectType	frameType,
+			in ODFrame		containingFrame,
+			in ODShape		frameShape,
+			in ODCanvas		biasCanvas,
+			in ODPart		part,
+			in ODTypeToken	viewType,
+			in ODTypeToken	presentation,
+			in ODBoolean	isSubframe,
+			in ODBoolean	isOverlaid);
+	   
+	ODFrame AcquireFrame(in ODStorageUnitID id);
+	
+	void RemoveFrame(in ODFrame frame);
+	
+	ODPart CreatePart(in ODType partType,
+						in ODEditor optionalEditor);
+	
+	ODPart AcquirePart(in ODStorageUnitID id);
+	
+	void ReleasePart(in ODPart part);
+	
+	void RemovePart(in ODPart part);
+	
+	ODLinkSpec CreateLinkSpec (in ODPart part, in ODByteArray data);
+
+	ODLinkSource CreateLinkSource(in ODPart part);
+	
+	ODLinkSource AcquireLinkSource(in ODStorageUnitID id);
+	
+	ODLink AcquireLink(in ODStorageUnitID id,
+					in ODLinkSpec linkSpec);
+	
+	void        RemoveLink(in ODLink link);
+	
+	void        RemoveLinkSource(in ODLinkSource link);
+	
+	ODPersistentObjectID	GetPersistentObjectID(in ODPersistentObject object,
+									in ODObjectType objectType);
+	
+	ODPersistentObject AcquirePersistentObject(in ODPersistentObjectID objectID,
+											out ODObjectType objectType);
+
+#ifdef __PRIVATE__
+	
+	void InitDraft(in ODDocument document,
+					in ODDraftID id,
+					in ODDraftPermissions perms);
+
+	void  ReleaseFrame(in ODFrame frame);
+	
+	void  ReleaseLink(in ODLink link);
+	
+	void  ReleaseLinkSource(in ODLinkSource link);
+
+	ODDraft ReleaseStorageUnit(in ODStorageUnitID id);
+
+	ODLinkIterator CreateLinkIterator();
+	
+	ODLinkSourceIterator CreateLinkSourceIterator();
+	
+#ifdef _PLATFORM_OS2_
+        ODLinkSourceIterator CreatePartLinkSourceIterator(in ODPart part);
+        ODLinkIterator CreatePartLinkIterator(in ODPart part);
+#endif
+
+	ODPart ConstructRealPart(in ODStorageUnit su,
+							in ODBoolean isInitPartFromStorage,
+							in ODPartWrapper partWrapper,
+							in ODType partType,
+							in ODEditor optionalEditor);
+							
+	void ReleaseRealPart(in ODPart part);
+
+	void DeleteRealPart(in ODPart part);
+	
+	void SwapPart(in ODPart part);
+
+#endif
+
+#ifdef __SOMIDL__
+  implementation
+  {
+	majorversion = 1; minorversion = 0;
+  	functionprefix = ODDraft;
+
+    override:
+		somUninit,
+        Acquire,
+        Release;
+    releaseorder:
+        GetDocument,
+        GetID,
+        GetName,
+        SetName,
+        AcquireDraftProperties,
+        GetPermissions,
+        CreateStorageUnit,
+        AcquireStorageUnit,
+        RemoveStorageUnit,
+        BeginClone,
+        EndClone,
+        AbortClone,
+        Clone,
+		WeakClone,
+        ChangedFromPrev,
+        SetChangedFromPrev,
+        RemoveFromDocument,
+        RemoveChanges,
+        Externalize,
+        SaveToAPrevious,
+        CreateFrame,
+        AcquireFrame,
+        RemoveFrame,
+        CreatePart,
+        AcquirePart,
+        RemovePart,
+        CreateLinkSpec,
+        CreateLinkSource,
+        AcquireLinkSource,
+        AcquireLink,
+        RemoveLink,
+        RemoveLinkSource,
+        GetPersistentObjectID,
+        AcquirePersistentObject,
+        ReleasePart,
+		IsValidID,
+#ifdef __PRIVATE__
+        InitDraft,
+        ReleaseFrame,
+        ReleaseLink,
+        ReleaseLinkSource,
+        ReleaseStorageUnit,
+		CreateLinkIterator,
+		CreateLinkSourceIterator,
+		ConstructRealPart,
+		ReleaseRealPart,
+		DeleteRealPart,
+#ifdef _PLATFORM_OS2_
+                SwapPart,
+                CreatePartLinkSourceIterator,
+                CreatePartLinkIterator;
+#else
+                SwapPart;
+#endif
+
+#else
+		reserved1,
+		reserved2,
+		reserved3,
+		reserved4,
+		reserved5,
+		reserved6,
+		reserved7,
+		reserved8,
+		reserved9,
+		reserved10,
+#ifdef _PLATFORM_OS2_
+    reserved11,
+    reserved12,
+    reserved13;
+#else
+    reserved11;
+#endif
+
+#endif
+};
+#endif
+};
+
+#endif  // _DRAFT_

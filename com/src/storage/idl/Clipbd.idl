@@ -1,0 +1,365 @@
+/* @(#)Z 1.20 com/src/storage/idl/Clipbd.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:27:49 (96/10/29 09:32:09) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27,94
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		Clipbd.idl
+//#
+//#	Contains:	Interface of ODClipboard class
+//#
+//#	Owned by:	Craig Carper
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		<14>	 8/31/95	DM		1273863, 1275336: add DraftSaved()
+//#		<13>	 8/25/95	CC		1264154: Added ActionDone, ActionUndone,
+//#									and ActionRedone methods.
+//#		<12>	 8/15/95	CC		1275241: IDL review.
+//#		<11>	  8/3/95	RR	 	#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		<10>	 5/25/95	VL		1251403: Multithreading naming support.
+//#		 <9>	 5/16/95	CC		1244991: Added private fExportedLinkSpec
+//#									field.
+//#		 <8>	 3/22/95	CC		1230322: Changed parameter to
+//#									ShowPasteAsDialog().
+//#		 <7>	 3/10/95	CC		1225050: Override DraftClosing; added
+//#									fOriginalDraft field.
+//#		 <6>	  9/9/94	jpa		Renamed "result" param to avoid d14 emitter
+//#									bug.
+//#		 <5>	  8/3/94	CC		Removed ODClipboardKey parameter from
+//#									methods; eliminated fLockCount data member.
+//#									(1160484)
+//#		 <4>	  8/2/94	CC		#1178169 - ShowPasteAsDialog() takes
+//#									ODFacet* instead of ODFrame*.
+//#		 <3>	 7/12/94	CC		Removed kODNoWait (now in ODTypesB.idl).
+//#		 <2>	 6/21/94	CC		Added functionprefix.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _CLIPBD_
+#define _CLIPBD_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  ODClipboard;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+interface  ODStorageUnit;
+interface  ODDraft;
+interface  ODPlatformTypeList;
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+interface  ODFacet;
+interface  ODTypeList;
+#endif //# _PLATFORM_MACINTOSH_ or OS/2 or WIN32
+#ifdef __PRIVATE__
+interface  ODSession;
+interface  ODDocument;
+interface  ODContainer;
+#endif //# __PRIVATE__
+#ifdef _PLATFORM_OS2_
+interface  ODTypeList;
+interface  ODPart;
+interface OrderedCollection;
+#endif
+
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+#define PROMISEKEEPER
+#ifdef _PLATFORM_WIN32_
+#ifdef PROMISEKEEPER
+typedef somToken OLEPromiseKeeper;
+#endif
+typedef somToken DWORD;
+//typedef somToken HWND;
+typedef somToken LPVOID;
+typedef somToken POINTL;
+typedef somToken Handle;
+typedef somToken ODOLEManager;
+#endif //# _PLATFORM_WIN32_
+#ifdef _PLATFORM_OS2_
+#ifdef __PRIVATE__
+typedef somToken HAB;
+#endif
+#endif
+
+//=====================================================================================
+// ODClipboard
+//=====================================================================================
+
+
+interface ODClipboard :  ODObject
+{
+	ODUpdateID GetUpdateID();
+						  
+	void Clear();
+	
+	ODStorageUnit GetContentStorageUnit();
+
+	ODUpdateID ActionDone(in ODCloneKind cloneKind);
+
+	void ActionUndone(in ODUpdateID update, in ODCloneKind originalCloneKind);
+
+	void ActionRedone(in ODUpdateID update, in ODCloneKind originalCloneKind);
+
+	void SetPlatformClipboard(in ODPlatformTypeList typeList);
+	
+	void ExportClipboard();
+
+	void DraftSaved(in ODDraft draft);
+
+	void DraftClosing(in ODDraft draft);
+#if defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+	ODBoolean CanEmbed();
+#endif
+
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+
+	ODBoolean ShowPasteAsDialog(
+					in		ODBoolean				canPasteLink,
+					in		ODPasteAsMergeSetting	mergeSetting,
+					in		ODFacet					facet,
+					in		ODTypeToken				viewType,
+					out		ODPasteAsResult			theResult);
+
+#endif //# _PLATFORM_MACINTOSH_  or _PLATFORM_WIN32_ or _PLATFORM_OS2_
+
+#ifdef _PLATFORM_OS2_
+        ODBoolean RegisterClipboardFormat(in ODType odType,
+                                    in ODPlatformType odPlatformType,
+                                    in ODULong formatInfo );
+
+        ODBoolean DeregisterClipboardFormat(in ODType odType );
+        ODBoolean CanEmbed();                         // [140007]
+        ODBoolean CanIncorporate(in ODType kind);     // [140007]
+#endif
+#ifdef __PRIVATE__
+	void InitClipboard(in ODSession session);
+	
+	//# Private to implementation
+
+	void NewClipboard();
+	
+	void DiscardClipboard();
+	
+#ifdef _PLATFORM_WIN32_
+	void ImportContent(in void *pDataObject);
+#endif	
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+	void ImportContent();
+
+        void PutContentOnPlatformClipboard();
+
+	void ExportPlatformTypes(in ODPlatformTypeList typeList);
+#endif // mac or os/2 or AIX 
+
+	
+#ifdef _PLATFORM_WIN32_
+	void ExportPlatformTypes(in ODPlatformTypeList typeList, in ODBoolean bExportClipboard);
+
+	void PutClipboardOnPlatformClipboard(in void *pDataObject);
+	
+	ODBoolean ImportClipboard(in void *pDataObject);
+#endif	
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+	void PutClipboardOnPlatformClipboard();
+	
+	ODBoolean ImportClipboard();
+#endif // mac or os/2 or AIX
+	
+#ifdef _PLATFORM_OS2_
+  ODBoolean DispatchHandler(in ODEventData evt);
+
+  void QueryContent(in ODTypeList typeList); // [140007]
+
+  void ResolvePMPromises(); // [146749]
+#endif // _PLATFORM_OS2_
+
+#ifdef _PLATFORM_WIN32_
+
+	ODBoolean PlatformClipboardHasType( in void *pDataObject , in ODPlatformType type);
+
+	void ClipboardChanged();
+
+	void QueryContent(in ODTypeList typeList);
+
+#endif //# _PLATFORM_WIN32_
+
+#ifdef _PLATFORM_AIX_
+	void QueryContent(in ODTypeList typeList);
+#endif // _PLATFORM_AIX_
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+			
+		functionprefix = ODClipboard;
+
+		override:
+			somUninit,
+			Purge;
+
+		releaseorder:
+			GetUpdateID,
+			Clear,
+			GetContentStorageUnit,
+			ActionDone,
+			ActionUndone,         
+			ActionRedone,
+			SetPlatformClipboard,
+			ExportClipboard,
+			DraftSaved,
+			DraftClosing,
+			ShowPasteAsDialog,
+                #ifdef _PLATFORM_WIN32_
+                        PlatformClipboardHasType,
+                        ClipboardChanged,
+			CanEmbed,
+                        ReservedA,
+                        ReservedB,
+                #endif // _PLATFORM_WIN32_
+                #ifdef _PLATFORM_OS2_
+                        RegisterClipboardFormat,
+                        DeregisterClipboardFormat,
+                        CanEmbed,
+                        CanIncorporate,
+                        PutContentOnPlatformClipboard,
+                #endif // _PLATFORM_OS2_
+                #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_AIX_)
+                        PutContentOnPlatformClipboard,
+                        CanEmbed,
+                        ReservedA,
+                        ReservedB,
+                        ReservedC,
+                #endif // MAC or AIX
+		#ifdef __PRIVATE__
+		    #ifdef _PLATFORM_WIN32_
+			QueryContent,
+                        reserved1,
+                        reserved2,
+		    #endif // _PLATFORM_WIN32_
+                    #ifdef _PLATFORM_OS2_
+                        DispatchHandler,
+                        QueryContent,
+                        ResolvePMPromises,
+                    #endif // _PLATFORM_OS2_
+                    #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_AIX_)
+			QueryContent,
+                        reserved1,
+                        reserved2,
+                    #endif // _PLATFORM_OS2_
+			InitClipboard,
+			NewClipboard,
+			DiscardClipboard,
+			ImportContent,
+			ExportPlatformTypes,
+			PutClipboardOnPlatformClipboard,
+			ImportClipboard;
+		#else
+			reserved1,
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6,
+			reserved7,
+			reserved8,
+			reserved9,
+			reserved10;
+    	        #endif //# __PRIVATE__
+		
+		#ifdef __PRIVATE__
+		   #ifdef PROMISEKEEPER
+			passthru C_xh = ""
+                                                        "#ifdef _PLATFORM_WIN32_"
+							"#ifndef _SOM_OLEPromiseKeeper_xh"
+							"#include <oledpkpr.xh>"
+							"#endif"
+							"#ifndef _OLEMGRW_"
+							"#include <OleMgrW.h>"
+							"#endif"
+							"#endif";
+		   #endif
+			ODSession		fSession;
+			ODHandle		fContainerHandle;
+			ODContainer		fContainer;
+			ODDocument		fDocument;
+			ODDraft			fDraft;
+			ODStorageUnit	fSU;
+			ODDraft			fOriginalDraft;
+			ODUpdateID		fUpdateID;
+			ODUpdateID		fNextUpdateID;
+			ODSShort		fScrapCount;
+			ODSShort		fScrapCountLastChange;
+			ODBoolean		fExportedLinkSpec;
+			ODCloneKind		fOriginalCloneKind;
+			ODUShort		fClonePasteCount;
+                #ifdef _PLATFORM_WIN32_
+			ODBoolean		fbClear;	/* Clear was the last operation */
+			void			*fpIDataObjectLast;
+                        ODUpdateID              fUpdateIDAtLastPlatformClipboardSet;
+		#ifdef PROMISEKEEPER
+			OLEPromiseKeeper	*fPromiseKeeper;	
+		#endif
+			HWND			fhwndClipboardMonitor;
+			ODOLEManager            *fOleManager;
+                #endif //# _PLATFORM_WIN32_
+                #ifdef _PLATFORM_OS2_
+                        ODPart     fClipboardOwner;
+                        HAB        fHab;
+                        OrderedCollection fTypeCollection;
+                        ODUpdateID    fLastImportUpdateID;
+                        ODBoolean     fArePromises;
+                #endif
+    #endif //# __PRIVATE__
+
+  };
+#endif //# _PLATFORM_MACINTOSH_ or WIN32 or OS2
+#endif //# __SOMIDL__
+};
+
+#endif // _CLIPBD_

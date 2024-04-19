@@ -1,0 +1,205 @@
+/* @(#)Z 1.3 com/src/registry/localidl/PartCat.idl, odconfig, od96os2, odos29646d 96/11/15 15:49:07 (96/10/29 09:29:51) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odconfig
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//#
+//#     File:           PartCat.idl
+//#     
+//#     Contains:       Interface for ODPartCategory, ODPartFileType,
+//#                        and ODPartFileExtension classes
+//#     
+//#     Written by:     Joe Ochipinti
+//#     
+//#     Copyright:      @1995 by International Business Machines, Inc., 
+//#                              all rights reserved.
+//#     
+//#     IBM Change History (most recent first):
+//#     
+//#     <1>    6/29/95        JSO  first checked in
+//#     
+//#     To Do:
+//#
+#else
+//#  Copyright: 1993-1994 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _PARTCAT_
+#define _PARTCAT_
+
+#include <somobj.idl>
+
+//==============================================================================
+// Implemenation types
+//==============================================================================
+
+typedef somToken ISOString;
+
+
+//==============================================================================
+// Theory of Operation
+//==============================================================================
+
+/*
+  This file defines classes ODPartFileType and ODPartFileExtension.
+  This class contains information about a part handler class.  This information is 
+  kept by the OpenDoc part registry and is used by the OpenDoc shell and some
+  OpenDoc utilities.
+*/
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODPartFileType;
+interface  ODPartFileExtension;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface ODPartHandlerInfoInt;
+interface PartSet;
+
+//==============================================================================
+// ODPartKind
+//==============================================================================
+
+interface ODPartFileType  : SOMObject
+{
+  void                   InitODPartFileType( in ISOString partFileTypeName);
+  ODPartHandlerInfoInt   GetPreferredPart();
+  void                   SetPreferredPart( in ODPartHandlerInfoInt part);
+  string                 GetKey();
+  boolean                Add( in ODPartHandlerInfoInt part);
+  void                   Remove( in ODPartHandlerInfoInt part); 
+  long                   Count();
+
+  attribute ISOString    partFileTypeName;
+
+#ifdef __SOMIDL__
+
+  implementation
+  {
+
+    passthru C_xh =
+    ""
+    "#include <ODTypes.h>"
+    "";
+
+    functionprefix = ODFileType;
+
+    override:
+      somInit,
+      somUninit,
+      somDumpSelfInt;
+    releaseorder:
+      InitODPartFileType,
+      GetPreferredPart,
+      SetPreferredPart,
+      GetKey,
+      Add,
+      Remove,
+      Count,
+      _get_partFileTypeName,
+      _set_partFileTypeName;
+
+  
+
+    #ifdef __PRIVATE__
+      PartSet                 parts;
+      boolean                 initialized;
+      ODPartHandlerInfoInt    preferredPart;
+    #endif    
+  };
+  
+#endif
+
+};
+
+interface ODPartFileExtension  : SOMObject
+{
+  void                   InitODPartFileExtension( in ISOString partFileExtensionName);
+  ODPartHandlerInfoInt   GetPreferredPart();
+  void                   SetPreferredPart( in ODPartHandlerInfoInt part);
+  string                 GetKey();
+  boolean                Add( in ODPartHandlerInfoInt part);
+  void                   Remove( in ODPartHandlerInfoInt part); 
+  long                   Count();
+
+  attribute ISOString    partFileExtensionName;
+
+#ifdef __SOMIDL__
+
+  implementation
+  {
+
+    functionprefix = ODFileExtension;
+
+    override:
+      somInit,
+      somUninit,
+      somDumpSelfInt;
+    releaseorder:
+      InitODPartFileExtension,
+      GetPreferredPart,
+      SetPreferredPart,
+      GetKey,
+      Add,
+      Remove,
+      Count,
+      _get_partFileExtensionName,
+      _set_partFileExtensionName;
+
+  
+
+    #ifdef __PRIVATE__
+      PartSet                 parts;
+      boolean                 initialized;
+      ODPartHandlerInfoInt    preferredPart;
+    #endif    
+  };
+  
+#endif
+
+};
+#endif // _PARTCAT_
+
+

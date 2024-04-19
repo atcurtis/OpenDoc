@@ -1,0 +1,354 @@
+/* @(#) 1.20 com/src/storage/idl/Link.idl, oddataxfer, od96os2, odos29646d 10/31/96 07:56:42 [11/15/96 15:27:51] */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27,94
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#     File:           Link.idl
+//#
+//#     Contains:       Interface of ODLink class
+//#
+//#     Owned by:       Craig Carper
+//#
+//#     Copyright:      (R) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <19>     8/15/95        CC              1275241: IDL review.
+//#             <18>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <17>     7/28/95        CC              1183569: Added SetLinkDirty method.
+//#             <16>     7/27/95        CC              1259986: Added SectionHandle parameter to
+//#                                                                     WriteLinkEdition.
+//#             <15>     7/21/95        CC              1153788: GetTextValue changed to
+//#                                                                     GetPlatformValue.
+//#             <14>     7/14/95        TJ              Made Some TypeDefs into Structs so SOM Slim
+//#                                                                     can get there correct Sizes.
+//#             <13>      3/3/95        CC              1223861, 1153949: Override
+//#                                                                     ShowLinkDestinationInfo().
+//#             <12>     1/19/95        CC              1183569 Added fDirty flag.
+//#             <11>    12/22/94        CC              1207987 Added DeleteLinkEdition().
+//#             <10>    12/16/94        CC              1203516Removed ODLinkSource parameter from
+//#                                                                     InitLink().
+//#              <9>    11/30/94        RR              #1188078 Use FSSpec, not ODFileSpec in
+//#                                                                     private methods
+//#              <8>     10/4/94        CC              1190862 - Added override of Release().
+//#              <7>     9/15/94        CC              1186669 - Override CloneInto().
+//#              <6>      9/6/94        CC              Override of UpdateDependents is private.
+//#              <5>     8/10/94        CC              1179943 - Moved platform-independent
+//#                                                                     implementation into LinkSrcB.
+//#              <4>     6/21/94        CC              Added functionprefix.
+//#              <3>     6/14/94        CC              Added passthru C_xh so clients of private
+//#                                                                     xh file will compile.
+//#              <2>      6/9/94        CC              Changed ODFileSpec parms to ODFileSpec*.
+//#              <1>      6/8/94        CG              first checked in
+//#              <9>      6/7/94        RR              Privatise change log
+//#              <8>     5/12/94        CC              Added ShowLinkDestinationInfo.
+//#              <7>      5/4/94        CC              Adjustments to in/out/inout; override of
+//#                                                                     UpdateDependents() made private.
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (R) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _LINK_
+#define _LINK_
+
+#ifndef _LINKB_
+#include "LinkB.idl"
+#endif
+
+#ifdef _PLATFORM_OS2_
+  #ifndef _IODDEFS_
+  #include <IODDefs.idl>
+  #endif
+#endif
+
+//==============================================================================
+// Theory of Operation (Copied from Feb-13 build)
+//==============================================================================
+
+/*
+  This class is used to represent the destination side of OpenDoc links.
+  ODDrafts create and own these links. The source ODPart will ask the draft
+  to create an ODLinkSource and an ODLink pair, and return the ODLink
+  object to the the destination part.  The destination part uses the ODLink
+  object to extract the contents of the link.
+*/
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODLink;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface       ODStorageUnit;
+interface       ODLinkSource;
+
+#ifdef __PRIVATE__
+
+//==============================================================================
+// Implementation types
+//==============================================================================
+
+// #ifdef _PLATFORM_MACINTOSH_
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+typedef somToken AliasHandle;
+typedef somToken SectionHandle;
+typedef somToken EditionContainerSpec;
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_OS2_
+typedef somToken FSSpec;                // THIS IS A BOGUS DEFINITION. DO NOT USE IN A FIELD!
+
+#ifdef _PLATFORM_WIN32_
+typedef somToken ODPartList;
+typedef somToken LPVOID;
+#endif //# _PLATFORM_WIN32_
+
+#endif //# __PRIVATE__
+
+//==============================================================================
+// ODLink
+//==============================================================================
+
+interface ODLink : ODBaseLink
+{
+#ifdef _PLATFORM_OS2_
+        void SetDescription (in ODLinkDescription Desc);
+           // called by target Part to set its description.
+
+        void GetDescription (out ODLinkDescription Desc);
+           // called by target Part to retrieve the description of itself.
+
+        ODBoolean IsRegistered();
+           // Returns whether of not this LinkTarget is registered to receive automatic updates.
+
+#endif // _PLATFORM_OS2_
+#ifdef __PRIVATE__
+
+        void InitLink(in ODStorageUnit storageUnit);
+
+        void InitLinkFromStorage(in ODStorageUnit storageUnit);
+
+#ifdef _PLATFORM_OS2_
+        void GetLinkSourceConnectionData (out ODLinkConnectionData* srcConnData);
+           // called by the draft to retrieve the description of the
+           // source content to which this link target is linked
+
+        void GetConnectionData (out ODLinkConnectionData* ConnData);
+           // called by the draft to retreive the description of the link
+
+#endif // _PLATFORM_OS2_
+
+#ifdef _PLATFORM_MACINTOSH_
+
+        AliasHandle CreateLinkEdition(in EditionContainerSpec editionContainer,
+                                                                        in FSSpec *documentSpec,
+                                                                        in ODULong sectionID,
+                                                                        in ODLinkKey key);
+
+        AliasHandle GetLinkEdition(in ODLinkKey key);
+
+        void DeleteLinkEdition(in ODLinkKey key);
+
+        void UpdateLinkEdition(in ODLinkKey key);
+
+        void WriteLinkEdition(in SectionHandle section,
+                                                        in FSSpec *documentSpec,
+                                                        in ODLinkKey key);
+
+#endif //# _PLATFORM_MACINTOSH_
+#ifdef _PLATFORM_WIN32_
+
+        ODHandle CloneIntoMemoryContainer(in ODLinkKey key);
+
+        void RefreshDataObject(in ODLinkKey key);
+
+        void UseItemName( in char *pszItemName );
+
+        char* GetItemName( );
+
+        LPVOID GetDataObject( in ODLinkKey key );
+
+#endif //# _PLATFORM_WIN32_
+        //# Private to implementation
+
+#ifdef _PLATFORM_MACINTOSH_
+        ODHandle GetPlatformValue(in ODPlatformType platformType, in ODLinkKey key);
+        ODHandle CloneToMemoryContainer(in ODLinkKey key);
+
+#endif // _PLATFORM_MACINTOSH_
+        void SetLinkDirty();
+#ifdef _PLATFORM_OS2_
+        ODHandle CloneToMemoryContainer(in ODLinkKey key);
+
+#endif // _PLATFORM_OS2_
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+#if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODLink;
+
+                override:
+                #ifdef __PRIVATE__
+                        UpdateDependents,
+                #endif
+                        somUninit,
+                        Release,
+                        Externalize,
+                        ReleaseAll,
+                #if defined(_PLATFORM_MACINTOSH_) || defined(_PLATFORM_WIN32_)
+                        ShowLinkDestinationInfo,
+                #endif
+                        CloneInto;
+
+                releaseorder:
+                #ifdef _PLATFORM_OS2_
+                        SetDescription,
+                        GetDescription,
+                        IsRegistered,
+                #endif
+                #ifdef __PRIVATE__
+                  #ifdef _PLATFORM_MACINTOSH_
+                        InitLink,
+                        InitLinkFromStorage,
+                        CreateLinkEdition,
+                        GetLinkEdition,
+                        DeleteLinkEdition,
+                        UpdateLinkEdition,
+                        GetPlatformValue,
+                        CloneToMemoryContainer,
+                        WriteLinkEdition,
+                        SetLinkDirty,
+                  #endif //# _PLATFORM_MACINTOSH_
+                  #ifdef _PLATFORM_OS2_
+                        InitLink,
+                        InitLinkFromStorage,
+                        CloneToMemoryContainer,
+                        GetConnectionData,
+                        GetLinkSourceConnectionData,
+                        SetLinkDirty,
+                        ReservedE;
+                  #endif //# _PLATFORM_OS2_
+                  #ifdef _PLATFORM_WIN32_
+                        InitLink,
+                        InitLinkFromStorage,
+                        GetPlatformValue,
+                        ReservedA,
+                        CloneIntoMemoryContainer,
+                        RefreshDataObject,
+                        UseItemName,
+                        GetItemName,
+                        GetDataObject,
+                        SetLinkDirty;
+                  #endif //# _PLATFORM_WIN32_
+                  #ifdef _PLATFORM_AIX_
+                        InitLink,
+                        InitLinkFromStorage,
+                        GetPlatformValue,
+                        SetLinkDirty,
+                        CloneToMemoryContainer,
+                        ReservedB,
+                        ReservedC,
+                        ReservedD,
+                        ReservedE,
+                        ReservedF;
+                  #endif //# _PLATFORM_AIX_
+                #else
+                        reserved1,
+                        reserved2,
+                        reserved3,
+                        reserved4,
+                        reserved5,
+                        reserved6,
+                        reserved7,
+                        reserved8,
+                        reserved9,
+                        reserved10;
+                #endif
+
+        #ifdef __PRIVATE__
+                        passthru C_xh = ""
+                                                        "#ifdef _PLATFORM_MACINTOSH_"
+                                                        "#ifndef __EDITIONS__"
+                                                        "#include <Editions.h>"
+                                                        "#endif"
+                                                        ""
+                                                        "#ifndef __FILES__"
+                                                        "#include <Files.h>"
+                                                        "#endif"
+                                                        ""
+                                                        "#ifndef __ALIASES__"
+                                                        "#include <Aliases.h>"
+                                                        "#endif"
+                                                        "#endif"
+                                                        ""
+                                                        "#ifdef _PLATFORM_OS2_"
+                                                        "#ifndef _ODTYPESB_"
+                                                        "#include <ODTypesB.xh>"
+                                                        "#endif"
+                                                        ""
+                                                        "#include <IODDefs.xh>"
+                                                        "typedef unsigned long SectionHandle;"
+                                                        "typedef unsigned long EditionContainerSpec;"
+                                                        "#endif"
+                                                        "";
+                #if defined(_PLATFORM_MACINTOSH_) || defined (_PLATFORM_OS2_) || defined(_PLATFORM_AIX_)
+                        SectionHandle   fSection;
+                #endif //# _PLATFORM_MACINTOSH_
+                #ifdef _PLATFORM_WIN32_
+                        char*           fpszItemName;   // OLE item moniker name
+                        LPVOID          fpDataObject;   // OLE data object
+                #endif //# _PLATFORM_WIN32_
+                        ODBoolean               fDirty;
+        #else  //# __PRIVATE__
+                        passthru C_xh = ""
+                                                        "#ifdef _PLATFORM_OS2_"
+                                                        "#ifndef _ODTYPESB_"
+                                                        "#include <ODTypesB.xh>"
+                                                        "#endif"
+                                                        "#endif"
+                                                        "";
+
+        #endif //# __PRIVATE__
+        };
+#endif //# _PLATFORM_MACINTOSH_ or _PLATFORM_WIN32_ or _PLATFORM_OS2_
+#endif //# __SOMIDL__
+};
+
+#endif // _LINK_

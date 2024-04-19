@@ -1,0 +1,169 @@
+/* @(#) 1.7 com/src/ui/idl/WinIter.idl, odui, od96os2, odos29646d 10/30/96 18:06:18 [11/15/96 15:28:38] */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+
+//# IBM Change History (most recent first):                         */
+//#          2/20/96 jrb  Complete Apple DR4 Integration            */
+//#          8/22/95 jso  Merge with Apple dr3 code                 */
+//#  120349  5/15/95 map  Fix up IDL copyright                      */
+//#******************************************************************/
+//#
+//#     File:           WinIter.idl
+//#
+//#     Contains:       Class definition for ODWindowIterator
+//#
+//#     Owned by:       Richard Rodseth
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#              <5>     8/15/95        RR              #1275241 IDL Review
+//#              <4>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#              <3>     6/22/95        RR              #1245283 Undoable frame deletion
+//#                                                                     #1209427 Changed private api between
+//#                                                                     iterator and iteratee to enable deletion
+//#                                                                     while iterating.
+//#              <2>     6/16/94        RR              Added function prefix
+//#              <1>      6/8/94        RR              first checked in
+//#              <1>      6/8/94        RR              first checked in
+//#              <5>      6/7/94        RR              Privatise change log
+//#              <1>      5/9/94        VL              first checked in
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _WINITER_
+#define _WINITER_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODWindowIterator;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODWindow;
+#ifdef __PRIVATE__
+interface  ODWindowState;
+#endif
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken LinkedListIterator;
+#endif
+
+//=====================================================================================
+// Class ODWindowIterator
+//=====================================================================================
+
+interface ODWindowIterator : ODObject
+{
+#ifdef __PRIVATE__
+
+        void InitWindowIterator(in ODWindowState windowState);
+
+#endif
+
+        ODWindow First();
+
+        ODWindow Next();
+
+        ODWindow Last();
+
+        ODWindow Previous();
+
+        ODBoolean IsNotComplete();
+
+#ifdef __SOMIDL__
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODWindowIterator;
+
+                override:
+                        somUninit;
+
+                releaseorder:
+                        First,
+                        Next,
+                        Last,
+                        Previous,
+                        IsNotComplete,
+                #ifdef __PRIVATE__
+                        InitWindowIterator;
+                #else
+                        reserved1;
+                #endif
+
+                #ifdef __PRIVATE__
+                passthru C_xih =
+                ""
+                "class LinkedListIterator;"
+                "";
+                  ODWindowState  fWindowState;
+                  ODULong fIteratorID;
+#if defined(_PLATFORM_WIN32_) || defined(_PLATFORM_OS2_) || defined(_PLATFORM_UNIX_)
+                  ODBoolean fIsNotCompleteWorks;
+#endif
+                #endif
+
+        };
+#endif //# __SOMIDL__
+};
+
+#endif //# _WINITER_

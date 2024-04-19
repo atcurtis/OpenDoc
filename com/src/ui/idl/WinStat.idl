@@ -1,0 +1,542 @@
+/* @(#) 1.19 com/src/ui/idl/WinStat.idl, odui, od96os2, odos29646d 10/30/96 18:06:23 [11/15/96 15:28:39] */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/********************************************************************/
+#ifdef __PRIVATE__
+
+//# IB\ Change History (most recent first):                         */
+//#  23295 09/24/96 lp  Change "Ex" parameters of CreateMenuBarEx() */
+//#                       and CreatePopupMenuEx() to pass a counter */
+//#                       and an array of (HMENU, ID) pairs.        */
+//#                     #ifdef these two APIs to be WIN32 only.     */
+//#  21996 05/15/96 brr Added API's for Popup.                      */
+//#                       CreatePopupMenu                           */
+//#                       CreatePopupMenu                           */
+//#                       AcquireBasePopupMenu                      */
+//#                     Renamed GetCurrentPopupMenu to              */
+//#                       AcquireCurrentPopupMenu                   */
+//#  21498 04/29/96 brr Created CreateMenuBarEx                     */
+//#  21467 04/26/96 brr Changed submenuIDarray to a *ODMenuItemID   */
+//#  21316 04/22/96 brr Changed new param to InitMenuBar to be an   */
+//#                      address to an array of submenu ID's rather */
+//#                      than the menuID we had tried to do with    */
+//#                      defect #21263                              */
+//#         2/20/96 jrb  Complete Apple DR4 Integration             */
+//# 145958 12/06/95 pfe  Change to reflect .longname in title       */
+//# 143654 11/13/95 ced  Apple DR4 IDL changes.                     */
+//# 135340  9/13/95 BLG  Added 2 new methods for popups - current popup */
+//# 133968  8/23/95 ced  DR3 Port                                   */
+//# 122943  5/21/95 map  Method name changes for multi-threading    */
+//# 120349  5/15/95 map  Fix problem with //# comment on #endifs    */
+//# 107897  5/12/95 st   added 2 new methods for popups             */
+//# 119388  4/29/95 st   changes for menu code - need currentmenubar*/
+//# 120604  4/28/95 ced  Merge with B1C16 Apple code.               */
+//#******************************************************************/
+//#
+//#     File:           WinStat.idl
+//#
+//#     Contains:       Class definition for ODWindowState
+//#
+//#     Owned by:       Richard Rodseth
+//#
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#     Change History (most recent first):
+//#
+//#             <22>    10/24/95        RR              #1295596 OpenWindows no longer calls
+//#                                                                     select() during normal document open. Added
+//#                                                                     fActivateOnOpen
+//#             <21>    10/16/95        RR              #1293067 Pass shouldDispose to
+//#                                                                     RegisterWindow
+//#             <20>     8/15/95        RR              #1275241 IDL Review
+//#             <19>      8/3/95        RR              #1257260: Collapse B classes. Remove
+//#                                                                     somInit methods. Don't call IsInitialized
+//#                                                                     or SubclassResponsibility
+//#             <18>     6/22/95        RR              #1245283 Undoable frame deletion
+//#                                                                     #1209427 Changed private api between
+//#                                                                     iterator and iteratee to enable deletion
+//#                                                                     while iterating. RemoveWindow does lazy
+//#                                                                     deletion if iteration is in progress
+//#             <17>     6/15/95        RR              #1256879 Get->AcquireCurrentMenuBar.
+//#             <16>      6/8/95        RR              #1257260 Collapse base classes. #1214898
+//#                                                                     StdTypes.r -> ODTypes.r
+//#             <15>     5/25/95        VL              1251403: Multithreading naming support.
+//#             <14>      4/5/95        CL              #1221461: Fix number of reserved methods
+//#             <13>     3/22/95        RR              #1225420, 1227993 Added
+//#                                                                     RegisterWindowForFrame
+//#             <12>      3/7/95        RR              # 1220929 Added fMenuFocus
+//#             <11>     2/20/95        Te              #1221861 BB: Incomplete AOCE support needs
+//#                                                                     to be removed from OpenDoc
+//#             <10>     1/23/95        RR              # 1211853 Added CreateMenuBar
+//#              <9>     9/23/94        RR              Added CreateFacet to override list
+//#              <8>     8/25/94        RR              Added private GetBaseMenuBar
+//#              <7>     8/16/94        JBS             1180387: add CreateCanvas()
+//#              <6>     8/15/94        JBS             1181138: add frameType to CreateFrame();
+//#                                                                     1181156: UI API Cleanup
+//#              <5>     7/27/94        eeh             fix use of Point and Rect (honesty to SOM )
+//#              <4>     7/21/94        eeh             bounds param to FixUpMailerWindow -> Rect*
+//#              <3>     6/20/94        jpa             Fixed syntax err in passthru.
+//#              <2>     6/16/94        RR              Added function prefix
+//#              <1>      6/8/94        RR              first checked in
+//#              <6>     5/23/94        RR              Passthru to xh rather than xih
+//#
+//#     To Do:
+//#
+#else
+//#     Copyright:      (r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _WINSTAT_
+#define _WINSTAT_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODWindowState;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODCanvas;
+interface  ODDraft;
+interface  ODFacet;
+interface  ODFrame;
+interface  ODMenuBar;
+interface  ODPart;
+interface  ODShape;
+interface  ODTransform;
+interface  ODWindow;
+interface  ODWindowIterator;
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+interface  ODPopup;
+#endif
+#ifdef __PRIVATE__
+interface  ODSession;
+#endif
+
+#ifdef _PLATFORM_UNIX_
+typedef somToken Display;
+typedef somToken Screen;
+typedef somToken XtAppContext;
+typedef somToken Widget;
+#endif
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+//# #ifdef _PLATFORM_MACINTOSH_     ced
+typedef somToken LinkedList;
+typedef somToken Str255;
+//# #endif //# _PLATFORM_MACINTOSH_
+
+#endif
+
+//=====================================================================================
+// ODWindowState
+//=====================================================================================
+
+
+interface ODWindowState :  ODObject
+{
+
+        ODWindow RegisterWindow(in ODPlatformWindow newWindow,
+                                                        in ODType frameType,
+                                                        in ODBoolean isRootWindow,
+                                                        in ODBoolean isResizable,
+                                                        in ODBoolean isFloating,
+                                                        in ODBoolean shouldSave,
+                                                        in ODBoolean shouldDispose,
+                                                        in ODPart rootPart,
+                                                        in ODTypeToken viewType,
+                                                        in ODTypeToken presentation,
+                                                        in ODFrame sourceFrame);
+
+        ODWindow RegisterWindowForFrame(in ODPlatformWindow newWindow,
+                                                        in ODFrame frame,
+                                                        in ODBoolean isRootWindow,
+                                                        in ODBoolean isResizable,
+                                                        in ODBoolean isFloating,
+                                                        in ODBoolean shouldSave,
+                                                        in ODBoolean shouldDispose,
+                                                        in ODFrame sourceFrame);
+
+        ODWindow AcquireWindow(in ODID id);
+
+        void Internalize(in ODDraft draft);
+
+        void Externalize(in ODDraft draft);
+
+        void SetDefaultWindowTitles(in ODDraft draft);
+
+        void OpenWindows(in ODDraft draft);
+
+        void CloseWindows(in ODDraft draft);
+
+        ODUShort GetWindowCount();
+
+        ODUShort GetRootWindowCount(in ODDraft draft);
+
+        ODUShort GetTotalRootWindowCount();
+
+        ODBoolean IsODWindow(in ODPlatformWindow aWindow);
+
+        ODWindow  AcquireODWindow(in ODPlatformWindow aWindow);
+
+        ODWindowIterator  CreateWindowIterator();
+
+        ODWindow  AcquireActiveWindow();
+
+        void SetBaseMenuBar(in ODMenuBar theMenuBar);
+
+        ODMenuBar  CopyBaseMenuBar();
+
+        void AdjustPartMenus();
+
+#ifdef _PLATFORM_WIN32_
+        ODPopup   CreatePopupMenuEx(in ODPlatformMenuBar popupMenu,
+                                    in ODUShort          subMenuIDcount,
+                                    in ODMenuIDInfo*     subMenuIDinfo);
+
+        ODMenuBar CreateMenuBarEx(in ODPlatformMenuBar  menuBar,
+                                  in ODUShort           subMenuIDcount,
+                                  in ODMenuIDInfo*      subMenuIDinfo);
+#endif // PLATFORM_WIN32
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+        ODPopup   CreatePopupMenu(in ODPlatformMenuBar popupMenu);
+#endif // PLATFORM_OS2, PLATFORM_WIN32, PLATFORM_UNIX
+
+        ODMenuBar CreateMenuBar(in ODPlatformMenuBar menuBar);
+
+        ODCanvas CreateCanvas(in ODGraphicsSystem graphicsSystem,
+                                                  in ODPlatformCanvas platformCanvas,
+                                                  in ODBoolean isDynamic,
+                                                  in ODBoolean isOffscreen);
+
+        ODFacet CreateFacet(in ODFrame frame,
+                                            in ODShape clipShape,
+                                            in ODTransform externalTransform,
+                                            in ODCanvas canvas,
+                                            in ODCanvas biasCanvas);
+
+// #ifdef _PLATFORM_MACINTOSH_
+
+        ODMenuBar  AcquireCurrentMenuBar();
+
+        ODMenuBar  AcquireBaseMenuBar();
+
+#ifdef _PLATFORM_MACINTOSH_
+        void DeactivateFrontWindows();
+
+    void ActivateFrontWindows();
+#endif
+
+    ODWindow AcquireFrontWindow();
+
+    ODWindow AcquireFrontFloatingWindow();
+
+    ODWindow AcquireFrontRootWindow();
+
+// #endif //# _PLATFORM_MACINTOSH_
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+
+    void SetBasePopup(in ODPopup thePopup);
+
+    ODPopup  CopyBasePopup();
+
+    ODPopup    AcquireCurrentPopupMenu();
+
+    ODPopup    AcquireBasePopupMenu();
+
+    ODPlatformWindow CreatePlatformWindow(in ODBoolean isFloating);
+#endif
+
+#ifdef _PLATFORM_UNIX_
+    Display*     GetDisplay();
+
+    Screen*      GetScreen();
+
+    XtAppContext GetAppContext();
+#endif
+
+#ifdef __PRIVATE__
+
+        void InitWindowState(in ODSession session);
+
+        void SetCurrentMenuBar(in ODMenuBar theMenuBar);
+
+        ODWindow  AddWindow(in ODWindow window);
+        void RemoveWindow(in ODWindow oldWindow);
+#ifdef _PLATFORM_MACINTOSH_
+        ODWindow  FindODWindow(in Point globalPoint);
+#endif
+        void ReleaseWindow(in ODWindow window);
+
+#ifdef _PLATFORM_MACINTOSH_
+        void SuspendResume(in ODEventData event);
+#endif
+
+        void SelectODWindow(in ODWindow window);
+#ifdef _PLATFORM_MACINTOSH_
+        void DragODWindow(in ODWindow window,
+                                          in Point startPoint,
+                                          in Rect draggingBounds);
+#endif
+        void ShowODWindow(in ODWindow window);
+        void HideODWindow(in ODWindow window);
+
+        ODULong AddIterator(in ODWindowIterator iterator);
+        ODWindow First(in ODULong iteratorID);
+        ODWindow Next(in ODULong iteratorID);
+        ODWindow Last(in ODULong iteratorID);
+        ODWindow Previous(in ODULong iteratorID);
+        ODBoolean IsNotComplete(in ODULong iteratorID);
+        void RemoveIterator(in ODULong iteratorID);
+
+        void ActivateWindow(in ODPlatformWindow platformWindow);
+        void DeactivateWindow(in ODPlatformWindow platformWindow);
+        void HighlightAndActivateWindow(in ODPlatformWindow platformWindow,
+                                                                          in ODBoolean activate);
+        ODPlatformWindow GetLastFloatingPlatformWindow();
+        ODPlatformWindow GetFrontNonFloatingPlatformWindow();
+
+#if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+    void       SetCurrentPopUpMenu(in ODPopup thePopup); // 135340
+    void SetLongName(in string longname);    //145958 pfe
+    string GetLongName();                    //145958 pfe
+#endif
+
+#ifdef _PLATFORM_UNIX_
+    // These methods are only available using the following protocol.  Within
+    // a method, invoke the ResetRootChildren method with a kODTrue parameter
+    // and then the other two methods are available.  When done using within
+    // that method, invoke ResetRootChildren with a kODFalse parameter.
+    // Note that these methods are intended to only be used within WinStat.cpp.
+    void      ResetRootChildren(in ODBoolean Entry);
+    ODBoolean IsODWindowRootChild(in ODPlatformWindow aWindow);
+    ODWindow  AcquireODWindowRootChild(in ODPlatformWindow aWindow);
+    void SaveActiveWindow(in ODWindow window);
+#endif
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+// #ifdef _PLATFORM_MACINTOSH_
+        implementation
+        {
+                majorversion = 1; minorversion = 0;
+
+                functionprefix = ODWindowState;
+
+                override:
+                        somUninit,
+                        Purge;
+
+           releaseorder:
+                        RegisterWindow,
+                        RegisterWindowForFrame,
+                        AcquireWindow,
+                        Internalize,
+                        Externalize,
+                        SetDefaultWindowTitles,
+                        OpenWindows,
+                        CloseWindows,
+                        GetWindowCount,
+                        GetRootWindowCount,
+                        GetTotalRootWindowCount,
+                        IsODWindow,
+                        AcquireODWindow,
+                        CreateWindowIterator,
+                        AcquireActiveWindow,
+                        SetBaseMenuBar,
+                        CopyBaseMenuBar,
+                        AdjustPartMenus,
+
+                #ifdef _PLATFORM_WIN32_
+                        CreatePopupMenuEx,
+                        CreateMenuBarEx,
+                #endif // PLATFORM_WIN32
+
+                #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+                        CreatePopupMenu,
+                #endif // PLATFORM_OS2, PLATFORM_WIN32, PLATFORM_UNIX
+
+                        CreateMenuBar,
+                        CreateCanvas,
+                        CreateFacet,
+
+                        AcquireCurrentMenuBar,
+                        AcquireBaseMenuBar,
+        #ifdef _PLATFORM_MACINTOSH_
+                        DeactivateFrontWindows,
+                        ActivateFrontWindows,
+        #endif
+                        AcquireFrontWindow,
+                        AcquireFrontFloatingWindow,
+                        AcquireFrontRootWindow,
+        #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+                        SetBasePopup,
+                        CopyBasePopup,
+                        AcquireCurrentPopupMenu,
+                        AcquireBasePopupMenu,
+                        CreatePlatformWindow,
+        #endif
+#ifdef _PLATFORM_UNIX_
+                        GetDisplay,
+                        GetScreen,
+                        GetAppContext,
+#endif
+
+                #ifdef __PRIVATE__
+                        InitWindowState,
+                        SetCurrentMenuBar,
+                        AddWindow,
+                        RemoveWindow,
+          #ifdef _PLATFORM_MACINTOSH_
+                        FindODWindow,
+          #endif
+                        ReleaseWindow,
+          #ifdef _PLATFORM_MACINTOSH_
+                        SuspendResume,
+          #endif
+                        SelectODWindow,
+          #ifdef _PLATFORM_MACINTOSH_
+                        DragODWindow,
+          #endif
+                        ShowODWindow,
+                        HideODWindow,
+                        AddIterator,
+                        First,
+                        Next,
+                        Last,
+                        Previous,
+                        IsNotComplete,
+                        RemoveIterator,
+                        ActivateWindow,
+                        DeactivateWindow,
+                        HighlightAndActivateWindow,
+                        GetLastFloatingPlatformWindow,
+                        GetFrontNonFloatingPlatformWindow
+          #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+            ,
+            SetCurrentPopUpMenu,
+            SetLongName,
+            GetLongName
+          #endif
+
+#ifdef _PLATFORM_UNIX_
+           ,ResetRootChildren,
+            IsODWindowRootChild,
+            AcquireODWindowRootChild,
+            SaveActiveWindow
+#endif
+          ;
+                #else
+          #ifdef _PLATFORM_MACINTOSH_
+                        reserved1, reserved2, reserved3, reserved4, reserved5, reserved6,
+                        reserved7, reserved8, reserved9, reserved10, reserved11, reserved12,
+                        reserved13, reserved14, reserved15, reserved16, reserved17, reserved18,
+                        reserved19,reserved20,reserved21,reserved22,reserved23;
+          #endif
+          #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_)
+            reserved1, reserved2, reserved3, reserved4, reserved5, reserved6,
+            reserved7, reserved8, reserved9, reserved10, reserved11, reserved12,
+            reserved13, reserved14, reserved15, reserved16, reserved17, reserved18,
+            reserved19, reserved20, reserved21, reserved22, reserved23;
+          #endif
+          #ifdef _PLATFORM_UNIX_
+            reserved1, reserved2, reserved3, reserved4, reserved5, reserved6,
+            reserved7, reserved8, reserved9, reserved10, reserved11, reserved12,
+            reserved13, reserved14, reserved15, reserved16, reserved17, reserved18,
+            reserved19, reserved20, reserved21, reserved22, reserved23, reserved24,
+            reserved25, reserved26, reserved27;
+          #endif
+                #endif
+
+    #ifdef __PRIVATE__
+                passthru C_xih =
+                        ""
+                        "class LinkedList;"
+          #ifdef _PLATFORM_MACINTOSH_
+                        "#ifndef __TYPES__"
+                        "#include <Types.h>"
+                        "#endif"
+                        "#ifndef __WINDOWS__"
+                        "#include <Windows.h>"
+                        "#endif"
+          #endif
+                        "";
+
+                ODSession               fSession;
+                LinkedList*     fWindowList;
+                ODID                    fNextID;
+                ODMenuBar               fBaseMenuBar;
+                ODMenuBar               fCurrentMenuBar;
+                ODTypeToken             fMenuFocus;
+                ODULong                 fIteratorCount;
+                ODBoolean               fActivateOnOpen;
+
+      #if defined(_PLATFORM_OS2_) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_UNIX_)
+        ODPopup                  fBasePopup;
+        ODPopup                  fCurrentPopupMenu;
+        char*                    fDocLongName;   //145958 pfe
+      #endif
+      #ifdef _PLATFORM_UNIX_
+        ODULong                  fResetRootEntryCount;
+        Display*                 fDisplay;
+        Screen*                  fScreen;
+        XtAppContext             fAppContext;
+        Widget                   fApplicationShell;
+        ODWindow                 fActiveWindow;
+      #endif
+    #endif
+
+  };
+// #endif //# _PLATFORM_MACINTOSH_
+#endif //# __SOMIDL__
+};
+
+#endif // _WINSTAT_

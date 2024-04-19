@@ -1,0 +1,162 @@
+/* @(#)Z 1.6 com/src/imaging/idl/Shape.idl, odimaging, od96os2, odos29646d 96/11/15 15:25:06 (96/10/29 09:25:57) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//# IBM Change History (most recent first):                         */
+//#          2/22/96 jab  Merge DR4 and OS/2 Feb. 13 drop.          */
+//#                       Modified #ifdef for better portability    */
+//#                       across platforms.                         */
+//#  133698  8/23/95 jso  Port dr3                                  */
+//#  120349  5/15/95 map  Fix problem with //# comment on #endifs   */
+//#  120349  5/15/95 map  Fix up IDL copyright                      */
+//#******************************************************************/
+//#
+//#	File:		Shape.idl
+//#
+//#	Contains:	ODShape, Mac-specific extensions to ODBaseShape
+//#
+//#	Owned by:	Jens Alfke
+//#
+//#	Copyright:	(r) 1994 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <7>	  9/8/95	jpa		IDL cleanup [1281687]
+//#		 <6>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <5>	 4/15/95	jpa		Fixed syntax error in releaseorder
+//#									[1237756]
+//#		 <4>	 12/5/94	jpa		Code review fixes. [1203923]
+//#		 <3>	 8/17/94	jpa		Added "functionprefix" directive. [1181512]
+//#		 <2>	 7/26/94	jpa		Added somInit method.
+//#		 <1>	  6/8/94	jpa		first checked in
+//#		 <6>	  6/7/94	jpa		Tweaked more params.
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _SHAPE_
+#define _SHAPE_
+
+#ifndef _SHAPEB_
+#include "ShapeB.idl"      
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface ODShape;
+
+//==============================================================================
+// ODShape
+//==============================================================================
+
+
+interface ODShape :  ODBaseShape
+{
+  void    InitShape();
+    
+#ifdef _PLATFORM_MACINTOSH_
+
+  ODRgnHandle  GetQDRegion();
+        
+  void    SetQDRegion(in ODRgnHandle rgn );
+        
+  ODgxShape  GetGXShape( );
+        
+  void    SetGXShape(in ODgxShape s);
+        
+  ODRgnHandle  CopyQDRegion();
+
+#endif  // _PLATFORM_MACINTOSH_
+
+
+#if defined( _PLATFORM_OS2_ ) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+
+  ODRgnHandle  GetRegion();
+
+  void    SetRegion(in ODRgnHandle rgn );
+
+  ODRgnHandle  CopyRegion();
+
+#endif // IBM Platforms 
+
+  
+#ifdef __SOMIDL__
+  implementation
+  {
+#ifdef _PLATFORM_MACINTOSH_ // CED 
+    releaseorder:
+      InitShape,
+      GetQDRegion,
+      SetQDRegion,
+      GetGXShape,
+      SetGXShape,
+      CopyQDRegion;
+
+#endif  // _PLATFORM_MACINTOSH_
+
+
+#if defined( _PLATFORM_OS2_ ) || defined(_PLATFORM_WIN32_) || defined(_PLATFORM_AIX_)
+    releaseorder:
+      InitShape,
+      GetRegion,
+      SetRegion,
+      CopyRegion;
+
+#endif // IBM Platforms 
+  
+    majorversion = 1; minorversion = 0;
+
+    functionprefix = ODShape;
+  };
+#endif
+};
+
+
+#endif //# _SHAPE_
+
+

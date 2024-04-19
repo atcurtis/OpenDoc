@@ -1,0 +1,102 @@
+/* @(#)Z 1.4 os2/src/imaging/idl/OS2WCanv.idl, odimaging, od96os2, odos29646d 96/11/15 15:49:42 (96/08/23 01:42:10) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odimaging
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+/********************************************************************/
+/*                                                                  */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+//#******************************************************************/
+//#
+//#  File:    OS2WCanv.idl
+//#
+//#  Contains:  ODOS2WindowCanvas
+//#
+//#  Written by:  Chuck Dumont
+//#
+#endif
+
+#ifndef _OS2WCANV_
+#define _OS2WCANV_
+
+#ifndef _OS2PCANV_
+#include "OS2PCanv.idl"
+#endif // _OS2PCANV_
+
+//==============================================================================
+// Classes used this interface
+//==============================================================================
+
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODOS2WindowCanvas;
+
+//==============================================================================
+// ODOS2WindowCanvas
+//==============================================================================
+
+interface ODOS2WindowCanvas :  ODOS2Canvas
+{
+
+#ifdef __SOMIDL__
+  implementation
+  {
+  majorversion = 1; minorversion = 0;
+
+  releaseorder:
+    InitPlatformWindowCanvas;
+
+  override:
+    HasWindow,
+    IsInitialized,
+    GetPlatformCanvasType,
+    InitPlatformCanvas,
+    InitPlatformWindowCanvas,
+    GetPS,
+    ReleasePS,
+    SetPS,
+    GetWindow;
+
+
+  functionprefix = ODOS2WindowCanvas;
+
+  #ifdef __PRIVATE__
+    HPS	     fHps;
+    HWND     fHWND;
+    ODULong  fCachedPSRefCount;
+    ODBoolean fInitialized;
+  #endif
+  };
+#endif
+};
+
+#endif // _OS2WCANV_

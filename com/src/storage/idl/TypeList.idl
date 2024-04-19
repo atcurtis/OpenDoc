@@ -1,0 +1,144 @@
+/* @(#)Z 1.4 com/src/storage/idl/TypeList.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:28:00 (96/10/29 09:33:30) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		TypeList.idl
+//#
+//#	Contains:	Definition of ODTypeList
+//#
+//#	Owned by:	Craig Carper
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <7>	 8/15/95	CC		1275241: IDL review.
+//#		 <6>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <5>	 5/17/95	VL		1249181: Made Init method private.
+//#		 <4>	 6/23/94	CC		Added private GetImplementation() method;
+//#									added functionprefix; removed
+//#									InitTypeListInHeap() method.
+//#		 <3>	 6/14/94	CC		Changed ODHeap to ODMemoryHeap.
+//#		 <2>	 6/10/94	VL		Fixed problem with header.
+//#		 <1>	  6/8/94	VL		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _TYPELIST_
+#define _TYPELIST_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+interface  ODTypeList;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+interface ODTypeListIterator;
+
+#ifdef __PRIVATE__
+
+//=====================================================================================
+// Implementation types
+//=====================================================================================
+typedef somToken OrderedCollection;
+
+#endif //# __PRIVATE__
+
+//=====================================================================================
+// Class ODTypeList
+//=====================================================================================
+
+interface ODTypeList : ODObject
+{
+	void AddLast(in ODType type);
+	
+	void Remove(in ODType type);
+	
+	ODBoolean Contains(in ODType type);
+	
+	ODULong Count();
+	
+	ODTypeListIterator CreateTypeListIterator();
+
+#ifdef __PRIVATE__
+
+	void InitTypeList(in ODTypeList typeList);
+
+	//# Private to implementation
+
+	OrderedCollection* GetImplementation();
+
+#endif //# __PRIVATE__
+
+#ifdef __SOMIDL__
+	implementation
+	{
+		majorversion = 1; minorversion = 0;
+
+		functionprefix = ODTypeList;
+
+		override:
+			somUninit;
+
+		releaseorder:
+			AddLast,
+			Remove,
+			Contains,
+			Count,
+			CreateTypeListIterator,
+		#ifdef __PRIVATE__
+			InitTypeList,
+			GetImplementation;
+		#else
+			reserved1,
+			reserved2;
+		#endif
+
+		#ifdef __PRIVATE__
+			passthru C_xh = "class OrderedCollection;";
+
+			OrderedCollection*	fList;
+		#endif //# __PRIVATE__
+	};
+#endif //# __SOMIDL__
+};
+
+#endif  // _TYPELIST_

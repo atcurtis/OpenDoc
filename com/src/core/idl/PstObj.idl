@@ -1,0 +1,129 @@
+/* @(#)Z 1.4 com/src/core/idl/PstObj.idl, odcore, od96os2, odos29646d 96/11/15 15:25:00 (96/10/29 09:22:48) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odcore
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		PstObj.idl
+//#
+//#	Contains:	Interface for ODPersistentObject class
+//#
+//#	Owned by:	Caia Grisar
+//#
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//#
+//#	Change History (most recent first):
+//#
+//#		 <8>	 8/18/95	DM		#1275241: IDL Cleanup
+//#		 <7>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//#									somInit methods. Don't call IsInitialized
+//#									or SubclassResponsibility
+//#		 <6>	 8/24/94	CG		#1181622: Updated file ownership.
+//#		 <5>	 8/16/94	VL		1143605: Added CloneInto.
+//#		 <4>	 6/23/94	CG		Added functionprefix.
+//#		 <3>	  6/8/94	CG		Forgot #endif.
+//#		 <2>	  6/8/94	CG		Privatize change history.
+//#		 <1>	  6/8/94	CG		first checked in
+//#
+//#	To Do:
+//#
+#else
+//#	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _PSTOBJ_
+#define _PSTOBJ_
+
+#ifndef _REFCTOBJ_
+#include "RefCtObj.idl"
+#endif
+
+//==============================================================================
+// Classes defined in this interface
+//==============================================================================
+
+interface  ODPersistentObject;
+
+//==============================================================================
+// Classes used by this interface
+//==============================================================================
+
+interface	ODStorageUnit;
+interface	ODFrame;
+
+//==============================================================================
+// ODPersistentObject
+//==============================================================================
+
+interface ODPersistentObject :  ODRefCntObject
+{
+  void  InitPersistentObject(in ODStorageUnit storageUnit);
+ 
+  void  InitPersistentObjectFromStorage(in ODStorageUnit storageUnit);
+    
+  void  ReleaseAll();
+  
+  void  Externalize();
+                  
+  ODStorageUnit  GetStorageUnit();
+    
+  ODID   GetID();
+  
+  void CloneInto(in ODDraftKey key,
+  							in ODStorageUnit toSU,
+							in ODFrame scope);
+  
+#ifdef __SOMIDL__
+	implementation
+	{
+	majorversion = 1; minorversion = 0;
+		
+  	functionprefix = ODPersistentObject;
+	
+  	override:
+		somUninit;
+	
+    releaseorder:
+        InitPersistentObject,
+        InitPersistentObjectFromStorage,
+        ReleaseAll,
+        Externalize,
+        GetStorageUnit,
+        GetID,
+		CloneInto;
+		
+    #ifdef __PRIVATE__
+      ODStorageUnit   fSU;
+      ODID      fID;
+    #endif //# __PRIVATE__
+    
+  };
+#endif //# __SOMIDL__
+};
+
+#endif //# _PSTOBJ_
+

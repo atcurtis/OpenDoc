@@ -1,0 +1,367 @@
+/* @(#)Z 1.10 os2/src/storage/idl/DragDrp.idl, oddataxfer, od96os2, odos29646d 96/11/15 15:50:36 (96/08/23 01:43:12) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: oddataxfer
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+
+#ifdef __PRIVATE__
+//#
+//#	File:		DragDrp.idl
+//#
+//#	Contains:	Definition of ODDragAndDrop
+//#
+//#	Owned by:	Vincent Lo
+//# IBM owner:		Troy Folger
+//#
+//# Format considerations:	formatted for tab width of 4
+//#
+#endif
+
+#ifndef _DRAGDROP_
+#define _DRAGDROP_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODDragAndDrop;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface	ODSession;
+interface	ODPart;
+interface	ODStorageUnit;
+interface	ODFacet;
+interface	ODFrame;
+interface	ODDraft;
+interface	ODStorageSystem;
+interface	ODWindowState;
+interface	ODDragItemIterator;
+interface	ODStorageUnitView;
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+typedef somToken LinkedList;
+typedef somToken OpenHashTable;
+typedef somToken PPOINTL;
+#endif
+
+
+//=====================================================================================
+// ODDragAndDrop
+//=====================================================================================
+
+
+interface ODDragAndDrop :  ODObject
+{
+	void Clear();
+	
+	ODStorageUnit  GetContentStorageUnit();
+	
+	ODDropResult StartDrag(in ODFrame srcFrame,
+						   in ODType imageType,
+						   in ODByteArray image,
+						   out ODPart destPart,
+						   in ODByteArray refCon);
+
+	ODBoolean ShowPasteAsDialog(in		ODBoolean				canPasteLink,
+								in		ODPasteAsMergeSetting	mergeSetting,
+								in		ODFacet					facet,
+								in		ODTypeToken				viewType,
+								in		ODStorageUnit			contentSU,
+								out		ODPasteAsResult			theResult);
+
+	ODULong GetDragAttributes();
+	
+	ODPlatformDragReference GetDragReference();
+	
+	void GetPromiseFromDragManager(in ODPart sourcePart,
+								   in ODStorageUnitView destSUView);
+								
+	ODBoolean GetDataFromDragManager(in ODStorageUnitView theSUView,	// [140007] removed szSelectedRMF
+									 out ODStorageUnit    renderedSU);
+	
+	ODBoolean CanEmbed(in ODStorageUnit dropSU);			// [140007]
+
+	ODBoolean CanIncorporate(in ODStorageUnit dropSU,		// [140007]
+							 in ODType kind);
+
+#ifdef __PRIVATE__
+
+	void InitDragAndDrop(in ODSession session);    
+	
+	ODFacet  FindTargetFacet(in ODPlatformWindow theWindow,
+							 in PPOINTL mouse, 
+							 out ODPoint local);
+	
+	LinkedList* GetDragItemList();
+	void SetDragItemList(in LinkedList* list);
+	
+	ODBoolean	GetListFromHandler();
+	void SetListFromHandler(in ODBoolean listFromHandler);
+	
+	ODFrame	GetSourceFrame();
+	void SetSourceFrame(in ODFrame sourceFrame);
+	
+	ODULong	GetAttributes();
+	void SetAttributes(in ODULong attr);
+
+	ODPart GetSourcePart();
+	void SetSourcePart(in ODPart sourcePart);
+		
+	ODDragItemIterator GetDragItemIterator();
+	void SetDragItemIterator(in ODDragItemIterator iter);
+	
+	ODSession GetSession();
+	ODStorageSystem GetStorageSystem();
+	
+	void SetDragReference(in ODPlatformDragReference dragReference);
+	
+	ODFacet GetPrevFacet();
+	void SetPrevFacet(in ODFacet prevFacet);
+	
+	ODFacet GetDestFacet();
+	void SetDestFacet(in ODFacet destFacet);
+	
+	ODDropResult GetDropResult();
+	void SetDropResult(in ODDropResult dropResult);
+	
+	ODUShort GetDragOperation();
+
+	ODBoolean DispatchHandler(in ODEventData evt,			// [138899] - ced
+							  in ODFacet targetfacet);
+
+	ODBoolean dmDiscardObject(in ODEventData evt);
+
+	ODBoolean dmDragError(in ODEventData evt);
+
+	ODBoolean dmDragLeave(in ODEventData evt);
+
+	ODBoolean dmDragOver(in ODEventData evt, 
+						 in ODFacet targetfacet);			// [138899] - ced
+
+	ODBoolean dmDragOverNotify(in ODEventData evt);
+
+	ODBoolean dmDrop(in ODEventData evt);
+
+	ODBoolean dmDropHelp(in ODEventData evt);
+
+	ODBoolean dmEndConversation(in ODEventData evt);
+
+	ODBoolean dmPrintObject(in ODEventData evt);
+
+	ODBoolean dmRender(in ODEventData evt);
+
+	ODBoolean dmRenderComplete(in ODEventData evt);
+
+	ODBoolean dmRenderPrepare(in ODEventData evt);
+
+	ODBoolean dmDoReceive(in ODPtr   pszSelectedRMF,						// [140007]
+						  in ODUShort usOperation,
+						  in ODULong hstrRenderToName,
+						  in ODULong hstrType,
+						  in ODPtr pszSelectedKind,
+						  in ODPtr newItem);
+
+	void DraftClosing(in ODDraft draft);
+#endif //# __PRIVATE__
+
+  
+#ifdef __SOMIDL__
+	implementation
+	{
+		functionprefix = ODDragAndDrop;
+		override:
+			somUninit;
+			
+		releaseorder:
+			Clear,
+			GetContentStorageUnit,
+			StartDrag,
+			ShowPasteAsDialog,
+			GetDragAttributes,
+			GetDragReference,
+			GetPromiseFromDragManager,
+			GetDataFromDragManager,
+			CanEmbed,
+			CanIncorporate,
+#ifdef __PRIVATE__
+			InitDragAndDrop,
+			FindTargetFacet,
+			GetDragItemList,
+			SetDragItemList,
+			GetListFromHandler,
+			SetListFromHandler,
+			GetSourceFrame,
+			SetSourceFrame,
+			GetAttributes,
+			SetAttributes,
+			GetSourcePart,
+			SetSourcePart,
+			GetDragItemIterator,
+			SetDragItemIterator,
+			GetSession,
+			GetStorageSystem,
+			SetDragReference,
+			GetPrevFacet,
+			SetPrevFacet,
+			GetDestFacet,
+			SetDestFacet,
+			GetDropResult,
+			SetDropResult,
+			GetDragOperation,
+			DispatchHandler,
+			dmDiscardObject,
+			dmDragError,
+			dmDragLeave,
+			dmDragOver,
+			dmDragOverNotify,
+			dmDrop,
+			dmDropHelp,
+			dmEndConversation,
+			dmPrintObject,
+			dmRender,
+			dmRenderComplete,
+			dmRenderPrepare,
+			dmDoReceive,
+			DraftClosing;
+#else  // __PRIVATE__
+			// reserved01 -- Clear
+			// reserved02 -- GetContentStorageUnit
+			// reserved03 -- StartDrag
+			// reserved04 -- ShowPasteAsDialog
+			// reserved05 -- GetDragAttributes
+			// reserved06 -- GetDragReference
+			// reserved07 -- GetPromiseFromDragManager
+			// reserved08 -- GetDataFromDragManager
+			// reserved09 -- CanEmbed
+			// reserved10 -- CanIncorporate
+			reserved11,
+			reserved12,
+			reserved13,
+			reserved14,
+			reserved15,
+			reserved16,
+			reserved17,
+			reserved18,
+			reserved19,
+			reserved20,
+			reserved21,
+			reserved22,
+			reserved23,
+			reserved24,
+			reserved25,
+			reserved26,
+			reserved27,
+			reserved28,
+			reserved29,
+			reserved30,
+			reserved31,
+			reserved32,
+			reserved33,
+			reserved34,
+			reserved35,
+			reserved36,
+			reserved37,
+			reserved38,
+			reserved39,
+			reserved40,
+			reserved41,
+			reserved42,
+			reserved43,
+			reserved44,
+			reserved45,
+			reserved46,
+			reserved47,
+			reserved48,
+			reserved49;
+#endif  // __PRIVATE__
+
+			majorversion = 1; minorversion = 0;
+	
+			passthru C_h = 
+				""
+				"";
+
+			passthru C_xh = 
+#ifdef __PRIVATE__
+				""
+				"class LinkedList;"
+#endif
+				"";
+
+#ifdef __PRIVATE__
+			passthru C_xih = 
+				""
+				"class LinkedList;"
+				"class OpenHashTable;"
+				"";
+				
+			ODSession					fSession;
+			ODWindowState				fWindowState;
+			ODStorageSystem				fStorageSystem;
+			LinkedList					*fDragItemList;
+			ODBoolean					fListFromHandler;
+			ODDragItemIterator			fDragItemIterator;
+			ODULong						fAttributes;
+			ODPlatformDragReference		fDragReference;
+			ODFacet						fPrevFacet;
+			ODFrame						fSourceFrame;
+			ODPart						fSourcePart;
+			ODFacet						fDestFacet;
+										
+			ODBoolean					fHasLeftSourceFrame;
+			ODBoolean					fHasLeftSourcePart;
+										
+			ODULong						fDropResult;
+										
+			OpenHashTable				*fFacetsRejected;
+										
+			ODBoolean					fNeverDrop;					//  are these 5 still needed?
+			ODPtr						fDragInform;
+			ODPtr						fDragItem;
+			ODPoint						fLocalMouse;
+			LinkedList					*fDragGarbageList;
+										
+			ODBoolean	  				fRenderCompleteReceived;	// [140007]
+			ODUShort	       			fRenderCompleteFlag;
+			ODUShort	   				fDragOperation;
+			ODULong	    				fulItemID;
+
+#endif //# __PRIVATE__
+	};
+#endif //# __SOMIDL__
+};
+
+#endif // _DRAGDROP_

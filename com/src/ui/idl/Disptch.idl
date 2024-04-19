@@ -1,0 +1,308 @@
+/* @(#)Z 1.8 com/src/ui/idl/Disptch.idl, odui, od96os2, odos29646d 96/11/15 15:28:35 (96/10/21 16:55:17) */
+//#====START_GENERATED_PROLOG======================================
+//#
+//#
+//#   COMPONENT_NAME: odui
+//#
+//#   CLASSES: none
+//#
+//#   ORIGINS: 82,27
+//#
+//#
+//#   (C) COPYRIGHT International Business Machines Corp. 1995,1996
+//#   All Rights Reserved
+//#   Licensed Materials - Property of IBM
+//#   US Government Users Restricted Rights - Use, duplication or
+//#   disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+//#   	
+//#   IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+//#   ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//#   PURPOSE. IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+//#   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+//#   USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+//#   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+//#   OR PERFORMANCE OF THIS SOFTWARE.
+//#
+//#====END_GENERATED_PROLOG========================================
+//#
+/********************************************************************/
+/*  Licensed Materials - Property of IBM                            */
+/*                                                                  */
+/*                                                                  */
+/* Copyright (C) International Business Machines Corp., 1994.       */
+/* Copyright (C) Apple Computer, Inc., 1994                         */
+/*                                                                  */
+/*  US Government Users Restricted Rights -                         */
+/*  Use, duplication, or disclosure restricted                      */
+/*  by GSA ADP Schedule Contract with IBM Corp.                     */
+/*                                                                  */
+/*                                                                  */
+/********************************************************************/
+#ifdef __PRIVATE__
+// IBM Change History (most recent first):                         */
+//  107819  5/25/95 aml  Added RemoveDispatchModuleEntries         */
+//  120349  5/15/95 map  Fix problem with //# comment on #endifs   */
+//  120349  5/15/95 map  Fix up IDL copyright                      */
+//******************************************************************/
+//
+//	File:		Disptch.idl
+//
+//	Contains:	Class definition for ODDispatcher
+//
+//	Owned by:	Richard Rodseth
+//
+//	Copyright:	(C) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+//
+//	Change History (most recent first):
+//
+//		<10>	 8/15/95	RR		#1275241 IDL Review
+//		 <9>	  8/3/95	RR		#1257260: Collapse B classes. Remove
+//									somInit methods. Don't call IsInitialized
+//									or SubclassResponsibility
+//		 <8>	 6/15/95	RR		#1254828/1255536 Added Redispatch
+//		 <7>	  6/8/95	RR		#1257260 Collapse base classes. #1214898
+//									StdTypes.r -> ODTypes.r
+//		 <6>	  4/4/95	RR		# 1211085 Removed redundant
+//									fThreadsAvailable
+//		 <5>	11/28/94	RR		Added fThreadsAvailable
+//		 <4>	 8/15/94	JBS		1181156: UI API Cleanup
+//		 <3>	  8/4/94	eeh		bug 1177981: add GetDispatchModule
+//		 <2>	 6/16/94	RR		Added function prefix
+//		 <1>	  6/8/94	RR		first checked in
+//		 <6>	  6/7/94	RR		Privatise change log
+//		 <1>	  5/9/94	VL		first checked in
+//
+//	To Do:
+//
+#else
+//	Copyright:	(r) 1993 - 1995 by Apple Computer, Inc., all rights reserved.
+#endif
+
+#ifndef _DISPTCH_
+#define _DISPTCH_
+
+#ifndef _ODOBJECT_
+#include "ODObject.idl"
+#endif
+
+//=====================================================================================
+// Classes defined in this interface
+//=====================================================================================
+
+interface  ODDispatcher;
+
+//=====================================================================================
+// Classes used by this interface
+//=====================================================================================
+
+interface  ODDispatchModule;
+interface  ODFrame;
+interface  ODPart;
+
+#ifdef __PRIVATE__
+interface  ODSession;
+interface  ODFacet;
+#endif // __PRIVATE__
+
+#ifdef __PRIVATE__
+//=====================================================================================
+// Implementation Types
+//=====================================================================================
+
+#if defined(_PLATFORM_MACINTOSH_)
+typedef somToken IdleList;
+#endif // _PLATFORM_MACINTOSH_
+
+typedef somToken DispatchTable;
+
+#endif // __PRIVATE__
+
+//=====================================================================================
+// ODDispatcher
+//=====================================================================================
+
+interface ODDispatcher :  ODObject
+{
+	void AddDispatchModule(in ODEventType eventType,
+						   in ODDispatchModule dispatchModule); 
+  
+	ODDispatchModule GetDispatchModule(in ODEventType eventType); 
+  
+	void RemoveDispatchModule(in ODEventType eventType); 
+  
+	void AddMonitor(in ODEventType eventType, 
+					in ODDispatchModule dispatchModule);
+  
+	void RemoveMonitor(in ODEventType eventType,
+					   in ODDispatchModule dispatchModule); 
+  
+	ODBoolean Dispatch(inout ODEventData eventData); 
+
+	ODBoolean Redispatch(inout ODEventData eventData, inout ODEventInfo eventInfo); 
+  
+	void Exit(); 
+  
+	ODBoolean ShouldExit(); 
+
+#ifdef _PLATFORM_MACINTOSH_
+
+   void RegisterIdle(in ODPart part,
+   					 in ODFrame frame,
+					 in ODIdleFrequency frequency);
+
+   void UnregisterIdle(in ODPart part,
+   					   in ODFrame frame);
+
+   void SetIdleFrequency(in ODPart part,
+   						 in ODFrame frame,
+						 in ODIdleFrequency frequency);
+
+   void Yield(in ODFrame frame);
+
+   void SetMouseRegion(in ODRgnHandle area);
+
+   ODRgnHandle GetMouseRegion();
+
+   void InvalidateFacetUnderMouse();
+
+   ODSLong GetSleepTime();
+
+#endif // _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_UNIX_
+
+   void SetXtDispatchMode(in ODBoolean mode);
+
+   ODBoolean GetXtDispatchMode();
+
+#endif // _PLATFORM_UNIX_
+
+#ifdef __PRIVATE__
+
+	void InitDispatcher(in ODSession session);
+
+#ifdef _PLATFORM_MACINTOSH_
+
+   void InvalidateMouseRegion();
+
+   ODFacet  GetFacetUnderMouse();
+
+   void SetFacetUnderMouse(in ODFacet facet);
+
+   ODBoolean HandleNullEvent(in ODEventData event,
+   							 in  ODFrame skipFrame);
+
+   ODBoolean MouseRegionIsInvalid();
+   
+   void ComputeMouseRegion();
+   
+   void CheckFacetUnderMouse();
+
+#endif // _PLATFORM_MACINTOSH_
+
+#endif // __PRIVATE__
+
+#ifdef __SOMIDL__
+
+  implementation
+  {
+ 		majorversion = 1; minorversion = 0;
+
+ 		functionprefix = ODDispatcher;
+	
+		override:
+			somUninit,
+			Purge;
+		
+		releaseorder:
+			AddDispatchModule,
+			GetDispatchModule,
+			RemoveDispatchModule,
+			AddMonitor,
+			RemoveMonitor,
+			Dispatch,
+			Redispatch,
+			Exit,
+			ShouldExit,
+#ifdef _PLATFORM_MACINTOSH_		// Macintosh-only public methods
+			RegisterIdle,				 
+			UnregisterIdle,
+			SetIdleFrequency,
+			Yield,
+			SetMouseRegion,
+			GetMouseRegion,
+			InvalidateFacetUnderMouse,
+			GetSleepTime,
+#endif // _PLATFORM_MACINTOSH_
+
+#ifdef _PLATFORM_UNIX_			// UNIX-only public methods
+			SetXtDispatchMode,
+			GetXtDispatchMode,
+#endif // _PLATFORM_UNIX_
+
+#ifdef __PRIVATE__			// cross-platform private methods 
+			InitDispatcher,
+#else
+			reserved1,
+#endif // __PRIVATE__
+#ifdef _PLATFORM_MACINTOSH_
+	#ifdef __PRIVATE__		// Macintosh-only private methods
+			InvalidateMouseRegion,
+			GetFacetUnderMouse,
+			SetFacetUnderMouse,
+			HandleNullEvent,
+			MouseRegionIsInvalid,
+			ComputeMouseRegion,
+			CheckFacetUnderMouse,
+	#else
+			reserved2,
+			reserved3,
+			reserved4,
+			reserved5,
+			reserved6,
+			reserved7,
+			reserved8,
+	#endif
+#endif // _PLATFORM_MACINTOSH_
+
+			reserved_end;	// end of releaseorder
+		
+	#ifdef __PRIVATE__
+			passthru C_xih =
+			""
+			"class DispatchTable;"
+			""
+		#if defined(_PLATFORM_MACINTOSH_)
+			"class IdleList;"
+		#endif // _PLATFORM_MACINTOSH_
+			""
+			"";
+
+			ODSession		fSession;
+			ODBoolean		fExit;
+
+			DispatchTable*		fDispatchTable;
+
+		#if defined(_PLATFORM_MACINTOSH_)
+			IdleList*		fIdleList;
+		#endif // _PLATFORM_MACINTOSH_
+
+		#ifdef _PLATFORM_MACINTOSH_
+			ODRgnHandle		fMouseRegion;
+			ODRgnHandle		fPartMouseRegion;
+			ODFacet			fFacetUnderMouse;
+		#endif // _PLATFORM_MACINTOSH_
+
+		#ifdef _PLATFORM_UNIX_
+			void*			fXtDisplay;
+			ODBoolean		fXtDispatchMode;
+		#endif // PLATFORM_UNIX
+	
+	#endif // __PRIVATE__
+	
+  };
+#endif // __SOMIDL__
+
+};
+
+#endif // _DISPTCH_
